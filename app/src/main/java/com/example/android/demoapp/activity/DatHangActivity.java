@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.DatHangViewModel;
 import com.example.android.demoapp.adapter.DatHangAdapter;
@@ -46,6 +47,8 @@ public class DatHangActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dat_hang_activity);
+        mDb = AppDatabase.getInstance(this);
+
         datHangRecyclerView = findViewById(R.id.recycler_view_dat_hang);
         datHangRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -85,6 +88,7 @@ public class DatHangActivity extends AppCompatActivity{
             public void onClick(View view) {
              Intent intentMuaTiep = new Intent(DatHangActivity.this , MainActivity.class );
              startActivity(intentMuaTiep);
+
                          }
         });
 
@@ -194,6 +198,7 @@ public class DatHangActivity extends AppCompatActivity{
               final String diachi = editTextDiaChi.getText().toString().trim();
               if (ten.length() > 0 && sdt.length() >0 && email.length() >0 && diachi.length() > 0){
                   Intent intent = new Intent(Intent.ACTION_SENDTO);
+                  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                   intent.setData(Uri.parse("mailto:"));
                   intent.putExtra(Intent.EXTRA_SUBJECT, "Order from " + ten);
                   String noidungtinnhan="Họ và tên: " + ten +"\nSố điện thoại: " + sdt + "\nĐịa chỉ: " + diachi + "\n" + "Danh sách sản phẩm mua: \n";
@@ -204,7 +209,7 @@ public class DatHangActivity extends AppCompatActivity{
                   for ( int i = 0; i< mDatHangs.size(); i++) {
                       noidungtinnhan += mDatHangs.get(i).getTenSanPham();
                       noidungtinnhan += "   x" + mDatHangs.get(i).getSoLuong();
-                      noidungtinnhan += "         " +  mDatHangs.get(i).getGiaSanPham()/mDatHangs.get(i).getSoLuong() + " Đ" +"\n";
+                      noidungtinnhan += "         " +  decimalFormat.format(mDatHangs.get(i).getGiaSanPham()/mDatHangs.get(i).getSoLuong()) + " Đ" +"\n";
                       tongtien += mDatHangs.get(i).getGiaSanPham();
                       tongTienDonHang += tongtien;
 
@@ -216,11 +221,22 @@ public class DatHangActivity extends AppCompatActivity{
                   intent.putExtra(Intent.EXTRA_TEXT, noidungtinnhan);
                   if(intent.resolveActivity(getPackageManager())!=null)
                   {
+                      for ( int i = 0; i< mDatHangs.size(); i++) {
+
+                          final int finalI = i;
+                          AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                          @Override
+                          public void run() {
+
+                              mDb.gioHangDao().deleteGioHang(mDatHangs.get(finalI));
+                          }
+
+                      });
+                          }
                     //  getContentResolver().delete(SanPhamContract.SanPhamEntry.CONTENT_URI, null ,null);
                       Toast.makeText(DatHangActivity.this, "Tiến hành gửi Email đặt hàng",Toast.LENGTH_SHORT).show();
-                      Intent intentmain = new Intent (getApplicationContext(), MainActivity.class);
                       startActivity(intent);
-                      startActivity(intentmain);
+                      finish();
                   }
 
               }
