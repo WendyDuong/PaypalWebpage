@@ -36,8 +36,8 @@ import java.util.List;
 public class DetailActivity extends AppCompatActivity {
     ImageView imgChiTiet, timImageView, imageViewHangSp;
     private static final String INSTANCE_SANPHAM_ID = "instanceID";
-    private static final int DEFAULT_ID = -1 ;
-    private static final String EXTRA_SANPHAM_ID = "extraSanPhamId" ;
+    private static final int DEFAULT_ID = -1;
+    private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
     private static final String EXTRA_HANG_ID = "extraHangId";
     private static final String TAG = DetailActivity.class.getSimpleName();
     private int idHang, id;
@@ -47,7 +47,7 @@ public class DetailActivity extends AppCompatActivity {
     Button btnDatMua;
     int idsanpham, hinhanhsp;
     double giasp;
-    String tensp,khoiluongsp, thuongHieu, xuatXu;
+    String tensp, khoiluongsp, thuongHieu, xuatXu;
     private int mTaskId = DEFAULT_ID;
     Spinner spinner;
 
@@ -70,7 +70,7 @@ public class DetailActivity extends AppCompatActivity {
         imgChiTiet = findViewById(R.id.image_view_chi_tiet);
         tvTen = findViewById(R.id.ten_san_pham);
         tvKhoiluong = findViewById(R.id.khoi_luong_san_pham);
-        tvGia =  findViewById(R.id.gia_san_pham);
+        tvGia = findViewById(R.id.gia_san_pham);
         tvMoTa = findViewById(R.id.mo_ta_san_pham);
         tvThuongHieu = findViewById(R.id.san_pham_thuong_hieu);
         tvXuatXu = findViewById(R.id.san_pham_xuat_xu);
@@ -158,7 +158,7 @@ public class DetailActivity extends AppCompatActivity {
                 switch (tab.getPosition()) {
                     case 0:
                         Intent intent0 = new Intent(DetailActivity.this, CatalogActivity.class);
-                        intent0.putExtra(DetailActivity.EXTRA_HANG_ID , idHang);
+                        intent0.putExtra(DetailActivity.EXTRA_HANG_ID, idHang);
                         DetailActivity.this.startActivity(intent0);
                         break;
                     case 1:
@@ -191,7 +191,7 @@ public class DetailActivity extends AppCompatActivity {
                     case 0:
 
                         Intent intent0 = new Intent(DetailActivity.this, CatalogActivity.class);
-                        intent0.putExtra(DetailActivity.EXTRA_HANG_ID,idHang);
+                        intent0.putExtra(DetailActivity.EXTRA_HANG_ID, idHang);
 
                         DetailActivity.this.startActivity(intent0);
                         break;
@@ -213,7 +213,6 @@ public class DetailActivity extends AppCompatActivity {
                         break;
                 }
             }
-
 
 
         });
@@ -248,15 +247,14 @@ public class DetailActivity extends AppCompatActivity {
                         gioHangEntries = gioHang;
                         int sosanphammua = 0;
 
-                        if (gioHangEntries.size() > 0){
+                        if (gioHangEntries.size() > 0) {
                             for (int i = 0; i < gioHangEntries.size(); i++) {
                                 sosanphammua += gioHangEntries.get(i).getSoLuong();
                             }
                             badgeDrawableGioHang.setVisible(true);
 
                             badgeDrawableGioHang.setNumber(sosanphammua);
-                        }
-                        else
+                        } else
                             badgeDrawableGioHang.setVisible(false);
                     }
                 });
@@ -266,24 +264,19 @@ public class DetailActivity extends AppCompatActivity {
                     public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
                         yeuThichEntries = yeuThich;
                         KiemTraYeuThich();
-                        if (yeuThichEntries.size()>0){
+                        if (yeuThichEntries.size() > 0) {
                             badgeDrawableYeuthich.setVisible(true);
                             badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
 
-                        }
-                        else
+                        } else
                             badgeDrawableYeuthich.setVisible(false);
 
                     }
 
-                    });
+                });
 
             }
         }
-
-
-
-
 
 
     }
@@ -295,7 +288,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (timImageView.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.timden24).getConstantState()) {
-                //    timImageView.setImageResource(R.drawable.timdo24);
+                    //    timImageView.setImageResource(R.drawable.timdo24);
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
@@ -309,17 +302,18 @@ public class DetailActivity extends AppCompatActivity {
                 } else {
 
 
-                  //  timImageView.setImageResource(R.drawable.timden24);
+                    //  timImageView.setImageResource(R.drawable.timden24);
 
-                    for (int vitrixoa = 0; vitrixoa <yeuThichEntries.size(); vitrixoa++) {
-                        int  idsanphamxoa = yeuThichEntries.get(vitrixoa).getIdSanPham();
+                    for (int vitrixoa = 0; vitrixoa < yeuThichEntries.size(); vitrixoa++) {
+                        int idsanphamxoa = yeuThichEntries.get(vitrixoa).getIdSanPham();
                         if (idsanphamxoa == idsanpham) {
                             final int finalVitrixoa = vitrixoa;
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
                                     mDb.yeuThichDao().deleteYeuThich(yeuThichEntries.get(finalVitrixoa));
-                                }});
+                                }
+                            });
                         }
                     }
                 }
@@ -378,132 +372,124 @@ public class DetailActivity extends AppCompatActivity {
                 //TODO(7) them vao gio hang
 
 
-                if(mgioHangEntries.size()>0){
-                    final int sl= Integer.parseInt(spinner.getSelectedItem().toString());
-                    boolean exsist=false;
-                    for(int i=0;i<mgioHangEntries.size();i++){
+                if (mgioHangEntries.size() > 0) {
+                    final int sl = Integer.parseInt(spinner.getSelectedItem().toString());
+                    boolean exsist = false;
+                    for (int i = 0; i < mgioHangEntries.size(); i++) {
 
-                        if (mgioHangEntries.get(i).getIdSanPham()  ==idsanpham){
+                        if (mgioHangEntries.get(i).getIdSanPham() == idsanpham) {
                             final int soluongcu = mgioHangEntries.get(i).getSoLuong();
-                            final  int id = mgioHangEntries.get(i).getId();
+                            final int id = mgioHangEntries.get(i).getId();
+                            final int soluongmoi = soluongcu + sl;
                             // Put the task description and selected mPriority into the ContentValues
 
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp,giasp * (soluongcu + sl) ,hinhanhsp,khoiluongsp,soluongcu + sl ,idHang));
-
+                                    mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, giasp * soluongmoi, hinhanhsp, khoiluongsp, soluongmoi, idHang));
 
 
                                 }
                             });
-                            Toast.makeText(DetailActivity.this,"Đã cap nhat san pham" +" " + tensp + " trong giỏ hàng",Toast.LENGTH_SHORT).show();
 
 
-
-                            if(soluongcu + sl >=20){
+                            if (soluongmoi >= 20) {
 
 
                                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id , idsanpham, tensp,giasp * 20 ,hinhanhsp,khoiluongsp,20 ,idHang));
-
+                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, giasp * 20, hinhanhsp, khoiluongsp, 20, idHang));
 
 
                                     }
                                 });
 
-                                Toast.makeText(DetailActivity.this,"Đã đủ 20 " +" " + tensp + " trong giỏ hàng",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(DetailActivity.this, "Đã đủ 20 " + " " + tensp + " trong giỏ hàng", Toast.LENGTH_SHORT).show();
 
+                            } else {
+                                Toast.makeText(DetailActivity.this, "Đã thêm " + soluongmoi + " " + tensp + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
                             }
 
 
-
-                            exsist=true;
-
+                            exsist = true;
 
 
                         }
                     }
-                    if(exsist==false){
+                    if (exsist == false) {
                         final int soluong = Integer.parseInt(spinner.getSelectedItem().toString());
-                       final double giamoi = soluong*giasp;
+                        final double giamoi = soluong * giasp;
 
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp,giamoi ,hinhanhsp,khoiluongsp,soluong ,idHang));
-
+                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, giamoi, hinhanhsp, khoiluongsp, soluong, idHang));
 
 
                             }
                         });
 
-                        Toast.makeText(DetailActivity.this,"Đã thêm " + soluong +" " + tensp +" vào giỏ hàng",Toast.LENGTH_SHORT).show();
-
-
+                        Toast.makeText(DetailActivity.this, "Đã thêm " + soluong + " " + tensp + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
 
 
                     }
-                }else{
-                    final int soluong= Integer.parseInt(spinner.getSelectedItem().toString());
-                    final double giamoi=soluong*giasp;
+                } else {
+                    final int soluong = Integer.parseInt(spinner.getSelectedItem().toString());
+                    final double giamoi = soluong * giasp;
 
 
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp,giamoi ,hinhanhsp,khoiluongsp,soluong,idHang ));
-
+                            mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, giamoi, hinhanhsp, khoiluongsp, soluong, idHang));
 
 
                         }
                     });
-                    // Display the URI that's returned with a Toast
-                    // [Hint] Don't forget to call finish() to return to MainActivity after this insert is complete
+                    Toast.makeText(DetailActivity.this, "Đã thêm " + soluong + " " + tensp + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
+
 
                 }
-
-
-
+           /*
                 Intent intent = new Intent(DetailActivity.this, GioHangActivity.class);
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
     }
 
     private void eventSpinner() {
-        ArrayList<Integer> arr=new ArrayList<Integer>();
-        for(int i=1;i<=10;i++){
+        ArrayList<Integer> arr = new ArrayList<Integer>();
+        for (int i = 1; i <= 10; i++) {
             arr.add(i);
         }
-        ArrayAdapter spinnerAdapter=new ArrayAdapter(DetailActivity.this,R.layout.spinner_item_custom,arr);
+        ArrayAdapter spinnerAdapter = new ArrayAdapter(DetailActivity.this, R.layout.spinner_item_custom, arr);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
 
 
     }
+
     private void KiemTraYeuThich() {
-                boolean exit = false;
+        boolean exit = false;
 
-                if (yeuThichEntries.size() > 0) {
-                    for (int vitritim = 0; vitritim < yeuThichEntries.size(); vitritim++) {
-                        if (yeuThichEntries.get(vitritim).getIdSanPham() == idsanpham) {
-                            timImageView.setImageResource(R.drawable.timdo24);
-                            exit = true;
-                        }
-                    }
+        if (yeuThichEntries.size() > 0) {
+            for (int vitritim = 0; vitritim < yeuThichEntries.size(); vitritim++) {
+                if (yeuThichEntries.get(vitritim).getIdSanPham() == idsanpham) {
+                    timImageView.setImageResource(R.drawable.timdo24);
+                    exit = true;
+                }
+            }
 
-                    if (exit == false)
-                        timImageView.setImageResource(R.drawable.timden24);
+            if (exit == false)
+                timImageView.setImageResource(R.drawable.timden24);
 
 
-                } else
-                    {  timImageView.setImageResource(R.drawable.timden24);}
+        } else {
+            timImageView.setImageResource(R.drawable.timden24);
+        }
 
     }
-
 
 
     @Override
@@ -560,55 +546,53 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
         if (intent != null && intent.hasExtra(EXTRA_SANPHAM_ID)) {
-                // populate the UI
-                mTaskId = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
+            // populate the UI
+            mTaskId = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
 
-                DetailViewModelFactory factory = new DetailViewModelFactory(mDb, mTaskId);
-                final DetailViewModel viewModel
-                        = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
+            DetailViewModelFactory factory = new DetailViewModelFactory(mDb, mTaskId);
+            final DetailViewModel viewModel
+                    = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
 
-                viewModel.getDetailSanPham().observe(this, new Observer<SanPhamEntry>() {
-                    @Override
-                    public void onChanged(SanPhamEntry sanPham) {
-                        viewModel.getDetailSanPham().removeObserver(this);
-                        populateUI(sanPham);
-                    }
+            viewModel.getDetailSanPham().observe(this, new Observer<SanPhamEntry>() {
+                @Override
+                public void onChanged(SanPhamEntry sanPham) {
+                    viewModel.getDetailSanPham().removeObserver(this);
+                    populateUI(sanPham);
+                }
 
-                });
+            });
 
-                viewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
-                    @Override
-                    public void onChanged(@Nullable List<GioHangEntry> gioHang) {
-                        gioHangEntries = gioHang;
-                        int sosanphammua = 0;
+            viewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
+                @Override
+                public void onChanged(@Nullable List<GioHangEntry> gioHang) {
+                    gioHangEntries = gioHang;
+                    int sosanphammua = 0;
 
-                        if (gioHangEntries.size() > 0){
-                            for (int i = 0; i < gioHangEntries.size(); i++) {
-                                sosanphammua += gioHangEntries.get(i).getSoLuong();
-                            }
-                            badgeDrawableGioHang.setVisible(true);
-
-                            badgeDrawableGioHang.setNumber(sosanphammua);
+                    if (gioHangEntries.size() > 0) {
+                        for (int i = 0; i < gioHangEntries.size(); i++) {
+                            sosanphammua += gioHangEntries.get(i).getSoLuong();
                         }
-                        else
-                            badgeDrawableGioHang.setVisible(false);
-                    }
-                });
+                        badgeDrawableGioHang.setVisible(true);
 
-                viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
-                    @Override
-                    public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
-                        yeuThichEntries = yeuThich;
-                        if (yeuThichEntries.size()>0){
-                            badgeDrawableYeuthich.setVisible(true);
-                            badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
+                        badgeDrawableGioHang.setNumber(sosanphammua);
+                    } else
+                        badgeDrawableGioHang.setVisible(false);
+                }
+            });
 
-                        }
-                        else
-                            badgeDrawableYeuthich.setVisible(false);
+            viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
+                @Override
+                public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
+                    yeuThichEntries = yeuThich;
+                    if (yeuThichEntries.size() > 0) {
+                        badgeDrawableYeuthich.setVisible(true);
+                        badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
 
-                    }
-                });
+                    } else
+                        badgeDrawableYeuthich.setVisible(false);
+
+                }
+            });
 
         }
         super.onNewIntent(intent);
@@ -629,15 +613,14 @@ public class DetailActivity extends AppCompatActivity {
                 gioHangEntries = gioHang;
                 int sosanphammua = 0;
 
-                if (gioHangEntries.size() > 0){
+                if (gioHangEntries.size() > 0) {
                     for (int i = 0; i < gioHangEntries.size(); i++) {
                         sosanphammua += gioHangEntries.get(i).getSoLuong();
                     }
                     badgeDrawableGioHang.setVisible(true);
 
                     badgeDrawableGioHang.setNumber(sosanphammua);
-                }
-                else
+                } else
                     badgeDrawableGioHang.setVisible(false);
             }
         });
@@ -647,12 +630,11 @@ public class DetailActivity extends AppCompatActivity {
             public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
                 yeuThichEntries = yeuThich;
                 KiemTraYeuThich();
-                if (yeuThichEntries.size()>0){
+                if (yeuThichEntries.size() > 0) {
                     badgeDrawableYeuthich.setVisible(true);
                     badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
 
-                }
-                else
+                } else
                     badgeDrawableYeuthich.setVisible(false);
 
             }

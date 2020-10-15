@@ -202,4 +202,10 @@ public class FindActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    protected void onRestart() {
+        timKiemAdapter.notifyDataSetChanged();
+        super.onRestart();
+    }
 }

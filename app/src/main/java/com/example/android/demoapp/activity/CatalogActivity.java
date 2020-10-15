@@ -86,7 +86,6 @@ public class CatalogActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(@Nullable List<SanPhamEntry> sanPhams) {
                     Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
-                    viewModel1.getSanPhams().removeObserver(this);
                     catalogAdapter.setSanPhams(sanPhams);
 
                 }
@@ -273,7 +272,6 @@ public class CatalogActivity extends AppCompatActivity {
                     @Override
                     public void onChanged(@Nullable List<SanPhamEntry> sanPhams) {
                         Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
-                        viewModel1.getSanPhams().removeObserver(this);
                         catalogAdapter.setSanPhams(sanPhams);
 
                     }
