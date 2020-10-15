@@ -65,7 +65,7 @@
 
 
     <TextView
-        android:id="@+id/so_tien"
+        android:id="@+id/tong_tien"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
@@ -73,7 +73,6 @@
         android:textColor="#fa3223"
         app:layout_constraintBottom_toTopOf="@id/button_dat_hang"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recycler_view_gio_hang" />
 
 

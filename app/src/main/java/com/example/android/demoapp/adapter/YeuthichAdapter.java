@@ -177,7 +177,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                         boolean exit = false;
                         for (int i = 0; i < mgioHangEntries.size(); i++) {
                             if (mgioHangEntries.get(i).getIdSanPham() == idsanphamhientai) {
-                                final int soluongcu = mgioHangEntries.get(i).getSoLuong();
+                             /*   final int soluongcu = mgioHangEntries.get(i).getSoLuong();
                                 final  int id = mgioHangEntries.get(i).getId();
                                 // Put the task description and selected mPriority into the ContentValues
 
@@ -189,7 +189,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
 
 
                                     }
-                                });
+                                });*/
                                 Toast.makeText(mcontext, tensanpham + " đã có trong giỏ hàng", Toast.LENGTH_SHORT).show();
                                 exit = true;
                             }

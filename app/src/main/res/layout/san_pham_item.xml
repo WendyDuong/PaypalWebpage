@@ -12,13 +12,13 @@
     android:id="@+id/card_view_catalog"
     android:layout_gravity="center_horizontal"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="15dp"
+    app:cardCornerRadius="10dp"
     app:cardElevation="10dp"
 
     >
 
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_margin="10dp"
+    android:layout_margin="5dp"
     android:background="@android:color/transparent"
     android:layout_width="match_parent"
     android:layout_height="match_parent">

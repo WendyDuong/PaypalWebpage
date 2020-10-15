@@ -198,7 +198,7 @@ public class DatHangActivity extends AppCompatActivity{
               final String diachi = editTextDiaChi.getText().toString().trim();
               if (ten.length() > 0 && sdt.length() >0 && email.length() >0 && diachi.length() > 0){
                   Intent intent = new Intent(Intent.ACTION_SENDTO);
-                  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                  intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                   intent.setData(Uri.parse("mailto:"));
                   intent.putExtra(Intent.EXTRA_SUBJECT, "Order from " + ten);
                   String noidungtinnhan="Họ và tên: " + ten +"\nSố điện thoại: " + sdt + "\nĐịa chỉ: " + diachi + "\n" + "Danh sách sản phẩm mua: \n";
@@ -219,6 +219,7 @@ public class DatHangActivity extends AppCompatActivity{
                   noidungtinnhan += ( "\nTổng tiền: " + decimalFormat.format(tongtien)+" Đ");
 
                   intent.putExtra(Intent.EXTRA_TEXT, noidungtinnhan);
+
                   if(intent.resolveActivity(getPackageManager())!=null)
                   {
                       for ( int i = 0; i< mDatHangs.size(); i++) {
@@ -233,10 +234,11 @@ public class DatHangActivity extends AppCompatActivity{
 
                       });
                           }
-                    //  getContentResolver().delete(SanPhamContract.SanPhamEntry.CONTENT_URI, null ,null);
+                      Intent intentMuaTiep = new Intent(DatHangActivity.this , MainActivity.class );
+                      startActivity(intentMuaTiep);
                       Toast.makeText(DatHangActivity.this, "Tiến hành gửi Email đặt hàng",Toast.LENGTH_SHORT).show();
                       startActivity(intent);
-                      finish();
+
                   }
 
               }

@@ -62,7 +62,7 @@ public class GioHangFragment extends Fragment {
         giohangRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         gioHangAdapter = new GioHangAdapter(getActivity());
         giohangRecyclerView.setAdapter(gioHangAdapter);
-        tvTongtien = rootView.findViewById(R.id.so_tien);
+        tvTongtien = rootView.findViewById(R.id.tong_tien);
 
 
         GioHangViewModel gioHangViewModel = ViewModelProviders.of(this).get(GioHangViewModel.class);
