@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <ImageView
+        android:id="@+id/anh_item_yeu_thich"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/anhbanhnho" />
+
+    <TextView
+        android:id="@+id/ten_item_yeu_thich"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bánh Sisi Mix Brand"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@id/anh_item_yeu_thich"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/khoi_luong_item_yeu_thich"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="Khối Lượng: 220g"
+        app:layout_constraintStart_toEndOf="@id/anh_item_yeu_thich"
+        app:layout_constraintTop_toBottomOf="@id/ten_item_yeu_thich" />
+
+    <TextView
+        android:id="@+id/gia_item_yeu_thich"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="50.000"
+        android:textColor="#fa3223"
+        app:layout_constraintStart_toEndOf="@id/anh_item_yeu_thich"
+        app:layout_constraintTop_toBottomOf="@id/khoi_luong_item_yeu_thich" />
+
+    <Button
+        android:id="@+id/button_them"
+        android:layout_width="144dp"
+        android:layout_height="17dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="36dp"
+        android:background="#D6AD7F"
+        android:text="Thêm vào giỏ hàng"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/anh_item_yeu_thich"
+        app:layout_constraintTop_toBottomOf="@+id/khoi_luong_item_yeu_thich" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
