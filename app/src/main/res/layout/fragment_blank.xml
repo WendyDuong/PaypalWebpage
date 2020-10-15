@@ -12,15 +12,19 @@
         android:id="@+id/viewflipper"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <GridView
-        android:id="@+id/gridview"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
         android:numColumns="3"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/viewflipper" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

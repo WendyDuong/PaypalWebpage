@@ -2,112 +2,160 @@ package com.example.android.demoapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.android.demoapp.R;
-import com.example.android.demoapp.adapter.GioHangAdapter;
+import com.example.android.demoapp.ViewModel.GioHangViewModel;
+import com.example.android.demoapp.database.YeuThichEntry;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.tabs.TabLayout;
+
+import java.util.List;
 
 public class GioHangActivity extends AppCompatActivity {
     private Toolbar toolbar;
-    public static TextView tvTongtien;
-    RecyclerView giohangRecyclerView;
-    GioHangAdapter gioAdapter;
-    Button buttonDatHang;
+    private    TabLayout tabLayout;
+    private  TabLayout.Tab tabYeuThich;
+    public static  BadgeDrawable badgeDrawableYeuthich;
+    List<YeuThichEntry> yeuThichEntries;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gio_hang_activity);
-        toolbar = findViewById(R.id.toolbar4);
+
+
+
+        toolbar = findViewById(R.id.toolbar_gio_hang_activity);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back);
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout_gio_hang_activity);
+
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               finish();
+             onBackPressed();
 
             }
         });
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.kinh_lup_icon));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.timdo_bar));
+        tabYeuThich = tabLayout.getTabAt(1);
+        badgeDrawableYeuthich = tabYeuThich.getOrCreateBadge();
 
-    /*    giohangRecyclerView = findViewById(R.id.recycler_view_gio_hang_2);
-        giohangRecyclerView.setHasFixedSize(true);
-        giohangRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        gioAdapter = new GioHangAdapter(this, MainActivity.mangGioHang);
-
-        new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(giohangRecyclerView);
-        giohangRecyclerView.setAdapter(gioAdapter);
-
-        tvTongtien = findViewById(R.id.so_tien_2);
-        buttonDatHang = findViewById(R.id.button_dat_hang_2);
-        eventUtil();
-
-
-
-        buttonDatHang.setOnClickListener(new View.OnClickListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onClick(View view) {
-                if (MainActivity.mangGioHang.size() > 0) {
-                    Intent intent = new Intent(GioHangActivity.this, DatHangActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(GioHangActivity.this, "Bạn chưa có sản phẩm nào trong giỏ hàng", Toast.LENGTH_SHORT).show();
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        Intent intent0 = new Intent(GioHangActivity.this, TimKiemActivity.class);
+                        startActivity(intent0);
+                        break;
+                    case 1:
+                        Intent intent1 = new Intent(GioHangActivity.this, YeuthichActivity.class);
+                       startActivity(intent1);
+                        break;
+                    default:
+                        break;
                 }
             }
-        });
-   */
 
-    }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
-
-
-
-
-
-        @Override
-        public boolean onCreateOptionsMenu(Menu menu) {
-            getMenuInflater().inflate(R.menu.menu_gio_hang, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-
-                case R.id.icon_tim_kiem:
-
-                    Intent intentTimKiem = new Intent(this, TimKiemActivity.class);
-                    startActivity(intentTimKiem);
-                    break;
-
-
-
-                case R.id.icon_yeu_thich:
-                    Intent intentYeuThich = new Intent(this, YeuthichActivity.class);
-                    startActivity(intentYeuThich);
-
-
-                break;
             }
 
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        Intent intent0 = new Intent(GioHangActivity.this, TimKiemActivity.class);
+                        startActivity(intent0);
+                        break;
+                    case 1:
+                        Intent intent1 = new Intent(GioHangActivity.this, YeuthichActivity.class);
+                        startActivity(intent1);
+                        break;
+                    default:
+                        break;
+                }
+            }
 
+        });
+        GioHangViewModel viewModel = ViewModelProviders.of(this).get(GioHangViewModel.class);
+        viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
+                yeuThichEntries = yeuThich;
+                if (yeuThichEntries.size()>0){
+                    badgeDrawableYeuthich.setVisible(true);
+                    badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
 
-            return super.onOptionsItemSelected(item);
+                }
+                else
+                    badgeDrawableYeuthich.setVisible(false);
 
-
-        }
-
-
-
-
+            }
+        });
     }
+
+
+
+/*
+    private void setupbadgeDrawableYeuThich() {
+        Cursor cursorSoSanPhamYeuThich = getContentResolver().query(SanPhamContract.SanPhamEntry.CONTENT_URI_2, null, null, null, null);
+        if (cursorSoSanPhamYeuThich.getCount() > 0) {
+            badgeDrawableYeuthich.setVisible(true);
+
+            badgeDrawableYeuthich.setNumber(cursorSoSanPhamYeuThich.getCount());
+        } else
+            badgeDrawableYeuthich.setVisible(false);
+
+        cursorSoSanPhamYeuThich.close();
+    }
+
+
+    @Override
+    protected void onRestart() {
+
+        setupbadgeDrawableYeuThich();
+        super.onRestart();
+    }
+*/
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

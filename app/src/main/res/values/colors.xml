@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#D6AD7F</color>
-    <color name="colorAccent">#03DAC5</color>
+        <color name="colorPrimary">#F44336</color>
+        <color name="red">#fa3223</color>
+        <color name="colorPrimaryDark">#D6AD7F</color>
+        <color name="colorAccent">#fa3223</color>
+        <color name="colorWhite">#FFFFFF</color>
     <color name="black_overlay">#66000000</color>
+        <color name="bgToolbar">#183545</color>
+        <color name="bgLogo">#f67122</color>
+        <color name="colorGray">#CCC</color>
+        <color name="colorFacebook">#4a6ea9</color>
+        <color name="colorGoogle">#da4835</color>
+        <color name="colorBlack">#000</color>
+        <color name="colorRed">#FFF62226</color>
+        <color name="tranparentBlack">#B2000000</color>
+        <color name="colorGreen">#38f734</color>
+        <color name="colorSliderInActive">#8095a1</color>
 </resources>

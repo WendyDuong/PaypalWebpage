@@ -7,24 +7,48 @@
     android:layout_height="match_parent">
 
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_gio_hang"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="100dp"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/button_dat_hang"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
-    <TextView
-        android:id="@+id/tong_tien"
+    <RelativeLayout
+
+        android:id="@+id/empty_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="188dp"
-        android:layout_marginBottom="17dp"
-        android:text="Tổng tiền: "
-        app:layout_constraintBottom_toTopOf="@id/button_dat_hang"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycler_view_gio_hang" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35000002">
+
+        <ImageView
+            android:id="@+id/empty_shelter_image"
+            android:layout_width="273dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/shopping_cart" />
+
+        <TextView
+            android:id="@+id/empty_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/empty_shelter_image"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="sans-serif-medium"
+            android:paddingTop="16dp"
+            android:text="@string/empty_view_title_gio_hang"
+            android:textAppearance="?android:textAppearanceMedium" />
+
+
+    </RelativeLayout>
 
     <Button
         android:id="@+id/button_dat_hang"
@@ -44,16 +68,13 @@
         android:id="@+id/so_tien"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
-        android:textColor="#fa3223"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="17dp"
+        android:textColor="#fa3223"
         app:layout_constraintBottom_toTopOf="@id/button_dat_hang"
-        app:layout_constraintStart_toEndOf="@id/tong_tien"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recycler_view_gio_hang" />
-
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

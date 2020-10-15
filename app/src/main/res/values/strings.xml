@@ -12,10 +12,22 @@
     <string name="ban30">Đã bán 30</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="facebook_app_id">1188433441539591</string>
+    <string name="fb_login_protocol_scheme">fb1188433441539591</string>
     <string name="thong_tin_ca_nhan">Thông tin cá nhân</string>
     <string name="hinh_thuc_thanh_toan">Hình Thức Thanh Toán</string>
     <string name="cac_don_hang">Các Đơn Hàng</string>
     <string name="dang_xuat">Đăng Xuất</string>
     <string name="dummy_button">Dummy Button</string>
+
+    <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
+    <string name="empty_view_title_gio_hang">Giỏ hàng của bạn đang trống...</string>
+    <string name="empty_view_tilte_yeu_thich">Danh sách yêu thích của bạn đang trống...</string>
+
+    <!-- Text in DetailActivity-->
+    <string name="chi_tiet_san_pham">Chi tiết sản phẩm</string>
+    <string name="mo_ta_san_pham">Mô tả sản phẩm</string>
+
+    <!-- Subtitle text for the empty view that prompts the user to add a pet [CHAR LIMIT=50] -->
     <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

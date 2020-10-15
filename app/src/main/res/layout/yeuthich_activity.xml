@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar4"
+        android:id="@+id/toolbar_yeu_thich_activity"
         android:layout_width="match_parent"
         app:title="Yêu Thích"
         app:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
@@ -19,11 +19,22 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp"/>
 
+    <com.google.android.material.tabs.TabLayout
+
+        android:id="@+id/tab_layout_yeu_thich_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#D6AD7F"
+        app:layout_constraintEnd_toEndOf="@id/toolbar_yeu_thich_activity"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabIndicatorColor="@android:color/transparent"
+        app:tabMode="fixed"/>
+
     <fragment
         android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.example.android.demoapp.fragment.FavoriteFragment"
+        android:name="com.example.android.demoapp.fragment.YeuThichFragment"
         android:id="@+id/frag_ment_yeu_thich"
     />
 

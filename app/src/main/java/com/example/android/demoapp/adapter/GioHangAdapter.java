@@ -1,119 +1,147 @@
 package com.example.android.demoapp.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.activity.DetailActivity;
-import com.example.android.demoapp.activity.MainActivity;
-import com.example.android.demoapp.fragment.CartFragment;
-import com.example.android.demoapp.model.GiohangItem;
-import com.example.android.demoapp.model.Sanpham;
-import com.squareup.picasso.Picasso;
+import com.example.android.demoapp.database.AppDatabase;
+import com.example.android.demoapp.database.GioHangEntry;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.List;
 
 public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHolderGioHang> {
-    Context mcontext;
-    ArrayList<GiohangItem> arrayGioHang;
-    String tensanpham, hinhanhsanpham, khoiluongsanpham, motasanpham;
-    int giasanpham,idsanpham, soluongsanpham,idnhacungcap;
+    Context context;
+    private AppDatabase mDb;
 
-    public GioHangAdapter(Context mcontext, ArrayList<GiohangItem> arrayGioHang) {
-        this.mcontext = mcontext;
-        this.arrayGioHang = arrayGioHang;
+    private List<GioHangEntry> gioHangs;
+    private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
+    private static final String EXTRA_HANG_ID = "extraHangId";
+
+    public GioHangAdapter(Context context) {
+        this.context = context;
     }
 
-    @Override
-    public int getItemCount() {
-        return arrayGioHang.size();
-    }
+
+
 
     @NonNull
     @Override
     public GioHangAdapter.viewHolderGioHang onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.gio_hang_item,null);
-        viewHolderGioHang gioHangItemHolder=new viewHolderGioHang(view);
-        return gioHangItemHolder;
+        View view = LayoutInflater.from(context).inflate(R.layout.gio_hang_item, parent, false);
+        return new viewHolderGioHang(view);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull GioHangAdapter.viewHolderGioHang holder, int position) {
-        GiohangItem giohangItem;
-        giohangItem = arrayGioHang.get(position);
-        holder.textViewTenItem.setText(giohangItem.getTensp());
-        holder.textViewKhoiLuongItem.setText(giohangItem.getKhoiluongsanpham());
-        DecimalFormat decimalFormat=new DecimalFormat("###,###,###");
-        holder.textViewGiaItem.setText(decimalFormat.format(giohangItem.getGiasp())+" Đ");
-        Picasso.get().load(giohangItem.getHinhsp()).into(holder.imageViewITem);
-        holder.textViewSoLuongItem.setText(giohangItem.getSoluongsp()+"");
+        GioHangEntry gioHangEntry = gioHangs.get(position);
 
-        int sl = arrayGioHang.get(position).getSoluongsp();
 
-        if(sl<2){
+        // Determine the values of the wanted data
+
+        String tensanpham = gioHangEntry.getTenSanPham();
+        String khoiluongsanpham = gioHangEntry.getKhoiLuong();
+        double giasanpham = gioHangEntry.getGiaSanPham();
+        int hinhanhsanpham = gioHangEntry.getHinhAnh();
+        int soluongsanpham = gioHangEntry.getSoLuong();
+        int idsanpham = gioHangEntry.getIdSanPham();
+
+        holder.textViewTenItem.setText(tensanpham);
+        holder.textViewKhoiLuongItem.setText(khoiluongsanpham);
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        holder.textViewGiaItem.setText(decimalFormat.format(giasanpham) + " Đ");
+        holder.imageViewITem.setImageResource(hinhanhsanpham);
+        holder.textViewSoLuongItem.setText(soluongsanpham + "");
+        holder.itemView.setTag(idsanpham);
+
+
+        if (soluongsanpham < 2) {
             holder.buttonGiam.setVisibility(View.INVISIBLE);
             holder.buttonTang.setVisibility(View.VISIBLE);
-        }
-        else if(sl>=2 && sl<20){
+        } else if (soluongsanpham >= 2 && soluongsanpham < 20) {
             holder.buttonGiam.setVisibility(View.VISIBLE);
             holder.buttonTang.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             holder.buttonTang.setVisibility(View.INVISIBLE);
             holder.buttonGiam.setVisibility(View.VISIBLE);
         }
-    }
 
-    @Override
-    public long getItemId(int i) {
-        return 0;
+
     }
 
 
-
-
-
-    public class viewHolderGioHang extends RecyclerView.ViewHolder  {
-        TextView textViewTenItem,textViewGiaItem,textViewKhoiLuongItem,textViewSoLuongItem;
+    class viewHolderGioHang extends RecyclerView.ViewHolder {
+        TextView textViewTenItem, textViewGiaItem, textViewKhoiLuongItem, textViewSoLuongItem;
         ImageView imageViewITem;
-        Button buttonGiam,buttonTang;
+        ImageButton buttonGiam, buttonTang;
+        ImageButton imageButton;
 
-        public viewHolderGioHang(View view){
+        public viewHolderGioHang(View view) {
             super(view);
             textViewTenItem = view.findViewById(R.id.ten_item_gio_hang);
             textViewGiaItem = view.findViewById(R.id.gia_item_gio_hang);
             textViewKhoiLuongItem = view.findViewById(R.id.khoi_luong_item_gio_hang);
             textViewSoLuongItem = view.findViewById(R.id.so_luong_item);
-            imageViewITem=view.findViewById(R.id.anh_item_gio_hang);
-            buttonGiam =view.findViewById(R.id.button_giam);
-            buttonTang =view.findViewById(R.id.button_tang);
+            imageViewITem = view.findViewById(R.id.anh_item_gio_hang);
+            buttonGiam = view.findViewById(R.id.button_giam);
+            buttonTang = view.findViewById(R.id.button_tang);
+            imageButton = view.findViewById(R.id.button_xoa_gio_hang);
 
-
-
-            view.setOnClickListener(new View.OnClickListener() {
+            imageViewITem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    idsanpham = arrayGioHang.get(getLayoutPosition()).getIdsp();
-                    tensanpham = arrayGioHang.get(getLayoutPosition()).getTensp();
-                    giasanpham = arrayGioHang.get(getLayoutPosition()).getGiasp();
-                    hinhanhsanpham = arrayGioHang.get(getLayoutPosition()).getHinhsp();
-                    khoiluongsanpham = arrayGioHang.get(getLayoutPosition()).getKhoiluongsanpham();
-                    motasanpham = arrayGioHang.get(getLayoutPosition()).getMotasp();
-                    idnhacungcap = arrayGioHang.get(getLayoutPosition()).getIdnhacungcap();
-                    Intent intentChiTiet= new Intent( mcontext, DetailActivity.class);
-                    intentChiTiet.putExtra("chitietsanpham", new Sanpham(idsanpham,tensanpham,giasanpham,hinhanhsanpham,motasanpham,idnhacungcap,khoiluongsanpham));
-                    intentChiTiet.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mcontext.startActivity(intentChiTiet);
+                    int idintent = gioHangs.get(getLayoutPosition()).getIdSanPham();
+                    int idHang = gioHangs.get(getLayoutPosition()).getIdHang();
+                    Intent intentChiTiet = new Intent(context, DetailActivity.class);
+                    intentChiTiet.putExtra(EXTRA_SANPHAM_ID, idintent);
+                    intentChiTiet.putExtra(EXTRA_HANG_ID, idHang);
+                    context.startActivity(intentChiTiet);
+                }
+            });
+
+
+            imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final AlertDialog.Builder buidlder = new AlertDialog.Builder(context);
+                    buidlder.setMessage("Bạn có chắc chắn muốn xóa sản phẩm này không ?");
+                    buidlder.setIcon(android.R.drawable.ic_delete);
+                    buidlder.setTitle("Xác nhận xóa");
+                    buidlder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    buidlder.setPositiveButton("Xác nhận", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int j) {
+                            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    mDb = AppDatabase.getInstance(context);
+                                    mDb.gioHangDao().deleteGioHang(gioHangs.get(getLayoutPosition()));
+                                }
+                            });
+                        }
+                    });
+                    AlertDialog alertDialog = buidlder.create();
+                    alertDialog.show();
 
                 }
             });
@@ -121,29 +149,29 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
             buttonTang.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    idsanpham = arrayGioHang.get(getLayoutPosition()).getIdsp();
-                    tensanpham = arrayGioHang.get(getLayoutPosition()).getTensp();
-                    giasanpham = arrayGioHang.get(getLayoutPosition()).getGiasp();
-                    hinhanhsanpham = arrayGioHang.get(getLayoutPosition()).getHinhsp();
-                    khoiluongsanpham = arrayGioHang.get(getLayoutPosition()).getKhoiluongsanpham();
-                    motasanpham = arrayGioHang.get(getLayoutPosition()).getMotasp();
 
-                    int soluongsanphamcu=Integer.parseInt(textViewSoLuongItem.getText().toString());
-                    int soluongsanphammoi=Integer.parseInt(textViewSoLuongItem.getText().toString());
-                    soluongsanphammoi = soluongsanphammoi + 1;
+                    final int id = gioHangs.get(getLayoutPosition()).getId();
+                    final int  idsanpham =   gioHangs.get(getLayoutPosition()).getIdSanPham();
+                    final String tensanpham = gioHangs.get(getLayoutPosition()).getTenSanPham();
+                    final double giasanpham = gioHangs.get(getLayoutPosition()).getGiaSanPham();
+                    final int  hinhanhsanpham = gioHangs.get(getLayoutPosition()).getHinhAnh();
+                    final String khoiluongsanpham = gioHangs.get(getLayoutPosition()).getKhoiLuong();
+                    final int idhang = gioHangs.get(getLayoutPosition()).getIdHang();
+                    final int soluongsanphamcu= Integer.parseInt(textViewSoLuongItem.getText().toString());
+                    final int soluongsanphammoi;
+                    soluongsanphammoi = soluongsanphamcu + 1;
                     textViewSoLuongItem.setText(soluongsanphammoi+"");
-                    MainActivity.mangGioHang.get(getLayoutPosition()).setSoluongsp(soluongsanphammoi);
-                    MainActivity.mangGioHang.get(getLayoutPosition()).setGiasp(giasanpham*soluongsanphammoi/soluongsanphamcu);
-                    final DecimalFormat decimalFormat=new DecimalFormat("###,###,###");
-                    textViewGiaItem.setText(decimalFormat.format(MainActivity.mangGioHang.get(getLayoutPosition()).getGiasp())+"Đ");
 
-                  long tongtien=0;
-                    for(int i=0;i<MainActivity.mangGioHang.size();i++){
-                        tongtien+=MainActivity.mangGioHang.get(i).getGiasp();
-                    }
-                    DecimalFormat decimalFormat1=new DecimalFormat("###,###,###");
-                   // GioHangActivity.tvTongtien.setText(decimalFormat1.format(tongtien)+" Đ");
-                    CartFragment.tvTongtien.setText(decimalFormat1.format(tongtien)+" Đ");
+                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            mDb = AppDatabase.getInstance(context);
+                            mDb.gioHangDao().updateGioHang(new GioHangEntry(id , idsanpham,tensanpham, giasanpham * soluongsanphammoi /soluongsanphamcu,  hinhanhsanpham,khoiluongsanpham,soluongsanphammoi,idhang ));
+
+                        }
+                    });
+
+
 
                     if(soluongsanphammoi>19){
                         buttonTang.setVisibility(View.INVISIBLE);
@@ -155,159 +183,134 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                         buttonGiam.setVisibility(View.VISIBLE);
                         textViewSoLuongItem.setText(soluongsanphammoi+"");
                     }
-                }}
-            );
+
+                   /* long tongtien=0;
+                    int sosanphammua= 0;
+
+                    Cursor cursorGiaTien = mcontext.getContentResolver().query(SanPhamContract.SanPhamEntry.CONTENT_URI,null,null,null,null);
+                    for(int i = 0; i< cursorGiaTien.getCount(); i++){
+                        cursorGiaTien.moveToPosition(i);
+                        tongtien+= cursorGiaTien.getDouble(cursorGiaTien.getColumnIndex(SanPhamContract.SanPhamEntry.COLUMN_GIA));
+                        sosanphammua = sosanphammua + cursorGiaTien.getInt(cursorGiaTien.getColumnIndex(SanPhamContract.SanPhamEntry.COLUMN_SOLUONG));
+
+                    }
+                    cursorGiaTien.close();
+
+                    DecimalFormat decimalFormat1=new DecimalFormat("###,###,###");
+                    // GioHangActivity.tvTongtien.setText(decimalFormat1.format(tongtien)+" Đ");
+                    GioHangFragment.tvTongtien.setText(decimalFormat1.format(tongtien)+" Đ");
+
+                    if (MainActivity.mainActivityOnCreat)
+
+                    {     MainActivity.badgeDrawableGioHang.setVisible(true);
+                        MainActivity.badgeDrawableGioHang.setNumber(sosanphammua);}
+
+                }}*/
+                }
+            });
             buttonGiam.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    idsanpham = arrayGioHang.get(getLayoutPosition()).getIdsp();
-                    tensanpham = arrayGioHang.get(getLayoutPosition()).getTensp();
-                    giasanpham = arrayGioHang.get(getLayoutPosition()).getGiasp();
-                    hinhanhsanpham = arrayGioHang.get(getLayoutPosition()).getHinhsp();
-                    khoiluongsanpham = arrayGioHang.get(getLayoutPosition()).getKhoiluongsanpham();
-                    motasanpham = arrayGioHang.get(getLayoutPosition()).getMotasp();
 
-                    int soluongsanphamcu=Integer.parseInt(textViewSoLuongItem.getText().toString());
-                    int soluongsanphammoi=Integer.parseInt(textViewSoLuongItem.getText().toString());
-                    soluongsanphammoi = soluongsanphammoi - 1;
+
+                    final int id = gioHangs.get(getLayoutPosition()).getId();
+                    final int idsanpham = gioHangs.get(getLayoutPosition()).getIdSanPham();
+                    final String tensanpham = gioHangs.get(getLayoutPosition()).getTenSanPham();
+                    final double giasanpham = gioHangs.get(getLayoutPosition()).getGiaSanPham();
+                    final int hinhanhsanpham = gioHangs.get(getLayoutPosition()).getHinhAnh();
+                    final String khoiluongsanpham = gioHangs.get(getLayoutPosition()).getKhoiLuong();
+                    final int soluongsanphamcu = Integer.parseInt(textViewSoLuongItem.getText().toString());
+                    final int idhang = gioHangs.get(getLayoutPosition()).getIdHang();
+                    final int soluongsanphammoi;
+                    soluongsanphammoi = soluongsanphamcu - 1;
                     textViewSoLuongItem.setText(soluongsanphammoi + "");
-                    MainActivity.mangGioHang.get(getLayoutPosition()).setSoluongsp(soluongsanphammoi);
-                    MainActivity.mangGioHang.get(getLayoutPosition()).setGiasp(giasanpham*soluongsanphammoi/soluongsanphamcu);
-                    final DecimalFormat decimalFormat=new DecimalFormat("###,###,###");
-                    textViewGiaItem.setText(decimalFormat.format(MainActivity.mangGioHang.get(getLayoutPosition()).getGiasp())+"Đ");
-                    long tongtien=0;
-                    for(int i=0;i<MainActivity.mangGioHang.size();i++){
-                        tongtien+=MainActivity.mangGioHang.get(i).getGiasp();
-                    }
-                    DecimalFormat decimalFormat1=new DecimalFormat("###,###,###");
-                   // GioHangActivity.tvTongtien.setText(decimalFormat1.format(tongtien)+" Đ");
-                    CartFragment.tvTongtien.setText(decimalFormat1.format(tongtien)+" Đ");
-                    if(soluongsanphammoi<2){
+
+
+                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            mDb = AppDatabase.getInstance(context);
+                            mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensanpham, giasanpham * soluongsanphammoi / soluongsanphamcu, hinhanhsanpham, khoiluongsanpham, soluongsanphammoi, idhang));
+
+                        }
+                    });
+
+
+                    if (soluongsanphammoi < 2) {
                         buttonGiam.setVisibility(View.INVISIBLE);
                         buttonTang.setVisibility(View.VISIBLE);
-                        textViewSoLuongItem.setText(soluongsanphammoi+"");
-                    }
-                    else{
+                        textViewSoLuongItem.setText(soluongsanphammoi + "");
+                    } else {
                         buttonTang.setVisibility(View.VISIBLE);
                         buttonGiam.setVisibility(View.VISIBLE);
-                        textViewSoLuongItem.setText(soluongsanphammoi+"");
+                        textViewSoLuongItem.setText(soluongsanphammoi + "");
                     }
+
+  /*                  long tongtien=0;
+                    int sosanphammua= 0;
+
+                    String[] projection2 = {
+                            SanPhamContract.SanPhamEntry.COLUMN_GIA,
+                            SanPhamContract.SanPhamEntry.COLUMN_SOLUONG,
+                    };
+
+                    Cursor cursorGiaTien = mcontext.getContentResolver().query(SanPhamContract.SanPhamEntry.CONTENT_URI,projection2,null,null,null);
+                    assert cursorGiaTien != null;
+                    for(int i = 0; i< cursorGiaTien.getCount(); i++){
+                        cursorGiaTien.moveToPosition(i);
+                        tongtien+= cursorGiaTien.getDouble(cursorGiaTien.getColumnIndex(SanPhamContract.SanPhamEntry.COLUMN_GIA));
+                        sosanphammua = sosanphammua + cursorGiaTien.getInt(cursorGiaTien.getColumnIndex(SanPhamContract.SanPhamEntry.COLUMN_SOLUONG));
+
+                    }
+                    cursorGiaTien.close();
+
+                    DecimalFormat decimalFormat1=new DecimalFormat("###,###,###");
+                    GioHangFragment.tvTongtien.setText(decimalFormat1.format(tongtien)+" Đ");
+
+                    if (MainActivity.mainActivityOnCreat)
+
+                    {     MainActivity.badgeDrawableGioHang.setVisible(true);
+                        MainActivity.badgeDrawableGioHang.setNumber(sosanphammua);}
+
+
+                }*/
                 }
             });
 
 
-
-
-
-
-
         }
+    }
 
+
+
+
+
+
+    @Override
+    public int getItemCount() {
+        if (gioHangs == null)
+            return 0;
+
+        return gioHangs.size();
+    }
+
+
+    public List<GioHangEntry> getGioHangs() {
+        return gioHangs;
+    }
+
+    public  void setGioHangs (List<GioHangEntry> gioHangs){
+        this.gioHangs = gioHangs;
+        notifyDataSetChanged();
 
     }
+
+
 }
 
 
 
 
-   /* @Override
-    public View getView(final int i, View view, ViewGroup viewGroup) {
-
-        if (view == null )
-            LayoutInflater layoutInflater= (LayoutInflater) mcontext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = layoutInflater.inflate(R.layout.gio_hang_item,null);
-        final TextView textViewTenItem,textViewGiaItem,textViewKhoiLuongItem,textViewSoLuongItem;
-        ImageView imageViewITem;
-        final Button buttonGiam,buttonTang;
-        textViewTenItem=view.findViewById(R.id.ten_item_gio_hang);
-        textViewGiaItem=view.findViewById(R.id.gia_item_gio_hang);
-        textViewKhoiLuongItem=view.findViewById(R.id.khoi_luong_item_gio_hang);
-        imageViewITem=view.findViewById(R.id.anh_item_gio_hang);
-        buttonGiam =view.findViewById(R.id.button_giam);
-        buttonTang =view.findViewById(R.id.button_tang);
-        textViewSoLuongItem=view.findViewById(R.id.so_luong_item);
-        textViewTenItem.setText(arrayGioHang.get(i).getTensp());
-        textViewKhoiLuongItem.setText(arrayGioHang.get(i).getKhoiluongsanpham());
-        DecimalFormat decimalFormat=new DecimalFormat("###,###,###");
-        textViewGiaItem.setText(decimalFormat.format(arrayGioHang.get(i).getGiasp())+" Đ");
-        Log.d("test", String.valueOf(arrayGioHang.size()));
-        Log.d("test",arrayGioHang.get(i).getHinhsp());
-        Picasso.get().load(arrayGioHang.get(i).getHinhsp()).centerCrop().resize(150,150).into(imageViewITem);
-        textViewSoLuongItem.setText(arrayGioHang.get(i).getSoluongsp()+"");
-        final int sl= Integer.parseInt(textViewSoLuongItem.getText().toString());
-        final int slmoi=sl;
-
-        if(sl<2){
-            buttonGiam.setVisibility(View.INVISIBLE);
-            buttonTang.setVisibility(View.VISIBLE);
-        }
-        else if(sl>=2 && sl<20){
-            buttonGiam.setVisibility(View.VISIBLE);
-            buttonTang.setVisibility(View.VISIBLE);
-        }
-        else{
-            buttonTang.setVisibility(View.INVISIBLE);
-            buttonGiam.setVisibility(View.VISIBLE);
-        }
-
-        buttonTang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int sl1=Integer.parseInt(textViewSoLuongItem.getText().toString());
-                int slmoi=Integer.parseInt(textViewSoLuongItem.getText().toString());
-                slmoi+=1;
-                textViewSoLuongItem.setText(slmoi+"");
-                MainActivity.mangGioHang.get(i).setSoluongsp(slmoi);
-                MainActivity.mangGioHang.get(i).setGiasp(MainActivity.mangGioHang.get(i).getGiasp()*slmoi/(sl1));
-                textViewGiaItem.setText(MainActivity.mangGioHang.get(i).getGiasp()+"");
-                long tongtien=0;
-                for(int i=0;i<MainActivity.mangGioHang.size();i++){
-                    tongtien+=MainActivity.mangGioHang.get(i).getGiasp();
-                }
-                DecimalFormat decimalFormat1=new DecimalFormat("###,###,###");
-                GioHangActivity.tvTongtien.setText(decimalFormat1.format(tongtien)+" Đ");
-                textViewGiaItem.setText(decimalFormat1.format(tongtien)+" Đ");
-                if(slmoi>19){
-                    buttonTang.setVisibility(View.INVISIBLE);
-                    buttonGiam.setVisibility(View.VISIBLE);
-                    textViewSoLuongItem.setText(slmoi+"");
-                }
-                else{
-                    buttonTang.setVisibility(View.VISIBLE);
-                    buttonGiam.setVisibility(View.VISIBLE);
-                    textViewSoLuongItem.setText(slmoi+"");
-                }
-            }
-        });
-        buttonGiam.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int sl1=Integer.parseInt(textViewSoLuongItem.getText().toString());
-                int slmoi=Integer.parseInt(textViewSoLuongItem.getText().toString());
-                slmoi-=1;
-                textViewSoLuongItem.setText(slmoi+"");
-                MainActivity.mangGioHang.get(i).setSoluongsp(slmoi);
-                MainActivity.mangGioHang.get(i).setGiasp(MainActivity.mangGioHang.get(i).getGiasp()*slmoi/(sl1));
-                textViewGiaItem.setText(MainActivity.mangGioHang.get(i).getGiasp()+"");
-                long tongtien=0;
-                for(int i=0;i<MainActivity.mangGioHang.size();i++){
-                    tongtien+=MainActivity.mangGioHang.get(i).getGiasp();
-                }
-                DecimalFormat decimalFormat1=new DecimalFormat("###,###,###");
-                GioHangActivity.tvTongtien.setText(decimalFormat1.format(tongtien)+" Đ");
-                textViewGiaItem.setText(decimalFormat1.format(tongtien)+" Đ");
-                if(slmoi<2){
-                    buttonGiam.setVisibility(View.INVISIBLE);
-                    buttonTang.setVisibility(View.VISIBLE);
-                    textViewSoLuongItem.setText(slmoi+"");
-                }
-                else{
-                    buttonTang.setVisibility(View.VISIBLE);
-                    buttonGiam.setVisibility(View.VISIBLE);
-                    textViewSoLuongItem.setText(slmoi+"");
-                }
-            }
-        });
 
 
 
@@ -315,5 +318,4 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
 
 
 
-        return view;
-    }*/
+

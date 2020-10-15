@@ -6,14 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ViewFlipper;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.demoapp.R;
-import com.example.android.demoapp.adapter.MainGridViewAdapter;
+import com.example.android.demoapp.adapter.MainAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,8 @@ public class MainFragment extends Fragment {
 
 
     ViewFlipper viewFlipper;
-    GridView gridView;
-
-    private static final List<Integer> ImageList = new ArrayList<Integer>() {{
+    RecyclerView recyclerViewMain;
+    public static final List<Integer> ImageList = new ArrayList<Integer>() {{
         add(R.drawable.hit);
         add(R.drawable.merc);
         add(R.drawable.penny);
@@ -50,10 +50,12 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_blank, container, false);
         viewFlipper = rootView.findViewById(R.id.viewflipper);
-        gridView = rootView.findViewById(R.id.gridview);
+        recyclerViewMain = rootView.findViewById(R.id.recycler_view_main);
         actionViewFlipper();
-        MainGridViewAdapter mainAdapter = new MainGridViewAdapter(getActivity(), ImageList);
-        gridView.setAdapter(mainAdapter);
+        MainAdapter mainAdapter = new MainAdapter(getActivity(), ImageList);
+        recyclerViewMain.setHasFixedSize(true);
+        recyclerViewMain.setLayoutManager(new GridLayoutManager(getActivity(),3));
+        recyclerViewMain.setAdapter(mainAdapter);
 
 
         return rootView;

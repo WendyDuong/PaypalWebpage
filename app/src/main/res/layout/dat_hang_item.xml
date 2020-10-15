@@ -1,35 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="10dp"
+        android:layout_margin="10dp"
+        >
+<androidx.constraintlayout.widget.ConstraintLayout
+
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="150dp">
 
     <ImageView
         android:id="@+id/image_view_item_dat"
         android:layout_width="121dp"
         android:layout_height="109dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.512"
         app:srcCompat="@drawable/anhbanhnho" />
 
     <TextView
         android:id="@+id/ten_item_dat"
         android:layout_width="153dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:singleLine="false"
         android:text="Bánh Sisi Mix"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/image_view_item_dat"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/image_view_item_dat" />
 
     <TextView
         android:id="@+id/khoiluong_item_dat"
         android:layout_width="wrap_content"
+        android:layout_marginTop="5dp"
         android:layout_height="wrap_content"
         android:text="300g"
+        android:layout_marginStart="10dp"
         app:layout_constraintStart_toEndOf="@+id/image_view_item_dat"
         app:layout_constraintTop_toBottomOf="@+id/ten_item_dat" />
 
@@ -37,22 +56,51 @@
         android:id="@+id/soluong_item_dat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="31dp"
-        android:text="x3"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="66dp"
+        android:layout_marginEnd="17dp"
+        android:text="3x"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/image_view_item_dat"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/gia_item_dat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="47dp"
-        android:layout_marginEnd="31dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="4dp"
         android:text="150.000đ"
-        android:textColor="#fa3223"
 
+        android:textColor="#fa3223"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/soluong_item_dat" />
+        app:layout_constraintTop_toBottomOf="@+id/soluong_item_dat"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
+        android:text="Tổng cộng: "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/gia_item_dat" />
+
+    <TextView
+        android:id="@+id/text_view_don_gia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:text="50.000Đ"
+        android:textColor="#fa3223"
+        app:layout_constraintStart_toEndOf="@+id/image_view_item_dat"
+        app:layout_constraintTop_toBottomOf="@+id/khoiluong_item_dat" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</FrameLayout>

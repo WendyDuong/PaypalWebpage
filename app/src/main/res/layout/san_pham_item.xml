@@ -1,29 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    >
+<androidx.cardview.widget.CardView
+    android:layout_width="wrap_content"
+    android:id="@+id/card_view_catalog"
+    android:layout_gravity="center_horizontal"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="10dp"
+
     >
 
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_margin="5dp"
+    android:layout_margin="10dp"
+    android:background="@android:color/transparent"
     android:layout_width="match_parent"
-    android:background="#f4ecd3"
     android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/imageView6"
-        app:layout_constraintTop_toBottomOf="@+id/giasp"
+        app:layout_constraintTop_toBottomOf="@+id/giasanpham"
         app:srcCompat="@drawable/saodanhgia" />
 
     <ImageView
-        android:id="@+id/anhsp"
+        android:id="@+id/anhsanpham"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_margin="5dp"
@@ -33,23 +43,23 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tensp"
+        android:id="@+id/tensanpham"
         android:layout_width="wrap_content"
         android:layout_margin="5dp"
 
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/anhsp"
+        app:layout_constraintTop_toBottomOf="@id/anhsanpham"
         android:text="Banh Sisi Mix"/>
 
     <TextView
-        android:id="@+id/giasp"
+        android:id="@+id/giasanpham"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:textColor="#fa3223"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tensp"
+        app:layout_constraintTop_toBottomOf="@id/tensanpham"
         android:text="50.000 "/>
 
     <ImageView
@@ -61,51 +71,58 @@
         android:layout_height="32dp"
         android:src="@drawable/timden24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/giasp" />
+        app:layout_constraintTop_toBottomOf="@id/giasanpham" />
 
     <ImageView
         android:id="@+id/saodanhgia"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/da_ban"
         app:layout_constraintStart_toEndOf="@+id/image_view_tim"
-        app:layout_constraintTop_toBottomOf="@+id/giasp"
         app:srcCompat="@drawable/saodanhgia" />
 
     <ImageView
 
         android:id="@+id/imageView5"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/saodanhgia"
-        app:layout_constraintTop_toBottomOf="@+id/giasp"
+        app:layout_constraintTop_toBottomOf="@+id/giasanpham"
         app:srcCompat="@drawable/saodanhgia" />
 
     <ImageView
         android:id="@+id/imageView6"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imageView7"
-        app:layout_constraintTop_toBottomOf="@+id/giasp"
+        app:layout_constraintTop_toBottomOf="@+id/giasanpham"
         app:srcCompat="@drawable/saodanhgia" />
 
     <ImageView
         android:id="@+id/imageView7"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/imageView5"
-        app:layout_constraintTop_toBottomOf="@+id/giasp"
+        app:layout_constraintTop_toBottomOf="@+id/giasanpham"
         app:srcCompat="@drawable/saodanhgia" />
 
     <TextView
         android:id="@+id/da_ban"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="36dp"
         android:text="Đã bán 100"
         app:layout_constraintStart_toEndOf="@+id/image_view_tim"
         app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-</LinearLayout>
+</androidx.cardview.widget.CardView>
+</FrameLayout>

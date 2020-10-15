@@ -10,6 +10,8 @@
 
     <LinearLayout
         android:id="@+id/layout_dat_hang"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -17,13 +19,15 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
+            android:imeOptions="actionDone"
+
             android:id="@+id/editText_ten"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             android:layout_marginBottom="1dp"
             android:ems="10"
-            android:hint="Họ và tên:"
+            android:hint="Họ và tên"
             android:inputType="textPersonName" />
 
         <EditText
@@ -32,6 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:ems="10"
+            android:imeOptions="actionDone"
+
             android:hint="Địa chỉ"
             android:inputType="textPersonName" />
 
@@ -41,6 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:ems="10"
+            android:imeOptions="actionDone"
             android:hint="Email"
             android:inputType="textPersonName" />
 
@@ -49,28 +56,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            style="@style/EditorFieldStyle"
+            android:imeOptions="actionDone"
             android:hint="Số điện thoại"
             android:inputType="number" />
     </LinearLayout>
-    <ListView
-        android:id="@+id/list_view_dat_hang"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_dat_hang"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="400dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="5dp"
        />
+
+
+    <TextView
+        android:id="@+id/tong_so_tien_hang_dat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100.000đ"
+        android:textColor="#fa3223"
+        android:layout_marginStart="10dp"
+        />
+
+
 <LinearLayout
-    android:layout_marginTop="20dp"
+    android:layout_marginTop="10dp"
     android:layout_width="match_parent"
     android:layout_height="60dp"
+    android:layout_marginBottom="10dp"
     android:orientation="horizontal">
     <Button
         android:id="@+id/mua_tiep_button"
         android:background="#F44336"
         android:gravity="center"
         android:layout_marginLeft="10dp"
-
         android:layout_weight="1"
+        android:layout_marginBottom="5dp"
         android:text="Tiếp tục mua"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
@@ -85,6 +106,7 @@
         android:background="#F44336"
         android:gravity="center"
         android:text="đặt hàng"
+        android:layout_marginBottom="5dp"
         android:layout_weight="1"
         android:textColor="#FFFFFF"
         android:textSize="20sp" />

@@ -13,7 +13,7 @@ import com.example.android.demoapp.R;
 import com.example.android.demoapp.activity.TimKiemActivity;
 
 
-public class FindFragment extends Fragment {
+public class TimKiemFragment extends Fragment {
 
   Button buttonTimKiem;
 

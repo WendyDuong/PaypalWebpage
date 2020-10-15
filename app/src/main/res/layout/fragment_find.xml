@@ -5,24 +5,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.FindFragment">
+    tools:context=".fragment.TimKiemFragment">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
 
-    <EditText
+    <Button
+        android:id="@+id/button_tim_kiem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:inputType="textPersonName"
+        android:padding="5dp"
+        android:layout_margin="20dp"
         android:ems="10"
-        android:hint="  Tìm kiếm"
-        android:drawableStart="@drawable/kinhlupvang"
+        android:text="Tìm kiếm sản phẩm của bạn"
+        android:drawableStart="@drawable/kinhlupvangcustom"
         android:background="@drawable/background_edit_text"
-        android:drawableEnd="@drawable/micro"
+        android:drawableEnd="@drawable/mixvangcustom"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

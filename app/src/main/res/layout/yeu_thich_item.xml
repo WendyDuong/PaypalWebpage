@@ -1,36 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+
+<androidx.cardview.widget.CardView
+ android:layout_height="wrap_content"
+ android:layout_width="match_parent"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="10dp"
+    android:layout_margin="10dp"
+    >
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="150dp"
     >
 
     <ImageView
         android:id="@+id/anh_item_yeu_thich"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="40dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginStart="16dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/anhbanhnho" />
 
     <TextView
         android:id="@+id/ten_item_yeu_thich"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:text="Bánh Sisi Mix Brand"
         android:textSize="18sp"
+        android:layout_marginStart="10dp"
+        android:singleLine="false"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/anh_item_yeu_thich"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/anh_item_yeu_thich" />
 
     <TextView
         android:id="@+id/khoi_luong_item_yeu_thich"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
         android:text="Khối Lượng: 220g"
         app:layout_constraintStart_toEndOf="@id/anh_item_yeu_thich"
         app:layout_constraintTop_toBottomOf="@id/ten_item_yeu_thich" />
@@ -40,20 +59,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="50.000"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
         android:textColor="#fa3223"
         app:layout_constraintStart_toEndOf="@id/anh_item_yeu_thich"
         app:layout_constraintTop_toBottomOf="@id/khoi_luong_item_yeu_thich" />
 
     <Button
         android:id="@+id/button_them"
-        android:layout_width="144dp"
-        android:layout_height="17dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="36dp"
-        android:background="#D6AD7F"
-        android:text="Thêm vào giỏ hàng"
+        android:layout_width="157dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginBottom="18dp"
+        android:background="@drawable/custom_button"
+        android:text="Thêm vào giỏ"
         android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/anh_item_yeu_thich"
         app:layout_constraintTop_toBottomOf="@+id/khoi_luong_item_yeu_thich" />
 
+    <ImageButton
+        android:id="@+id/button_xoa_yeu_thich"
+        android:layout_width="54dp"
+        android:layout_height="70dp"
+
+        android:background="@android:color/transparent"
+        android:src="@drawable/delete"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toTopOf="@+id/button_them"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
+</FrameLayout>

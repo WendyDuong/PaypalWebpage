@@ -2,143 +2,250 @@ package com.example.android.demoapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.activity.DetailActivity;
-import com.example.android.demoapp.activity.MainActivity;
-import com.example.android.demoapp.model.Sanpham;
-import com.squareup.picasso.Picasso;
+import com.example.android.demoapp.database.AppDatabase;
+import com.example.android.demoapp.database.SanPhamEntry;
+import com.example.android.demoapp.database.YeuThichEntry;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.List;
 
-public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHolder>{
+public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHolder> {
+    private List<YeuThichEntry> mYeuThichEntries;
+    private AppDatabase mDb;
+
     Context context;
-    ArrayList<Sanpham>  arrayListSanpham;
-    String tensanpham, hinhanhsanpham, khoiluongsanpham, motasanpham;
-    int giasanpham,idsanpham,idnhacungcap;
-    YeuthichAdapter yeuthichAdapter;
+    private List<SanPhamEntry> sanPhams;
+    private int iD;
+    private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
+    private int idHang;
+    private static final String EXTRA_HANG_ID = "extraHangId";
 
-    public CatalogAdapter(Context context, ArrayList<Sanpham> arrayListSanpham) {
+    public CatalogAdapter(Context context) {
         this.context = context;
-        this.arrayListSanpham = arrayListSanpham;
     }
 
     @NonNull
     @Override
     public itemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.san_pham_item,null);
-        itemHolder itemHolder=new itemHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.san_pham_item, null);
+        itemHolder itemHolder = new itemHolder(view);
         return itemHolder;
     }
 
     @Override
-    public void onBindViewHolder(itemHolder holder, int position) {
-        Sanpham sanPham ;
-        sanPham=arrayListSanpham.get(position);
-        holder.tvTensanpham.setText(sanPham.getMtensanpham());
-        DecimalFormat decimalFormat=new DecimalFormat("###,###,###");
-        holder.tvGiasanpham.setText(decimalFormat.format(sanPham.getMgiasanpham())+" Đ");
-        Picasso.get().load(sanPham.getMhinhanhsanpham()).into(holder.imgHinhAnhSanpham);
-        idsanpham = sanPham.getMidsanpham();
-        if(MainActivity.mangYeuthich.size() > 0)
-        { boolean exit = false;
-        for (int vitritim = 0; vitritim < MainActivity.mangYeuthich.size(); vitritim++) {
-            if (MainActivity.mangYeuthich.get(vitritim).getMidsanpham() == idsanpham){
-                holder.imageViewTim.setImageResource(R.drawable.timdo24);
-            exit = true;}}
-            if(exit == false)
-                holder.imageViewTim.setImageResource(R.drawable.timden24);
+    public void onBindViewHolder(final itemHolder holder, final int position) {
+        SanPhamEntry sanPham = sanPhams.get(position);
+        holder.tvTensanpham.setText(sanPham.getTenSanPham());
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        holder.tvGiasanpham.setText("Giá :" + decimalFormat.format(sanPham.getGiaSanPham()) + " Đ");
+        holder.imgHinhAnhSanpham.setImageResource(sanPham.getHinhAnh());
+        final int idsanpham = sanPham.getIdSanPham();
+
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) holder.cardViewCatalog.getLayoutParams();
+        int left = dptoPx(24);
+        int top = dptoPx(12);
+        int right = dptoPx(24);
+        int bottom = dptoPx(12);
+
+        boolean isFirst2Iteme = position < 2;
+        boolean isLast2tems = position > getItemCount() - 2;
+        if (isFirst2Iteme) {
+            top = dptoPx(24);
         }
-        else
-            holder.imageViewTim.setImageResource(R.drawable.timden24);
+        if (isLast2tems) {
+            bottom = dptoPx(24);
         }
 
+        boolean isLeftSide = (position + 1) % 2 != 0;
+        boolean isRightSide = !isLeftSide;
+
+        if (isLeftSide) {
+            right = dptoPx(12);
+        }
+        if (isRightSide) {
+            left = dptoPx(12);
+        }
+
+        layoutParams.setMargins(left, top, right, bottom);
+        holder.cardViewCatalog.setLayoutParams(layoutParams);
+
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb = AppDatabase.getInstance(context);
+                mYeuThichEntries = mDb.yeuThichDao().loadDanhSachYeuThich();
+                boolean exit = false;
+
+                if (mYeuThichEntries.size() > 0) {
+                    for (int vitritim = 0; vitritim < mYeuThichEntries.size(); vitritim++) {
+                        if (mYeuThichEntries.get(vitritim).getIdSanPham() == idsanpham) {
+                            holder.imageViewTim.setImageResource(R.drawable.timdo24);
+                            exit = true;
+                        }
+                    }
+
+                    if (exit == false)
+                        holder.imageViewTim.setImageResource(R.drawable.timden24);
+
+
+                } else
+                    holder.imageViewTim.setImageResource(R.drawable.timden24);
+            }
+        });
+
+
+    }
+
+
+    private int dptoPx(int dp) {
+        float px = dp + context.getResources().getDisplayMetrics().density;
+        return (int) px;
+
+    }
 
     @Override
     public int getItemCount() {
-        return arrayListSanpham.size();
+        if (sanPhams == null)
+            return 0;
+
+        return sanPhams.size();
     }
 
-    public class itemHolder extends RecyclerView.ViewHolder{
-        public ImageView imgHinhAnhSanpham;
+
+    public List<SanPhamEntry> getSanPhams() {
+        return sanPhams;
+    }
+
+    public void setSanPhams(List<SanPhamEntry> sanPhams) {
+        this.sanPhams = sanPhams;
+        notifyDataSetChanged();
+
+    }
+
+    public class itemHolder extends RecyclerView.ViewHolder {
+        CardView cardViewCatalog;
+        public ImageView imgHinhAnhSanpham, imageViewTim;
         public TextView tvTensanpham;
         public TextView tvGiasanpham;
         public TextView tvDaban;
-        public ImageView imageViewTim;
+
         public itemHolder(View itemView) {
             super(itemView);
-            imgHinhAnhSanpham=itemView.findViewById(R.id.anhsp);
-            tvTensanpham=itemView.findViewById(R.id.tensp);
-            tvGiasanpham=itemView.findViewById(R.id.giasp);
+            imgHinhAnhSanpham = itemView.findViewById(R.id.anhsanpham);
+            tvTensanpham = itemView.findViewById(R.id.tensanpham);
+            tvGiasanpham = itemView.findViewById(R.id.giasanpham);
             tvDaban = itemView.findViewById(R.id.da_ban);
+            cardViewCatalog = itemView.findViewById(R.id.card_view_catalog);
             imageViewTim = itemView.findViewById(R.id.image_view_tim);
-        itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent=new Intent(context, DetailActivity.class);
-                    intent.putExtra("chitietsanpham",arrayListSanpham.get(getLayoutPosition()));
-                    Toast.makeText(context, arrayListSanpham.get(getLayoutPosition()).getMtensanpham(), Toast.LENGTH_SHORT).show();
-                    context.startActivity(intent);
 
+
+            imgHinhAnhSanpham.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SanPhamEntry sanPham = sanPhams.get(getLayoutPosition());
+                    iD = sanPham.getIdSanPham();
+                    idHang = sanPham.getIdHang();
+                    Log.i("MainGridViewAdapter", Integer.toString(iD));
+
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra(EXTRA_SANPHAM_ID, iD);
+                    intent.putExtra(EXTRA_HANG_ID, idHang);
+                    context.startActivity(intent);
 
                 }
             });
-        imageViewTim.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (imageViewTim.getDrawable().getConstantState() == context.getResources().getDrawable(R.drawable.timden24).getConstantState()) {
-                    imageViewTim.setImageResource(R.drawable.timdo24);
-                    idsanpham = arrayListSanpham.get(getLayoutPosition()).getMidsanpham();
-                    tensanpham = arrayListSanpham.get(getLayoutPosition()).getMtensanpham();
-                    giasanpham = arrayListSanpham.get(getLayoutPosition()).getMgiasanpham();
-                    hinhanhsanpham = arrayListSanpham.get(getLayoutPosition()).getMhinhanhsanpham();
-                    motasanpham = arrayListSanpham.get(getLayoutPosition()).getMmotasanpham();
-                    khoiluongsanpham = arrayListSanpham.get(getLayoutPosition()).getKhoiluongsanpham();
-                    idnhacungcap = arrayListSanpham.get(getLayoutPosition()).getIdnhacungcap();
 
-                    /*for (int i = 0; i < MainActivity.mangGioHang.size(); i++) {
-                        if (MainActivity.mangGioHang.get(i).getIdsp() == idsanpham) {
-                            Toast.makeText(context, "Sản Phẩm đã có trong danh sách yêu thích",Toast.LENGTH_SHORT).show();
+            imageViewTim.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (imageViewTim.getDrawable().getConstantState() == context.getResources().getDrawable(R.drawable.timden24).getConstantState()) {
+                        final int idhang = sanPhams.get(getLayoutPosition()).getIdHang();
+                        final int idsanpham = sanPhams.get(getLayoutPosition()).getIdSanPham();
+                        final String tensanpham = sanPhams.get(getLayoutPosition()).getTenSanPham();
+                        final double giasanpham = sanPhams.get(getLayoutPosition()).getGiaSanPham();
+                        final int hinhanhsanpham = sanPhams.get(getLayoutPosition()).getHinhAnh();
+                        final String khoiluongsanpham = sanPhams.get(getLayoutPosition()).getKhoiLuong();
+                        imageViewTim.setImageResource(R.drawable.timdo24);
+
+
+
+                            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mDb = AppDatabase.getInstance(context);
+                                    mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham, hinhanhsanpham, khoiluongsanpham,idhang ));
+                                    Log.d("checkidsanphaminsert", " "+ idsanpham);
+
+                                }
+                            });
+
+
                         }
-                        else   */
-                     MainActivity.mangYeuthich.add(new Sanpham(idsanpham,tensanpham,giasanpham,hinhanhsanpham, motasanpham,idnhacungcap, khoiluongsanpham));
+                     else {
+                        final int idsanpham = sanPhams.get(getLayoutPosition()).getIdSanPham();
 
-                    yeuthichAdapter = new YeuthichAdapter(context, MainActivity.mangYeuthich);
-                    yeuthichAdapter.notifyDataSetChanged();
+                        imageViewTim.setImageResource(R.drawable.timden24);
 
-                }else{
-                    idsanpham = arrayListSanpham.get(getLayoutPosition()).getMidsanpham();
+                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                mDb = AppDatabase.getInstance(context);
+                                mYeuThichEntries = mDb.yeuThichDao().loadDanhSachYeuThich();
+                                for (int vitrixoa = 0; vitrixoa < mYeuThichEntries.size(); vitrixoa++) {
+                                    int idsanphamxoa = mYeuThichEntries.get(vitrixoa).getIdSanPham() ;
+                                    if (idsanphamxoa == idsanpham) {
+                                        mDb.yeuThichDao().deleteYeuThich(mYeuThichEntries.get(vitrixoa));
 
-                    Toast.makeText(context, ""+idsanpham, Toast.LENGTH_SHORT).show();
-
-                    imageViewTim.setImageResource(R.drawable.timden24);
-                    for (int vitrixoa = 0; vitrixoa < MainActivity.mangYeuthich.size(); vitrixoa++) {
-                        if (MainActivity.mangYeuthich.get(vitrixoa).getMidsanpham() == idsanpham)
-                    {MainActivity.mangYeuthich.remove(vitrixoa);}
-                        yeuthichAdapter = new YeuthichAdapter(context, MainActivity.mangYeuthich);
-                        yeuthichAdapter.notifyDataSetChanged();
-
+                                    }
+                                }
+                            }
+                        });
 
                     }
 
+                }
 
-
-
-            }
-        }});
-
-
-
+            });
         }
+
+
+
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
