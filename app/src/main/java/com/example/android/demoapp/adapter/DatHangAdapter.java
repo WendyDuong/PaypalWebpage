@@ -60,7 +60,7 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
         holder.textViewGiaItem.setText(decimalFormat.format(giasanpham) + " Đ");
         holder.textViewDonGia.setText(decimalFormat.format(giaDonViSanPham) + " Đ");
         holder.imageViewITem.setImageResource(hinhanhsanpham);
-        holder.textViewSoLuongItem.setText(soluongsanpham + "");
+        holder.textViewSoLuongItem.setText(soluongsanpham + "x");
         holder.itemView.setTag(idsanpham);
 
 
