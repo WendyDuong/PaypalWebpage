@@ -73,13 +73,13 @@
         android:id="@+id/tong_so_tien_hang_dat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="100.000đ"
-        android:textColor="#fa3223"
         android:layout_marginStart="10dp"
-        />
+        android:layout_gravity="end"
+        android:layout_marginEnd="10dp"
+        android:text="100.000đ"
+        android:textColor="#fa3223" />
 
-
-<LinearLayout
+    <LinearLayout
     android:layout_marginTop="10dp"
     android:layout_width="match_parent"
     android:layout_height="60dp"
