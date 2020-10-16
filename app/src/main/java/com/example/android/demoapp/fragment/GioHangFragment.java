@@ -65,8 +65,8 @@ public class GioHangFragment extends Fragment {
         tvTongtien = rootView.findViewById(R.id.tong_tien);
 
 
-        GioHangViewModel gioHangViewModel = ViewModelProviders.of(this).get(GioHangViewModel.class);
-        gioHangViewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
+        GioHangViewModel gioHangViewModel = ViewModelProviders.of(getActivity()).get(GioHangViewModel.class);
+        gioHangViewModel.getGioHang().observe(getActivity(), new Observer<List<GioHangEntry>>() {
             @Override
             public void onChanged(@Nullable List<GioHangEntry> gioHangEntries) {
                     mGiohangs = gioHangEntries;
@@ -75,6 +75,7 @@ public class GioHangFragment extends Fragment {
                     emptyView.setVisibility(View.VISIBLE);
 
                 }else {
+                    tvTongtien.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.INVISIBLE);
                     for (int i = 0; i < mGiohangs.size(); i++) {
                         tongtien = mGiohangs.get(i).getGiaSanPham();

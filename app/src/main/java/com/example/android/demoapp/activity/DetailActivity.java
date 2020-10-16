@@ -26,6 +26,7 @@ import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.SanPhamEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
 import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import java.text.DecimalFormat;
@@ -44,7 +45,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private AppDatabase mDb;
     TextView tvTen, tvGia, tvMoTa, tvKhoiluong, tvThuongHieu, tvXuatXu;
-    Button btnDatMua;
+    ExtendedFloatingActionButton btnDatMua;
     int idsanpham, hinhanhsp;
     double giasp;
     String tensp, khoiluongsp, thuongHieu, xuatXu;

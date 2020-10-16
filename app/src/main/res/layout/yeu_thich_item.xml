@@ -81,6 +81,9 @@
         app:layout_constraintStart_toEndOf="@+id/anh_item_yeu_thich"
         app:layout_constraintTop_toBottomOf="@+id/khoi_luong_item_yeu_thich" />
 
+
+
+
     <ImageButton
         android:id="@+id/button_xoa_yeu_thich"
         android:layout_width="54dp"

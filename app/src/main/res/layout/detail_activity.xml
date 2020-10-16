@@ -171,16 +171,19 @@
         app:srcCompat="@drawable/pennynho" />
 
 
-    <Button
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/button_mua"
-        android:layout_width="190dp"
-        android:layout_height="35dp"
+        android:textSize="12sp"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_gravity="center"
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/custom_button"
         android:text="Thêm vào giỏ hàng"
         android:textColor="#FFFFFF"
-        android:textSize="12sp"
+        app:backgroundTint="#D6AD7F"
+        app:elevation="15dp"
+        app:pressedTranslationZ="10dp"
         app:layout_constraintEnd_toEndOf="@+id/card_view_detail"
         app:layout_constraintStart_toEndOf="@+id/spinner"
         app:layout_constraintTop_toBottomOf="@id/card_view_detail" />
@@ -193,7 +196,6 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/mo_ta_san_pham_tilte"
         app:layout_constraintTop_toBottomOf="@+id/mo_ta_san_pham_tilte" />
 

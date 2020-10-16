@@ -74,7 +74,6 @@ public class CatalogActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
             // populate the UI
             mIdHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_HANG_ID);
-            Log.d("idhang", Integer.toString(mIdHang));
 
             SanPhamViewModelFactory factory1 = new SanPhamViewModelFactory(mDb, mIdHang);
 
@@ -233,7 +232,6 @@ public class CatalogActivity extends AppCompatActivity {
             }
         });
 
-        Toast.makeText(CatalogActivity.this, "onCreat" , Toast.LENGTH_SHORT).show();
 
     }
 
@@ -260,7 +258,6 @@ public class CatalogActivity extends AppCompatActivity {
             if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
                 // populate the UI
                 mIdHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_HANG_ID);
-                Log.d("idhang", Integer.toString(mIdHang));
 
                 SanPhamViewModelFactory factory1 = new SanPhamViewModelFactory(mDb, mIdHang);
 
@@ -271,7 +268,6 @@ public class CatalogActivity extends AppCompatActivity {
                 viewModel1.getSanPhams().observe(this, new Observer<List<SanPhamEntry>>() {
                     @Override
                     public void onChanged(@Nullable List<SanPhamEntry> sanPhams) {
-                        Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
                         catalogAdapter.setSanPhams(sanPhams);
 
                     }
