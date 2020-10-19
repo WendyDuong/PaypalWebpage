@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:background="#F44336"
+        android:background="@color/colorAccent"
         android:gravity="center"
         android:text="Tiến hành đặt hàng"
         android:textColor="#FFFFFF"

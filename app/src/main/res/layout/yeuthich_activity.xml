@@ -15,7 +15,7 @@
         app:titleMarginStart="40dp"
         app:titleTextColor="#FFFFFF"
         android:layout_height="?attr/actionBarSize"
-        android:background="#D6AD7F"
+        android:background="@drawable/gradient_toolbar"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp"/>
 
@@ -24,7 +24,7 @@
         android:id="@+id/tab_layout_yeu_thich_activity"
         android:layout_width="wrap_content"
         android:layout_height="?attr/actionBarSize"
-        android:background="#D6AD7F"
+        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="@id/toolbar_yeu_thich_activity"
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="@android:color/transparent"

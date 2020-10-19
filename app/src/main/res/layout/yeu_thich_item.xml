@@ -65,24 +65,22 @@
         app:layout_constraintStart_toEndOf="@id/anh_item_yeu_thich"
         app:layout_constraintTop_toBottomOf="@id/khoi_luong_item_yeu_thich" />
 
+
     <Button
+
         android:id="@+id/button_them"
-        android:layout_width="157dp"
-        android:layout_height="16dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="17dp"
-        android:layout_marginBottom="18dp"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="52dp"
         android:background="@drawable/custom_button"
-        android:text="Thêm vào giỏ"
+        android:padding="8dp"
+        android:text="@string/them_vao_gio_hang"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/button_xoa_yeu_thich"
+        app:layout_constraintHorizontal_bias="0.391"
         app:layout_constraintStart_toEndOf="@+id/anh_item_yeu_thich"
-        app:layout_constraintTop_toBottomOf="@+id/khoi_luong_item_yeu_thich" />
-
-
-
+        app:layout_constraintTop_toBottomOf="@+id/gia_item_yeu_thich" />
 
     <ImageButton
         android:id="@+id/button_xoa_yeu_thich"

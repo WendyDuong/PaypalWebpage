@@ -13,7 +13,7 @@
         app:titleMarginStart="40dp"
         app:titleTextColor="#FFFFFF"
         android:layout_height="?attr/actionBarSize"
-        android:background="#D6AD7F"
+        android:background="@drawable/gradient_toolbar"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp"/>
 

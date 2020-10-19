@@ -70,8 +70,8 @@
 
     <ImageButton
         android:id="@+id/button_giam"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:src="@drawable/minus"
         android:textSize="10sp"
@@ -82,8 +82,8 @@
 
     <TextView
         android:id="@+id/so_luong_item"
-        android:layout_width="40dp"
-        android:layout_height="30dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:gravity="center"
         android:text="1"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -93,8 +93,8 @@
 
     <ImageButton
         android:id="@+id/button_tang"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:src="@drawable/add"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"

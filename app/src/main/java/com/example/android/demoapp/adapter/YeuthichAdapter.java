@@ -53,7 +53,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
     @NonNull
     @Override
     public YeuthichAdapter.viewHolderYeuthich onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.yeu_thich_item, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.yeu_thich_item, parent, false);
         viewHolderYeuthich yeuThichItemHolder = new viewHolderYeuthich(view);
         return yeuThichItemHolder;
     }

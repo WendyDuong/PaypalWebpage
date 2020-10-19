@@ -30,4 +30,7 @@
 
     <!-- Subtitle text for the empty view that prompts the user to add a pet [CHAR LIMIT=50] -->
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="them_vao_gio_hang">Thêm vào giỏ hàng</string>
+
 </resources>

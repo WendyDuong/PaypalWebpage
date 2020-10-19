@@ -259,6 +259,36 @@ public class CatalogActivity extends AppCompatActivity {
                 // populate the UI
                 mIdHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_HANG_ID);
 
+                switch (mIdHang){
+                    case 0:
+                        imageViewNhaCungCap.setImageResource(R.drawable.hit);
+                        break;
+                    case 1:
+                        imageViewNhaCungCap.setImageResource(R.drawable.merclogo);
+                        break;
+                    case 2:
+                        imageViewNhaCungCap.setImageResource(R.drawable.penny);
+                        break;
+                    case 3:
+                        imageViewNhaCungCap.setImageResource(R.drawable.muller);
+                        break;
+                    case 4:
+                        imageViewNhaCungCap.setImageResource(R.drawable.dell);
+                        break;
+                    case 5:
+                        imageViewNhaCungCap.setImageResource(R.drawable.audi);
+                        break;
+                    case 6:
+                        imageViewNhaCungCap.setImageResource(R.drawable.dior);
+                        break;
+                    case 7:
+                        imageViewNhaCungCap.setImageResource(R.drawable.skii);
+                        break;
+                    case 8:
+                        imageViewNhaCungCap.setImageResource(R.drawable.richy);
+                        break;
+                }
+
                 SanPhamViewModelFactory factory1 = new SanPhamViewModelFactory(mDb, mIdHang);
 
 

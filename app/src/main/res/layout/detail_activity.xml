@@ -9,7 +9,7 @@
         android:id="@+id/toolbar3"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#D6AD7F"
+        android:background="@drawable/gradient_toolbar"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="-4dp">
 
@@ -25,12 +25,12 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view_detail"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="12dp"
         app:cardCornerRadius="15dp"
         app:cardElevation="15dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:background="#f4ecd3">
+            android:background="@color/colorPrimaryLight">
 
 
             <ImageView
@@ -51,13 +51,12 @@
                 android:layout_width="130dp"
                 android:layout_height="130dp"
                 android:layout_margin="8dp"
-                android:scaleType="fitXY"
                 android:background="@drawable/image_view_custom"
+                android:scaleType="fitXY"
+                android:src="@drawable/taomy"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-               android:src="@drawable/taomy"
-            />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/khoi_luong_san_pham"
@@ -153,6 +152,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginEnd="4dp"
+                android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:srcCompat="@drawable/timden24" />
@@ -175,20 +175,19 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/button_mua"
-        android:textSize="12sp"
         android:layout_width="wrap_content"
-        android:layout_height="37dp"
+        android:layout_height="48dp"
         android:layout_gravity="center"
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
         android:text="Thêm vào giỏ hàng"
         android:textColor="#FFFFFF"
-        app:backgroundTint="#D6AD7F"
+        android:textSize="12sp"
         app:elevation="15dp"
-        app:pressedTranslationZ="10dp"
         app:layout_constraintEnd_toEndOf="@+id/card_view_detail"
         app:layout_constraintStart_toEndOf="@+id/card_view_spinner"
-        app:layout_constraintTop_toBottomOf="@id/card_view_detail" />
+        app:layout_constraintTop_toBottomOf="@id/card_view_detail"
+        app:pressedTranslationZ="10dp" />
 
     <TextView
         android:id="@+id/mo_ta_san_pham"
@@ -211,12 +210,12 @@
         app:layout_constraintEnd_toStartOf="@+id/button_mua"
         app:layout_constraintStart_toStartOf="@+id/card_view_detail"
         app:layout_constraintTop_toBottomOf="@+id/card_view_detail">
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="90dp"
-        android:layout_height="35dp"
-        android:background="@drawable/custom_spinner"
-        />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="90dp"
+            android:layout_height="48dp"
+            android:background="@drawable/custom_spinner" />
     </androidx.cardview.widget.CardView>
 
 

@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-        <color name="colorPrimary">#F44336</color>
-        <color name="red">#fa3223</color>
-        <color name="colorPrimaryDark">#D6AD7F</color>
-        <color name="colorAccent">#fa3223</color>
-        <color name="colorWhite">#FFFFFF</color>
+        <color name="colorPrimary">#ffe259</color>
+    <color name="colorPrimaryLight">#FFFDE7</color>
+
+    <color name="colorPrimaryDark">#ffa751</color>
+        <color name="colorAccent">#ffa751</color>
+
+
+
+
+    <color name="red">#fa3223</color>
+    <color name="colorWhite">#FFFFFF</color>
     <color name="black_overlay">#66000000</color>
         <color name="bgToolbar">#183545</color>
         <color name="bgLogo">#f67122</color>
