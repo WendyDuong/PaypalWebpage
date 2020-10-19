@@ -24,6 +24,8 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
     private AppDatabase mDb;
     private List<GioHangEntry> gioHangs;
     private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
+    private static final String EXTRA_HANG_ID = "extraHangId";
+
 
     public DatHangAdapter(Context context) {
         mcontext = context;
@@ -103,8 +105,10 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
                 @Override
                 public void onClick(View view) {
                     int idintent = gioHangs.get(getLayoutPosition()).getIdSanPham();
+                    int idHang = gioHangs.get(getLayoutPosition()).getIdHang();
                     Intent intentChiTiet = new Intent(mcontext, DetailActivity.class);
                     intentChiTiet.putExtra(EXTRA_SANPHAM_ID, idintent);
+                    intentChiTiet.putExtra(EXTRA_HANG_ID,idHang );
                     intentChiTiet.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mcontext.startActivity(intentChiTiet);
                 }
