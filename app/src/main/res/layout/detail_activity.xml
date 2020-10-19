@@ -52,10 +52,12 @@
                 android:layout_height="130dp"
                 android:layout_margin="8dp"
                 android:scaleType="fitXY"
+                android:background="@drawable/image_view_custom"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/anhbanhnho" />
+               android:src="@drawable/taomy"
+            />
 
             <TextView
                 android:id="@+id/khoi_luong_san_pham"

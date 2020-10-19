@@ -87,7 +87,7 @@ public class DetailActivity extends AppCompatActivity {
 
         imageViewHangSp.setVisibility(View.INVISIBLE);
 
-
+        imgChiTiet.setClipToOutline(true);
         //TODO(4)
 
         if (savedInstanceState != null && savedInstanceState.containsKey(INSTANCE_SANPHAM_ID)) {
