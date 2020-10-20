@@ -23,6 +23,7 @@ import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.GioHangViewModel;
 import com.example.android.demoapp.activity.DatHangActivity;
+import com.example.android.demoapp.activity.DetailActivity;
 import com.example.android.demoapp.adapter.GioHangAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
@@ -53,6 +54,7 @@ public class GioHangFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mDb = AppDatabase.getInstance(getActivity());
+        Toast.makeText(getActivity(), "onCreate", Toast.LENGTH_SHORT).show();
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.gio_hang_fragment, container, false);
@@ -66,10 +68,13 @@ public class GioHangFragment extends Fragment {
 
 
         GioHangViewModel gioHangViewModel = ViewModelProviders.of(getActivity()).get(GioHangViewModel.class);
-        gioHangViewModel.getGioHang().observe(getActivity(), new Observer<List<GioHangEntry>>() {
+        gioHangViewModel.getGioHang().removeObservers(this);
+        gioHangViewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
             @Override
             public void onChanged(@Nullable List<GioHangEntry> gioHangEntries) {
-                    mGiohangs = gioHangEntries;
+                mGiohangs = gioHangEntries;
+                Toast.makeText(getActivity(), "onChange", Toast.LENGTH_SHORT).show();
+
                 if (mGiohangs.size() == 0) {
                     tvTongtien.setVisibility(View.INVISIBLE);
                     emptyView.setVisibility(View.VISIBLE);
@@ -81,12 +86,17 @@ public class GioHangFragment extends Fragment {
                         tongtien = mGiohangs.get(i).getGiaSanPham();
                         tongTienDonHang += tongtien;
                     }
+                    Toast.makeText(getActivity(), Double.toString(tongTienDonHang), Toast.LENGTH_SHORT).show();
+
                     DecimalFormat decimalFormat1 = new DecimalFormat("###,###,###");
                     tvTongtien.setText("Tổng số tiền: " + decimalFormat1.format(tongTienDonHang) + " Đ");
                     tongTienDonHang = 0;
+                    Toast.makeText(getActivity(), "set tong tien thanh cong", Toast.LENGTH_SHORT).show();
 
                     Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
                 }
+
+
                 gioHangAdapter.setGioHangs(gioHangEntries);
 
             }
@@ -107,9 +117,13 @@ public class GioHangFragment extends Fragment {
         });
 
 
+
+
         return rootView;
 
     }
+
+
     ItemTouchHelper.SimpleCallback itemTouchHelper = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {

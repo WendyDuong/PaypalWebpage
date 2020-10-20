@@ -1,8 +1,11 @@
 package com.example.android.demoapp.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,6 +21,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.android.demoapp.Presenter.PresenterLogicXuLyMenu;
@@ -47,13 +51,17 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     Toolbar toolbar;
     public static final int RC_SIGN_IN = 1;
-    DrawerLayout drawerLayout;
     ImageView imageView;
     CategoryAdapter viewPageAdapter;
     TabLayout.Tab tabGioHang;
     TabLayout.Tab tabYeuThich;
     public static BadgeDrawable badgeDrawableYeuthich;
     public static BadgeDrawable badgeDrawableGioHang;
+
+    private RecyclerView list;
+    private adapter recyclerAdapter;
+    private DrawerLayout mDrawerLayout;
+
 
 
     private AppDatabase mDb;
@@ -86,10 +94,13 @@ public class MainActivity extends AppCompatActivity {
         caNhan.add(getString(R.string.thong_tin_ca_nhan));
         caNhan.add(getString(R.string.hinh_thuc_thanh_toan));
         caNhan.add(getString(R.string.cac_don_hang));
+        caNhan.add(getString(R.string.giao_hang));
+        caNhan.add(getString(R.string.chinh_sach_doi_tra));
+        caNhan.add(getString(R.string.thong_tin_lien_he));
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                drawerLayout.openDrawer(GravityCompat.END);
+                mDrawerLayout.openDrawer(GravityCompat.END);
 
             }
         });
@@ -149,18 +160,49 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    TextView country;
+
+    private class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
+        Context context;
+        List<String> mData;
+
+        public adapter(Context context, List<String> data) {
+            this.context = context;
+            this.mData = data;
+        }
+
+        @Override
+        public adapter.myViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(context).inflate(R.layout.navigation_recyclerview, parent, false);
+            return new myViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(adapter.myViewHolder holder, int position) {
+            holder.country.setText(mData.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return mData.size();
+        }
+        public class myViewHolder extends RecyclerView.ViewHolder {
+            TextView nav;
+
+            public myViewHolder(View itemView) {
+                super(itemView);
+                nav = (TextView) itemView.findViewById(R.id.nav);
+            }
+        }
+    }
 
     @Override
     public void onBackPressed() {
-       if(drawerLayout.isDrawerOpen(GravityCompat.END)){
-           drawerLayout.closeDrawer(GravityCompat.END);
+       if(mDrawerLayout.isDrawerOpen(GravityCompat.END)){
+           mDrawerLayout.closeDrawer(GravityCompat.END);
        }else{
         super.onBackPressed();}
     }
-
-
-
-
 
 
         private void init () {
@@ -168,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
             buttonDangNhap = findViewById(R.id.button_dang_nhap);
             buttonDangXuat = findViewById(R.id.button_dang_xuat);
             toolbar = findViewById(R.id.toolbar);
-            drawerLayout = findViewById(R.id.drawer_layout);
+            mDrawerLayout = findViewById(R.id.drawer_layout);
             imageView = findViewById(R.id.anhcanhan);
             listView = findViewById(R.id.list_view);
             viewPager2 = (ViewPager2) findViewById(R.id.viewpager);
@@ -179,25 +221,26 @@ public class MainActivity extends AppCompatActivity {
             TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
                 @Override
                 public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                    switch (position){
-                        case 0 : {
+                    switch (position) {
+                        case 0: {
                             tab.setIcon(R.drawable.logokhongnen);
                             break;
                         }
-                        case 1 : {
-                                tab.setIcon(R.drawable.kinh_lup_icon);
-                                break;
-                            }
-                        case 2 :
-                        { tab.setIcon(R.drawable.timdo_bar);
+                        case 1: {
+                            tab.setIcon(R.drawable.kinh_lup_icon);
                             break;
                         }
-                        case 3:
-                        { tab.setIcon(R.drawable.xe_hang);
-                           break;
+                        case 2: {
+                            tab.setIcon(R.drawable.timdo_bar);
+                            break;
+                        }
+                        case 3: {
+                            tab.setIcon(R.drawable.xe_hang);
+                            break;
+                        }
                     }
                 }
-            } });
+            });
 
             tabLayoutMediator.attach();
 
@@ -215,15 +258,14 @@ public class MainActivity extends AppCompatActivity {
                     gioHangEntries = gioHang;
                     int sosanphammua = 0;
 
-                    if (gioHangEntries.size() > 0){
+                    if (gioHangEntries.size() > 0) {
                         for (int i = 0; i < gioHangEntries.size(); i++) {
                             sosanphammua += gioHangEntries.get(i).getSoLuong();
                         }
                         badgeDrawableGioHang.setVisible(true);
 
                         badgeDrawableGioHang.setNumber(sosanphammua);
-                    }
-                    else
+                    } else
                         badgeDrawableGioHang.setVisible(false);
                 }
             });
@@ -232,83 +274,90 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
                     yeuThichEntries = yeuThich;
-                    if (yeuThichEntries.size()>0){
+                    if (yeuThichEntries.size() > 0) {
                         badgeDrawableYeuthich.setVisible(true);
                         badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
 
-                    }
-                    else
+                    } else
                         badgeDrawableYeuthich.setVisible(false);
 
                 }
             });
 
 
-
-
-
-
+        }
         }
 
 /*
 
+  private DrawerLayout mDrawerLayout;
+    private RecyclerView list;
+    private adapter recyclerAdapter;
+
+
     @Override
-    protected void onRestart() {
-        setupbadgeDrawable();
-        viewPageAdapter.notifyDataSetChanged();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_navigation_view11);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        list = (RecyclerView) findViewById(R.id.list);
+        //Data
+        ArrayList<String> nav_item = new ArrayList<>();
+        nav_item.add("Home");
+        nav_item.add("App");
+        nav_item.add("Blog");
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        list.setLayoutManager(layoutManager);
+        recyclerAdapter = new adapter(NavigationViewActivity11.this, nav_item);
+        list.setAdapter(recyclerAdapter);
 
-        super.onRestart();
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, toolbar,R.string.app_name, R.string.app_name);
+
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+
+        mDrawerToggle.syncState();
+
     }
 
-    @Override
-    protected void onResume() {
-        accessToken = logicXuLyMenu.LayTokenDungFacebook();
-        account = GoogleSignIn.getLastSignedInAccount(this);
-        if(accessToken != null ){
-            GraphRequest graphRequest = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
-                @Override
-                public void onCompleted(JSONObject object, GraphResponse response) {
-                    try {
-                        tennguoidung = object.getString("name");
-                        textViewTenKhachHang.setText(tennguoidung);
-                        buttonDangNhap.setVisibility(View.GONE);
-                        buttonDangXuat.setVisibility(View.VISIBLE);
+    private class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
+        Context context;
+        List<String> mData;
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            Bundle parameter = new Bundle();
-            parameter.putString("fields","name");
-
-            graphRequest.setParameters(parameter);
-            graphRequest.executeAsync();
+        public adapter(Context context, List<String> data) {
+            this.context = context;
+            this.mData = data;
         }
 
-        if (account != null)
-        {
-            textViewTenKhachHang.setText(account.getDisplayName());
-            buttonDangNhap.setVisibility(View.GONE);
-            buttonDangXuat.setVisibility(View.VISIBLE);
-
+        @Override
+        public adapter.myViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(context).inflate(R.layout.navigationrecyclerview_adapter11, parent, false);
+            return new myViewHolder(view);
         }
 
-        String tenkhachhang = modelDangNhap.LayCachedDangNhap(this);
-        if(!tenkhachhang.equals("")){
-            textViewTenKhachHang.setText(tenkhachhang);
-            buttonDangNhap.setVisibility(View.GONE);
-            buttonDangXuat.setVisibility(View.VISIBLE);
+        @Override
+        public void onBindViewHolder(adapter.myViewHolder holder, int position) {
+            holder.country.setText(mData.get(position));
         }
 
+        @Override
+        public int getItemCount() {
+            return mData.size();
+        }
+        public class myViewHolder extends RecyclerView.ViewHolder {
+            TextView nav;
 
+            public myViewHolder(View itemView) {
+                super(itemView);
+                nav = (TextView) itemView.findViewById(R.id.nav);
+            }
+        }
+    }
 
+*/
 
-        super.onResume();
-    }*/
-}
 
 
 

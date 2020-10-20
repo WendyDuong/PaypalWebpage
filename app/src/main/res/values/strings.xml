@@ -14,9 +14,14 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="facebook_app_id">1188433441539591</string>
     <string name="fb_login_protocol_scheme">fb1188433441539591</string>
+
+    //Navigation Drawer
     <string name="thong_tin_ca_nhan">Thông tin cá nhân</string>
     <string name="hinh_thuc_thanh_toan">Hình Thức Thanh Toán</string>
     <string name="cac_don_hang">Các Đơn Hàng</string>
+    <string name="giao_hang">Giao hàng</string>
+    <string name="chinh_sach_doi_tra">Chính sách đổi trả</string>
+    <string name="thong_tin_lien_he">Thông tin liên hệ</string>
     <string name="dang_xuat">Đăng Xuất</string>
     <string name="dummy_button">Dummy Button</string>
 

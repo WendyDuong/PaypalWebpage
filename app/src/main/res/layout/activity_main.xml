@@ -121,7 +121,7 @@
                 android:layout_alignParentBottom="true"
                 android:textSize="20sp"
                 android:textColor="#FFFFFF"
-                android:background="#D6AD7F"
+                android:background="@color/colorAccent"
                 android:text="Đăng Nhập" />
 
         </RelativeLayout>

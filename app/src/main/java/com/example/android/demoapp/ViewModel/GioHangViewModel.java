@@ -5,7 +5,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.OnLifecycleEvent;
 
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
@@ -19,6 +21,10 @@ public class GioHangViewModel extends AndroidViewModel {
     private LiveData<List<GioHangEntry>> sanPhams;
     private LiveData<List<YeuThichEntry>> yeuThich;
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    protected void onLifeCycleStop(){
+
+    }
 
     public GioHangViewModel(@NonNull Application application) {
         super(application);
