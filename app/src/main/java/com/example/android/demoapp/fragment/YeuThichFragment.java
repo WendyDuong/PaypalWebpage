@@ -251,6 +251,7 @@ public class YeuThichFragment extends Fragment {
         //      DividerItemDecoration.VERTICAL));
 
         YeuThichViewModel yeuThichViewModel = ViewModelProviders.of(this).get(YeuThichViewModel.class);
+        //yeuThichViewModel.getYeuThich().removeObservers(this);
         yeuThichViewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
             @Override
             public void onChanged(@Nullable List<YeuThichEntry> yeuThichEntries) {

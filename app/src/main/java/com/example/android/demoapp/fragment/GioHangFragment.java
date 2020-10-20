@@ -57,7 +57,7 @@ public class GioHangFragment extends Fragment {
         Toast.makeText(getActivity(), "onCreate", Toast.LENGTH_SHORT).show();
 
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.gio_hang_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.gio_hang_fragment, container, false);
         buttonDatHang = rootView.findViewById(R.id.button_dat_hang);
         giohangRecyclerView = rootView.findViewById(R.id.recycler_view_gio_hang);
         emptyView = rootView.findViewById(R.id.empty_view);
@@ -67,12 +67,17 @@ public class GioHangFragment extends Fragment {
         tvTongtien = rootView.findViewById(R.id.tong_tien);
 
 
-        GioHangViewModel gioHangViewModel = ViewModelProviders.of(getActivity()).get(GioHangViewModel.class);
-        gioHangViewModel.getGioHang().removeObservers(this);
+
+        GioHangViewModel gioHangViewModel = ViewModelProviders.of(this).get(GioHangViewModel.class);
+        //gioHangViewModel.getGioHang().removeObservers(this);
+
         gioHangViewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
             @Override
             public void onChanged(@Nullable List<GioHangEntry> gioHangEntries) {
+                tvTongtien = rootView.findViewById(R.id.tong_tien);
                 mGiohangs = gioHangEntries;
+                Toast.makeText(getActivity(), "show toast", Toast.LENGTH_SHORT).show();
+
                 Toast.makeText(getActivity(), "onChange", Toast.LENGTH_SHORT).show();
 
                 if (mGiohangs.size() == 0) {
@@ -86,14 +91,13 @@ public class GioHangFragment extends Fragment {
                         tongtien = mGiohangs.get(i).getGiaSanPham();
                         tongTienDonHang += tongtien;
                     }
-                    Toast.makeText(getActivity(), Double.toString(tongTienDonHang), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), Double.toString(tongTienDonHang), Toast.LENGTH_SHORT).show();
 
                     DecimalFormat decimalFormat1 = new DecimalFormat("###,###,###");
                     tvTongtien.setText("Tổng số tiền: " + decimalFormat1.format(tongTienDonHang) + " Đ");
                     tongTienDonHang = 0;
-                    Toast.makeText(getActivity(), "set tong tien thanh cong", Toast.LENGTH_SHORT).show();
 
-                    Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
+
                 }
 
 
@@ -101,6 +105,8 @@ public class GioHangFragment extends Fragment {
 
             }
         });
+
+
 
         new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(giohangRecyclerView);
 
@@ -123,7 +129,42 @@ public class GioHangFragment extends Fragment {
 
     }
 
+/*
+    @Override
+    public void onResume() {
+        tvTongtien = getView().findViewById(R.id.tong_tien);
+        getViewModelStore().clear();
+        GioHangViewModel gioHangViewModel = ViewModelProviders.of(getActivity()).get(GioHangViewModel.class);
+        gioHangViewModel.getGioHang().removeObservers(this);
+        gioHangViewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<GioHangEntry> gioHangEntries) {
+                Toast.makeText(getActivity(), "Show toast", Toast.LENGTH_SHORT).show();
 
+                Toast.makeText(getActivity(), "OnChange", Toast.LENGTH_SHORT).show();
+                mGiohangs = gioHangEntries;
+                if (mGiohangs.size() == 0) {
+                    tvTongtien.setVisibility(View.INVISIBLE);
+                    emptyView.setVisibility(View.VISIBLE);
+                }else {
+                    tvTongtien.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.INVISIBLE);
+                    for (int i = 0; i < mGiohangs.size(); i++) {
+                        tongtien = mGiohangs.get(i).getGiaSanPham();
+                        tongTienDonHang += tongtien;
+                    }
+                    DecimalFormat decimalFormat1 = new DecimalFormat("###,###,###");
+                    tvTongtien.setText("Tổng số tiền: " + decimalFormat1.format(tongTienDonHang) + " Đ");
+                    tongTienDonHang = 0;
+                    Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
+                }
+                gioHangAdapter.setGioHangs(gioHangEntries);
+            }
+        });
+        super.onResume();
+    }
+
+*/
     ItemTouchHelper.SimpleCallback itemTouchHelper = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {

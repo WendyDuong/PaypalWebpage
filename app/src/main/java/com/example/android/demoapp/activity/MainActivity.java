@@ -15,12 +15,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -29,6 +31,7 @@ import com.example.android.demoapp.R;
 import com.example.android.demoapp.View.DangNhap.DangNhapActivity;
 import com.example.android.demoapp.ViewModel.MainViewModel;
 import com.example.android.demoapp.adapter.CategoryAdapter;
+import com.example.android.demoapp.adapter.NavigationViewAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
@@ -48,7 +51,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     GoogleSignInAccount account ;
-    ListView listView;
     Toolbar toolbar;
     public static final int RC_SIGN_IN = 1;
     ImageView imageView;
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     public static BadgeDrawable badgeDrawableGioHang;
 
     private RecyclerView list;
-    private adapter recyclerAdapter;
+    private NavigationViewAdapter recyclerAdapter;
     private DrawerLayout mDrawerLayout;
 
 
@@ -91,9 +93,9 @@ public class MainActivity extends AppCompatActivity {
         init();
         mainActivityOnCreat = true;
         ArrayList<String> caNhan = new ArrayList<String>();
-        caNhan.add(getString(R.string.thong_tin_ca_nhan));
+
         caNhan.add(getString(R.string.hinh_thuc_thanh_toan));
-        caNhan.add(getString(R.string.cac_don_hang));
+
         caNhan.add(getString(R.string.giao_hang));
         caNhan.add(getString(R.string.chinh_sach_doi_tra));
         caNhan.add(getString(R.string.thong_tin_lien_he));
@@ -105,8 +107,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<String> caNhanAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, caNhan);
-        listView.setAdapter(caNhanAdapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        list.setLayoutManager(layoutManager);
+        recyclerAdapter = new NavigationViewAdapter(MainActivity.this, caNhan);
+        list.setAdapter(recyclerAdapter);
+
+        //ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, toolbar,R.string.app_name, R.string.app_name);
+
 
 
       buttonDangNhap.setOnClickListener(new View.OnClickListener() {
@@ -160,41 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    TextView country;
 
-    private class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
-        Context context;
-        List<String> mData;
-
-        public adapter(Context context, List<String> data) {
-            this.context = context;
-            this.mData = data;
-        }
-
-        @Override
-        public adapter.myViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(context).inflate(R.layout.navigation_recyclerview, parent, false);
-            return new myViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(adapter.myViewHolder holder, int position) {
-            holder.country.setText(mData.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return mData.size();
-        }
-        public class myViewHolder extends RecyclerView.ViewHolder {
-            TextView nav;
-
-            public myViewHolder(View itemView) {
-                super(itemView);
-                nav = (TextView) itemView.findViewById(R.id.nav);
-            }
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -212,7 +186,13 @@ public class MainActivity extends AppCompatActivity {
             toolbar = findViewById(R.id.toolbar);
             mDrawerLayout = findViewById(R.id.drawer_layout);
             imageView = findViewById(R.id.anhcanhan);
-            listView = findViewById(R.id.list_view);
+
+
+            list = (RecyclerView) findViewById(R.id.recycleview);
+
+
+
+
             viewPager2 = (ViewPager2) findViewById(R.id.viewpager);
             viewPageAdapter = new CategoryAdapter(this);
             viewPager2.setAdapter(viewPageAdapter);
