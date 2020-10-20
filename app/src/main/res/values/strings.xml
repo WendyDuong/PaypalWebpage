@@ -21,7 +21,15 @@
     <string name="cac_don_hang">Các Đơn Hàng</string>
     <string name="giao_hang">Giao hàng</string>
     <string name="chinh_sach_doi_tra">Chính sách đổi trả</string>
-    <string name="thong_tin_lien_he">Thông tin liên hệ</string>
+<string name="lien_he">Thông tin liên hệ</string>
+    <string name="thong_tin_thanh_toan">Tiki hiện có các phương thức thanh toán sau: ... Thanh toán qua thẻ ATM có đăng ký thanh toán trực tuyến (miễn phí thanh toán): Để sử dụng phương thức thanh toán này, tài khoản ngân hàng của quý khách cần đăng ký dịch vụ Internet Banking với ngân hàng. Tiki hiện hỗ trợ thanh toán cho phần lớn các ngân hàng tại Việt Nam.</string>
+    <string name="thong_tin_giao_hang">Chính sách hỗ trợ phí vận chuyển: tùy vào chính sách hỗ trợ riêng ở mỗi thời điểm của từng nhà cung cấp/nhà bán hàng, đơn hàng sẽ thể hiện mức phí vận chuyển cuối cùng khác nhau. Bên cạnh đó, quý khách còn có thể hưởng ưu đãi phí giao hàng từ Tiki được cập nhật hằng tháng tại phần “Thông báo của tôi” (áp dụng cho hình thức giao hàng tiêu chuẩn)
+
+Quý khách hàng có đăng ký gói thành viên TikiNOW sẽ được miễn phí vận chuyển cho tất cả mọi đơn hàng. Chi tiết về gói thành viên TikiNOW </string>
+
+    <string name="thong_tin_doi_tra">Tại Tiki, chúng tôi trân trọng sự tin tưởng của khách hàng khi đặt mua sản phẩm. Chính sách hậu mãi ở Tiki được xây dựng dựa trên cam kết bảo vệ quyền lợi người tiêu dùng để quý khách có thể yên tâm mua sắm và trải nghiệm dịch vụ tại Tiki.</string>
+    <string name="thong_tin_lien_he">Quý khách vui lòng liên hệ với Tiki.vn hoặc tổng đài mạng di động qua các số điện thoại sau: Tổng đài Tiki ( 8h - 21h ): 1900 6035. Email: hotro@tiki.vn. Tổng đài Viettel (24/24): 1800.8198 - 1900.8198</string>
+
     <string name="dang_xuat">Đăng Xuất</string>
     <string name="dummy_button">Dummy Button</string>
 
@@ -37,5 +45,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="them_vao_gio_hang">Thêm vào giỏ hàng</string>
+    
 
+    
 </resources>

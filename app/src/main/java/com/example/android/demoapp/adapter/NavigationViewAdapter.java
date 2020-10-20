@@ -2,14 +2,21 @@ package com.example.android.demoapp.adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.demoapp.activity.GiaoHang;
 import com.example.android.demoapp.R;
+import com.example.android.demoapp.activity.DoiTra;
+import com.example.android.demoapp.activity.LienHe;
+import com.example.android.demoapp.activity.ThanhToan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +24,13 @@ import java.util.List;
 public class NavigationViewAdapter extends RecyclerView.Adapter<NavigationViewAdapter.myViewHolder> {
     Context context;
     List<String> mData;
+
     public static final List<Integer> ImageList = new ArrayList<Integer>() {{
-        add();
-        add(R.drawable.merc);
-        add(R.drawable.penny);
-        add(R.drawable.muller);
-        add(R.drawable.dell);
-        add(R.drawable.audi);
-        add(R.drawable.dior);
-        add(R.drawable.skii);
-        add(R.drawable.richy);
+        add(R.drawable.ic_baseline_payment_24);
+        add(R.drawable.ic_baseline_local_shipping_24);
+        add(R.drawable.ic_baseline_assignment_return_24);
+      add(R.drawable.ic_baseline_contact_mail_24);
+
 
     }};
 
@@ -44,6 +48,7 @@ public class NavigationViewAdapter extends RecyclerView.Adapter<NavigationViewAd
     @Override
     public void onBindViewHolder(NavigationViewAdapter.myViewHolder holder, int position) {
         holder.nav.setText(mData.get(position));
+        holder.iconView.setImageResource(ImageList.get(position));
     }
 
     @Override
@@ -52,10 +57,40 @@ public class NavigationViewAdapter extends RecyclerView.Adapter<NavigationViewAd
     }
     public class myViewHolder extends RecyclerView.ViewHolder {
         TextView nav;
+        ImageView iconView;
 
-        public myViewHolder(View itemView) {
+        public myViewHolder(final View itemView) {
             super(itemView);
             nav = (TextView) itemView.findViewById(R.id.nav);
+            iconView= itemView.findViewById(R.id.icon_image_view);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getLayoutPosition();
+                    switch (pos){
+                        case 0:
+                            Toast.makeText(context, "Hinh thuc thanh toan", Toast.LENGTH_SHORT).show();
+                            Intent intentThanhToan = new Intent(context, ThanhToan.class);
+                            context.startActivity(intentThanhToan);
+                            break;
+                            case 1:
+                            Toast.makeText(context, "Giao hang", Toast.LENGTH_SHORT).show();
+                                Intent intentGiaoHang = new Intent(context, GiaoHang.class);
+                                context.startActivity(intentGiaoHang);
+                            break;
+                            case 2:
+                            Toast.makeText(context, "Doi tra", Toast.LENGTH_SHORT).show();
+                                Intent intentDoiTra = new Intent(context, DoiTra.class);
+                                context.startActivity(intentDoiTra);
+                            break;
+                            case 3:
+                            Toast.makeText(context, "Lien he", Toast.LENGTH_SHORT).show();
+                                Intent intentLienHe = new Intent(context, LienHe.class);
+                                context.startActivity(intentLienHe);
+                            break;
+                    }
+                }
+            });
         }
     }
 }

@@ -91,6 +91,27 @@
             android:launchMode="singleTask"
             />
 
+        <activity
+            android:name=".activity.DoiTra"
+            android:launchMode="singleTask"
+            />
+
+        <activity
+            android:name=".activity.ThanhToan"
+            android:launchMode="singleTask"
+            />
+
+        <activity
+            android:name=".activity.LienHe"
+            android:launchMode="singleTask"
+            />
+
+        <activity
+            android:name=".activity.GiaoHang"
+            android:launchMode="singleTask"
+            />
+
+
 
     </application>
 
