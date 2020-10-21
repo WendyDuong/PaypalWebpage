@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -41,12 +40,12 @@ public class DetailActivity extends AppCompatActivity {
     private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
     private static final String EXTRA_HANG_ID = "extraHangId";
     private static final String TAG = DetailActivity.class.getSimpleName();
-    private int idHang, id;
+    private int idHang, idsanpham;
 
     private AppDatabase mDb;
     TextView tvTen, tvGia, tvMoTa, tvKhoiluong, tvThuongHieu, tvXuatXu;
     ExtendedFloatingActionButton btnDatMua;
-    int idsanpham, hinhanhsp;
+    int  hinhanhsp;
     double giasp;
     String tensp, khoiluongsp, thuongHieu, xuatXu;
     private int mTaskId = DEFAULT_ID;
@@ -334,8 +333,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void populateUI(SanPhamEntry sanPham) {
-        idsanpham = sanPham.getIdSanPham();
-        id = sanPham.getId();
+        idsanpham = sanPham.getId();
         tensp = sanPham.getTenSanPham();
         giasp = sanPham.getGiaSanPham();
         hinhanhsp = sanPham.getHinhAnh();

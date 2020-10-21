@@ -10,7 +10,6 @@ public class SanPhamEntry {
 
     @PrimaryKey(autoGenerate = true)
     private  int id;
-    private int idSanPham;
     private  int idHang;
     private String tenSanPham;
     private double giaSanPham;
@@ -22,10 +21,8 @@ public class SanPhamEntry {
 
 
     @Ignore
-    public SanPhamEntry(int idSanPham,
-                        int idHang, String tenSanPham, double giaSanPham, int hinhAnh,
+    public SanPhamEntry(int idHang, String tenSanPham, double giaSanPham, int hinhAnh,
                         String khoiLuong, String moTa, String thuongHieu, String xuatXu) {
-        this.idSanPham = idSanPham;
         this.idHang = idHang;
         this.tenSanPham = tenSanPham;
         this.giaSanPham = giaSanPham;
@@ -36,10 +33,9 @@ public class SanPhamEntry {
         this.xuatXu = xuatXu;
     }
 
-    public SanPhamEntry(int id, int idSanPham, int idHang, String tenSanPham, double giaSanPham,
+    public SanPhamEntry(int id, int idHang, String tenSanPham, double giaSanPham,
                         int hinhAnh, String khoiLuong, String moTa, String thuongHieu, String xuatXu) {
         this.id = id;
-        this.idSanPham = idSanPham;
         this.idHang = idHang;
         this.tenSanPham = tenSanPham;
         this.giaSanPham = giaSanPham;
@@ -58,13 +54,7 @@ public class SanPhamEntry {
         this.id = id;
     }
 
-    public int getIdSanPham() {
-        return idSanPham;
-    }
 
-    public void setIdSanPham(int idSanPham) {
-        this.idSanPham = idSanPham;
-    }
 
     public int getIdHang() {
         return idHang;

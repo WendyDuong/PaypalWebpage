@@ -54,7 +54,6 @@ public class GioHangFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mDb = AppDatabase.getInstance(getActivity());
-        Toast.makeText(getActivity(), "onCreate", Toast.LENGTH_SHORT).show();
 
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.gio_hang_fragment, container, false);
@@ -76,9 +75,7 @@ public class GioHangFragment extends Fragment {
             public void onChanged(@Nullable List<GioHangEntry> gioHangEntries) {
                 tvTongtien = rootView.findViewById(R.id.tong_tien);
                 mGiohangs = gioHangEntries;
-                Toast.makeText(getActivity(), "show toast", Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(getActivity(), "onChange", Toast.LENGTH_SHORT).show();
 
                 if (mGiohangs.size() == 0) {
                     tvTongtien.setVisibility(View.INVISIBLE);

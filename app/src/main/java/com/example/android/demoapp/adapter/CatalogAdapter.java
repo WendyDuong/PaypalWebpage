@@ -54,7 +54,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         holder.tvGiasanpham.setText("Giá :" + decimalFormat.format(sanPham.getGiaSanPham()) + " Đ");
         holder.imgHinhAnhSanpham.setImageResource(sanPham.getHinhAnh());
-        final int idsanpham = sanPham.getIdSanPham();
+        final int idsanpham = sanPham.getId();
 
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) holder.cardViewCatalog.getLayoutParams();
         int left = dptoPx(24);
@@ -159,7 +159,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                 @Override
                 public void onClick(View v) {
                     SanPhamEntry sanPham = sanPhams.get(getLayoutPosition());
-                    iD = sanPham.getIdSanPham();
+                    iD = sanPham.getId();
                     idHang = sanPham.getIdHang();
                     Log.i("MainGridViewAdapter", Integer.toString(iD));
 
@@ -178,7 +178,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
 
                     if (imageViewTim.getDrawable().getConstantState() == context.getResources().getDrawable(R.drawable.timden24).getConstantState()) {
                         final int idhang = sanPhams.get(getLayoutPosition()).getIdHang();
-                        final int idsanpham = sanPhams.get(getLayoutPosition()).getIdSanPham();
+                        final int idsanpham = sanPhams.get(getLayoutPosition()).getId();
                         final String tensanpham = sanPhams.get(getLayoutPosition()).getTenSanPham();
                         final double giasanpham = sanPhams.get(getLayoutPosition()).getGiaSanPham();
                         final int hinhanhsanpham = sanPhams.get(getLayoutPosition()).getHinhAnh();
@@ -200,7 +200,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
 
                         }
                      else {
-                        final int idsanpham = sanPhams.get(getLayoutPosition()).getIdSanPham();
+                        final int idsanpham = sanPhams.get(getLayoutPosition()).getId();
 
                         imageViewTim.setImageResource(R.drawable.timden24);
 

@@ -256,14 +256,14 @@ public class YeuThichFragment extends Fragment {
             @Override
             public void onChanged(@Nullable List<YeuThichEntry> yeuThichEntries) {
                 mYeuThichs = yeuThichEntries;
-                yeuThichAdapter.setYeuThichs(yeuThichEntries);
 
                 if (mYeuThichs.size() == 0) {
-                    yeuThichAdapter.setYeuThichs(yeuThichEntries);
                     emptyView.setVisibility(View.VISIBLE);
                 }
                 else
                     emptyView.setVisibility(View.INVISIBLE);
+
+                yeuThichAdapter.setYeuThichs(yeuThichEntries);
 
             }
         });
