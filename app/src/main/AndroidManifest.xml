@@ -2,25 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.android.demoapp">
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="false"
-        android:icon="@drawable/appicon"
         android:hardwareAccelerated="false"
-
+        android:icon="@drawable/appicon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+
 
         <receiver android:name=".widget.DemoAppWidgetProvider">
             <intent-filter>
@@ -31,6 +29,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/new_app_widget_info" />
         </receiver>
+        <service
+            android:name=".widget.MyService"
+            />
 
         <service
             android:name=".widget.GridWidgetService"
@@ -38,78 +39,76 @@
 
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:showOnLockScreen="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
-        <activity
-            android:name="com.facebook.CustomTabActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="@string/fb_login_protocol_scheme" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".View.DangNhap.DangNhapActivity" />
         <activity
             android:name=".activity.CatalogActivity"
             android:launchMode="singleTask"
+            android:showOnLockScreen="true"
 
             />
         <activity
             android:name=".activity.DetailActivity"
             android:launchMode="singleTask"
+            android:showOnLockScreen="true"
 
             />
         <activity
             android:name=".activity.GioHangActivity"
             android:launchMode="singleTask"
-             />
+            android:showOnLockScreen="true"
+            />
         <activity
             android:name=".activity.DatHangActivity"
             android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:showOnLockScreen="true"
             />
         <activity
             android:name=".activity.TimKiemActivity"
             android:launchMode="singleTask"
-           />
+            android:showOnLockScreen="true"
+            />
         <activity
             android:name=".activity.YeuthichActivity"
             android:launchMode="singleTask"
-             />
+            android:showOnLockScreen="true"
+            />
         <activity android:name=".activity.FindActivity"
             android:launchMode="singleTask"
+            android:showOnLockScreen="true"
             />
 
         <activity
             android:name=".activity.DoiTra"
             android:launchMode="singleTask"
+            android:showOnLockScreen="true"
+
             />
 
         <activity
             android:name=".activity.ThanhToan"
             android:launchMode="singleTask"
+            android:showOnLockScreen="true"
             />
 
         <activity
             android:name=".activity.LienHe"
             android:launchMode="singleTask"
+            android:showOnLockScreen="true"
             />
 
         <activity
             android:name=".activity.GiaoHang"
             android:launchMode="singleTask"
+            android:showOnLockScreen="true"
             />
 
 

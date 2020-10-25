@@ -28,9 +28,9 @@ public class MainFragment extends Fragment {
         add(R.drawable.hit);
         add(R.drawable.merc);
         add(R.drawable.penny);
-        add(R.drawable.muller);
-        add(R.drawable.dell);
-        add(R.drawable.audi);
+        add(R.drawable.rossmann_logo);
+        add(R.drawable.apotheke_logo);
+        add(R.drawable.mediamarkt_logo);
         add(R.drawable.dior);
         add(R.drawable.skii);
         add(R.drawable.richy);
@@ -48,7 +48,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_blank, container, false);
+        View rootView = inflater.inflate(R.layout.main_fragment, container, false);
         viewFlipper = rootView.findViewById(R.id.viewflipper);
         recyclerViewMain = rootView.findViewById(R.id.recycler_view_main);
         actionViewFlipper();

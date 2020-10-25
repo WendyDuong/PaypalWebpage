@@ -10,8 +10,6 @@
 
     <LinearLayout
         android:id="@+id/layout_dat_hang"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -20,33 +18,49 @@
 
         <EditText
             android:imeOptions="actionDone"
-
             android:id="@+id/editText_ten"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:layout_marginBottom="1dp"
+            android:background="@drawable/edit_text_custom"
+            android:layout_marginBottom="5dp"
             android:ems="10"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:drawableStart="@drawable/ic_baseline_person_24"
+            android:drawablePadding="10dp"
+            android:elevation="5dp"
+            android:padding="10dp"
             android:hint="Họ và tên"
             android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/editText_dia_chi"
             android:layout_width="match_parent"
+            android:background="@drawable/edit_text_custom"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:drawablePadding="10dp"
+            android:padding="10dp"
+            android:drawableStart="@drawable/ic_baseline_home_24"
             android:ems="10"
+            android:elevation="5dp"
+            android:layout_margin="5dp"
             android:imeOptions="actionDone"
-
             android:hint="Địa chỉ"
             android:inputType="textPersonName" />
 
         <EditText
+            android:drawableStart="@drawable/ic_baseline_email_24"
             android:id="@+id/editTextText_email"
+            android:drawablePadding="10dp"
+            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:ems="10"
+            android:elevation="5dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/edit_text_custom"
             android:imeOptions="actionDone"
             android:hint="Email"
             android:inputType="textPersonName" />
@@ -55,18 +69,24 @@
             android:id="@+id/editText_so_dt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/edit_text_custom"
             android:ems="10"
+            android:drawablePadding="10dp"
+            android:padding="10dp"
+            android:layout_margin="5dp"
             android:imeOptions="actionDone"
+            android:elevation="5dp"
             android:hint="Số điện thoại"
+            android:drawableStart="@drawable/ic_baseline_phone_android_24"
             android:inputType="number" />
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_dat_hang"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginBottom="50dp"
+        android:layout_height="0dp"
         android:layout_marginTop="5dp"
-       />
+        />
 
 
     <TextView
@@ -74,45 +94,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
         android:layout_gravity="end"
         android:layout_marginEnd="10dp"
         android:text="100.000đ"
         android:textColor="#fa3223" />
 
     <LinearLayout
-    android:layout_marginTop="10dp"
-    android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:layout_marginBottom="10dp"
-    android:orientation="horizontal">
-    <Button
-        android:id="@+id/mua_tiep_button"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="5dp"
-        android:text="Tiếp tục mua"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"/>
-    <Button
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:id="@+id/dat_hang_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:text="đặt hàng"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="1"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp" />
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/mua_tiep_button"
+            android:background="@color/colorAccent"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="5dp"
+            android:text="Tiếp tục mua"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+        <Button
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/dat_hang_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:gravity="center"
+            android:text="đặt hàng"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
 
 
-</LinearLayout>
+    </LinearLayout>
 
 
 

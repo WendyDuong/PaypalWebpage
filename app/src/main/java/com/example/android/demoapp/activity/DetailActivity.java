@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -66,6 +67,12 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_activity);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON|
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
         mDb = AppDatabase.getInstance(getApplicationContext());
         imgChiTiet = findViewById(R.id.image_view_chi_tiet);
         tvTen = findViewById(R.id.ten_san_pham);
@@ -117,17 +124,17 @@ public class DetailActivity extends AppCompatActivity {
                     break;
                 case 3:
                     //imageViewHangSp.setImageResource(R.drawable.muller);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.muller));
+                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.rossmann_logo));
 
                     break;
                 case 4:
                     //imageViewHangSp.setImageResource(R.drawable.dell);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.dell));
+                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.apotheke_logo));
 
                     break;
                 case 5:
                     //imageViewHangSp.setImageResource(R.drawable.audi);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.audi));
+                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.mediamarkt_logo));
 
                     break;
                 case 6:

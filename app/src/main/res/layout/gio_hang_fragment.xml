@@ -49,30 +49,30 @@
 
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/button_dat_hang"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:text="Tiến hành đặt hàng"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
 
     <TextView
         android:id="@+id/tong_tien"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="17dp"
+        android:layout_margin="10dp"
+
         android:textColor="#fa3223"
         app:layout_constraintBottom_toTopOf="@id/button_dat_hang"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recycler_view_gio_hang" />
+
+    <Button
+        android:id="@+id/button_dat_hang"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:text="Tiến hành đặt hàng"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

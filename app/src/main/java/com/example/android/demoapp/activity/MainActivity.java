@@ -1,21 +1,15 @@
 package com.example.android.demoapp.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -28,7 +22,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.android.demoapp.Presenter.PresenterLogicXuLyMenu;
 import com.example.android.demoapp.R;
-import com.example.android.demoapp.View.DangNhap.DangNhapActivity;
 import com.example.android.demoapp.ViewModel.MainViewModel;
 import com.example.android.demoapp.adapter.CategoryAdapter;
 import com.example.android.demoapp.adapter.NavigationViewAdapter;
@@ -36,6 +29,7 @@ import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
 import com.example.android.demoapp.model.ModelDangNhap;
+import com.example.android.demoapp.widget.MyService;
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -45,6 +39,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +85,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON|
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
+        Intent intent = new Intent(this, MyService.class);
+        startService(intent);
+
+
         init();
         mainActivityOnCreat = true;
         ArrayList<String> caNhan = new ArrayList<String>();
@@ -117,55 +121,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-      buttonDangNhap.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-              Intent intentDangNhap = new Intent(MainActivity.this, DangNhapActivity.class);
-               startActivity(intentDangNhap);
-          }
-      });
-
-
-
-        logicXuLyMenu = new PresenterLogicXuLyMenu();
-
-
-   buttonDangXuat.setOnClickListener(new View.OnClickListener() {
-       @Override
-       public void onClick(View view) {
-           if (accessToken != null) {
-               LoginManager.getInstance().logOut();
-               Toast.makeText(MainActivity.this, "Đăng Xuất Thành Công!", Toast.LENGTH_SHORT).show();
-               buttonDangNhap.setVisibility(View.VISIBLE);
-               buttonDangXuat.setVisibility(View.GONE);
-               textViewTenKhachHang.setText("Chào Mừng Quý Khách");
-           }
-           if(account!= null)
-           {
-               mGoogleSignInClient = modelDangNhap.LayGoogleSignInClient(MainActivity.this);
-               mGoogleSignInClient.signOut()
-                       .addOnCompleteListener(MainActivity.this, new OnCompleteListener<Void>() {
-                           @Override
-                           public void onComplete(@NonNull Task<Void> task) {
-                               Toast.makeText(MainActivity.this, "Đăng Xuất Thành Công!", Toast.LENGTH_SHORT).show();
-                               buttonDangNhap.setVisibility(View.VISIBLE);
-                               buttonDangXuat.setVisibility(View.GONE);
-                               textViewTenKhachHang.setText("Chào Mừng Quý Khách");
-                           }
-                       });
-
-           }
-
-           if(!modelDangNhap.LayCachedDangNhap(MainActivity.this).equals("")){
-               Toast.makeText(MainActivity.this, "Đăng Xuất Thành Công!", Toast.LENGTH_SHORT).show();
-               modelDangNhap.CapNhatCachedDangNhap(MainActivity.this,"");
-               buttonDangNhap.setVisibility(View.VISIBLE);
-               buttonDangXuat.setVisibility(View.GONE);
-               textViewTenKhachHang.setText("Chào Mừng Quý Khách");
-
-       }
-   }});
-
     }
 
 
@@ -180,9 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         private void init () {
-            textViewTenKhachHang = findViewById(R.id.ten_khach_hang);
-            buttonDangNhap = findViewById(R.id.button_dang_nhap);
-            buttonDangXuat = findViewById(R.id.button_dang_xuat);
+
             toolbar = findViewById(R.id.toolbar);
             mDrawerLayout = findViewById(R.id.drawer_layout);
             imageView = findViewById(R.id.anhcanhan);

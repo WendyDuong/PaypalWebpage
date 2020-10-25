@@ -3,8 +3,11 @@ package com.example.android.demoapp.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -47,6 +50,10 @@ public class DatHangActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dat_hang_activity);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON|
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         mDb = AppDatabase.getInstance(this);
 
         datHangRecyclerView = findViewById(R.id.recycler_view_dat_hang);
@@ -189,6 +196,7 @@ public class DatHangActivity extends AppCompatActivity{
          }
      }); */
 
+
    buttonDatHang.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -196,7 +204,8 @@ public class DatHangActivity extends AppCompatActivity{
               final String sdt = editTextSoDt.getText().toString().trim();
               final String email = editTextEmail.getText().toString().trim();
               final String diachi = editTextDiaChi.getText().toString().trim();
-              if (ten.length() > 0 && sdt.length() >0 && email.length() >0 && diachi.length() > 0){
+
+              if (ten.length() > 0 && sdt.length() >0 && email.length() >0 && diachi.length() > 0 && isValidEmail (email)){
                   Intent intent = new Intent(Intent.ACTION_SENDTO);
                   intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                   intent.setData(Uri.parse("mailto:"));
@@ -243,13 +252,16 @@ public class DatHangActivity extends AppCompatActivity{
 
               }
               else{
-              Toast.makeText(DatHangActivity.this, "Thông tin cá nhân còn thiếu", Toast.LENGTH_SHORT).show();
+              Toast.makeText(DatHangActivity.this, "Thông tin cá nhân còn thiếu hoặc địa chỉ email chưa đúng", Toast.LENGTH_SHORT).show();
 
           }
           }
       });
 
 
+    }
+    public static boolean isValidEmail (String email){
+        return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
     }

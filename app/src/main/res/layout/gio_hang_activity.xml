@@ -38,52 +38,43 @@
         android:name="com.example.android.demoapp.fragment.GioHangFragment"
         android:id="@+id/frag_ment_gio_hang"/>
 
-
-
-
- <!--   <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="?attr/actionBarSize"
-        android:id="@+id/recycler_view_gio_hang_2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="100dp"
-        />
-
-    <TextView
-        android:id="@+id/tong_tien_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="188dp"
-        android:layout_marginBottom="17dp"
-        android:text="Tổng tiền: "
-        app:layout_constraintBottom_toTopOf="@id/button_dat_hang_2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycler_view_gio_hang_2" />
-
-    <Button
-        android:id="@+id/button_dat_hang_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:background="#F44336"
-        android:gravity="center"
-        android:text="Tiến hành đặt hàng"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
-    <TextView
-        android:id="@+id/so_tien_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
-        android:layout_marginBottom="17dp"
-        app:layout_constraintBottom_toTopOf="@id/button_dat_hang_2"
-        app:layout_constraintStart_toEndOf="@id/tong_tien_2"
-        app:layout_constraintTop_toBottomOf="@id/recycler_view_gio_hang_2" />
-
--->
-
+    <!--   <androidx.recyclerview.widget.RecyclerView
+         android:layout_marginTop="?attr/actionBarSize"
+         android:id="@+id/recycler_view_gio_hang_2"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:layout_marginBottom="100dp"
+         />
+     <TextView
+         android:id="@+id/tong_tien_2"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="188dp"
+         android:layout_marginBottom="17dp"
+         android:text="Tổng tiền: "
+         app:layout_constraintBottom_toTopOf="@id/button_dat_hang_2"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@id/recycler_view_gio_hang_2" />
+     <Button
+         android:id="@+id/button_dat_hang_2"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginBottom="16dp"
+         android:background="#F44336"
+         android:gravity="center"
+         android:text="Tiến hành đặt hàng"
+         android:textColor="#FFFFFF"
+         android:textSize="20sp"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintStart_toStartOf="parent" />
+     <TextView
+         android:id="@+id/so_tien_2"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="9dp"
+         android:layout_marginBottom="17dp"
+         app:layout_constraintBottom_toTopOf="@id/button_dat_hang_2"
+         app:layout_constraintStart_toEndOf="@id/tong_tien_2"
+         app:layout_constraintTop_toBottomOf="@id/recycler_view_gio_hang_2" />
+ -->
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,7 @@ package com.example.android.demoapp.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -50,6 +51,10 @@ public class CatalogActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.catalog_activity);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON|
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout2);
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.iconhome));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.kinh_lup_icon));
@@ -142,13 +147,13 @@ public class CatalogActivity extends AppCompatActivity {
                 imageViewNhaCungCap.setImageResource(R.drawable.penny);
                 break;
             case 3:
-                imageViewNhaCungCap.setImageResource(R.drawable.muller);
+                imageViewNhaCungCap.setImageResource(R.drawable.rossmann_logo);
                 break;
             case 4:
-                imageViewNhaCungCap.setImageResource(R.drawable.dell);
+                imageViewNhaCungCap.setImageResource(R.drawable.apotheke_logo);
                 break;
             case 5:
-                imageViewNhaCungCap.setImageResource(R.drawable.audi);
+                imageViewNhaCungCap.setImageResource(R.drawable.mediamarkt_logo);
                 break;
             case 6:
                 imageViewNhaCungCap.setImageResource(R.drawable.dior);
