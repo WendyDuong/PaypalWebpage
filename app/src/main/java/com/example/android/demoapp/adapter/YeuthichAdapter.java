@@ -29,6 +29,8 @@ import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
+import org.apache.commons.math3.util.Precision;
+
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -67,10 +69,12 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
 
         String tensanpham = yeuThichEntry.getTenSanPham();
         String khoiluongsanpham = yeuThichEntry.getKhoiLuong();
-        double giasanpham = yeuThichEntry.getGiaSanPham();
         int hinhanhsanpham = yeuThichEntry.getHinhAnh();
         int idsanpham = yeuThichEntry.getIdSanPham();
 
+        //Rounding currency to make a easy reading
+        double giasanpham = yeuThichEntry.getGiaSanPham();
+        giasanpham = Precision.round(giasanpham/1000, 0)*1000;
 
 
         holder.tvTen.setText(tensanpham);
@@ -165,7 +169,6 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                 @Override
                 public void onClick(View view) {
 
-                    yeuThichs.get(getLayoutPosition());
                     final int idsanphamhientai = yeuThichs.get(getLayoutPosition()).getIdSanPham();
                     final String tensanpham = yeuThichs.get(getLayoutPosition()).getTenSanPham();
                     final String khoiluongsanpham = yeuThichs.get(getLayoutPosition()).getKhoiLuong();

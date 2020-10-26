@@ -19,7 +19,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
 
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="170dp"
     >
 
 
@@ -31,7 +31,7 @@
         android:layout_marginTop="12dp"
         android:singleLine="false"
         android:text="Bánh Sisi Mix Brand"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/anh_item_gio_hang"
         app:layout_constraintTop_toTopOf="parent" />
@@ -73,6 +73,8 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/minus"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -84,6 +86,8 @@
         android:id="@+id/so_luong_item"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:gravity="center"
         android:text="1"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -95,6 +99,8 @@
         android:id="@+id/button_tang"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/add"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"

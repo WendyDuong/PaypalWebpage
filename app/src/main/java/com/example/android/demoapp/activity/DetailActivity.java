@@ -29,13 +29,15 @@ import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import org.apache.commons.math3.util.Precision;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class DetailActivity extends AppCompatActivity {
-    ImageView imgChiTiet, timImageView, imageViewHangSp;
+    ImageView imgChiTiet, timImageView;
     private static final String INSTANCE_SANPHAM_ID = "instanceID";
     private static final int DEFAULT_ID = -1;
     private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
@@ -89,9 +91,6 @@ public class DetailActivity extends AppCompatActivity {
 
         addEvent();
         yeuthichEvent();
-        imageViewHangSp = findViewById(R.id.image_view_hang_san_pham);
-
-        imageViewHangSp.setVisibility(View.INVISIBLE);
 
         imgChiTiet.setClipToOutline(true);
         //TODO(4)
@@ -342,11 +341,14 @@ public class DetailActivity extends AppCompatActivity {
     private void populateUI(SanPhamEntry sanPham) {
         idsanpham = sanPham.getId();
         tensp = sanPham.getTenSanPham();
-        giasp = sanPham.getGiaSanPham();
         hinhanhsp = sanPham.getHinhAnh();
         khoiluongsp = sanPham.getKhoiLuong();
         thuongHieu = sanPham.getThuongHieu();
         xuatXu = sanPham.getXuatXu();
+
+        //Rounding currency to make a easy reading
+        giasp = sanPham.getGiaSanPham();
+        giasp = Precision.round(giasp/1000, 0)*1000;
 
         tvTen.setText(tensp);
         tvMoTa.setText(sanPham.getMoTa());
@@ -525,17 +527,20 @@ public class DetailActivity extends AppCompatActivity {
                     //imageViewHangSp.setImageResource(R.drawable.penny);
                     tabNhaCungCap.setIcon(R.drawable.penny);
                     break;
+
+
+
                 case 3:
                     //imageViewHangSp.setImageResource(R.drawable.muller);
-                    tabNhaCungCap.setIcon(R.drawable.muller);
+                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.rossmann_logo));
                     break;
                 case 4:
                     //imageViewHangSp.setImageResource(R.drawable.dell);
-                    tabNhaCungCap.setIcon(R.drawable.dell);
+                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.apotheke_logo));
                     break;
                 case 5:
                     //imageViewHangSp.setImageResource(R.drawable.audi);
-                    tabNhaCungCap.setIcon(R.drawable.audi);
+                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.mediamarkt_logo));
                     break;
                 case 6:
                     //imageViewHangSp.setImageResource(R.drawable.dior);

@@ -28,6 +28,8 @@ import com.example.android.demoapp.adapter.GioHangAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 
+import org.apache.commons.math3.util.Precision;
+
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -68,14 +70,12 @@ public class GioHangFragment extends Fragment {
 
 
         GioHangViewModel gioHangViewModel = ViewModelProviders.of(this).get(GioHangViewModel.class);
-        //gioHangViewModel.getGioHang().removeObservers(this);
 
         gioHangViewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
             @Override
             public void onChanged(@Nullable List<GioHangEntry> gioHangEntries) {
                 tvTongtien = rootView.findViewById(R.id.tong_tien);
                 mGiohangs = gioHangEntries;
-
 
                 if (mGiohangs.size() == 0) {
                     tvTongtien.setVisibility(View.INVISIBLE);
@@ -86,18 +86,15 @@ public class GioHangFragment extends Fragment {
                     emptyView.setVisibility(View.INVISIBLE);
                     for (int i = 0; i < mGiohangs.size(); i++) {
                         tongtien = mGiohangs.get(i).getGiaSanPham();
+                        tongtien = Precision.round(tongtien/1000, 0)*1000;
                         tongTienDonHang += tongtien;
                     }
-                    //Toast.makeText(getActivity(), Double.toString(tongTienDonHang), Toast.LENGTH_SHORT).show();
 
+                    //Rounding currency to make a easy reading
                     DecimalFormat decimalFormat1 = new DecimalFormat("###,###,###");
                     tvTongtien.setText("Tổng số tiền: " + decimalFormat1.format(tongTienDonHang) + " Đ");
                     tongTienDonHang = 0;
-
-
                 }
-
-
                 gioHangAdapter.setGioHangs(gioHangEntries);
 
             }
@@ -126,42 +123,6 @@ public class GioHangFragment extends Fragment {
 
     }
 
-/*
-    @Override
-    public void onResume() {
-        tvTongtien = getView().findViewById(R.id.tong_tien);
-        getViewModelStore().clear();
-        GioHangViewModel gioHangViewModel = ViewModelProviders.of(getActivity()).get(GioHangViewModel.class);
-        gioHangViewModel.getGioHang().removeObservers(this);
-        gioHangViewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
-            @Override
-            public void onChanged(@Nullable List<GioHangEntry> gioHangEntries) {
-                Toast.makeText(getActivity(), "Show toast", Toast.LENGTH_SHORT).show();
-
-                Toast.makeText(getActivity(), "OnChange", Toast.LENGTH_SHORT).show();
-                mGiohangs = gioHangEntries;
-                if (mGiohangs.size() == 0) {
-                    tvTongtien.setVisibility(View.INVISIBLE);
-                    emptyView.setVisibility(View.VISIBLE);
-                }else {
-                    tvTongtien.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.INVISIBLE);
-                    for (int i = 0; i < mGiohangs.size(); i++) {
-                        tongtien = mGiohangs.get(i).getGiaSanPham();
-                        tongTienDonHang += tongtien;
-                    }
-                    DecimalFormat decimalFormat1 = new DecimalFormat("###,###,###");
-                    tvTongtien.setText("Tổng số tiền: " + decimalFormat1.format(tongTienDonHang) + " Đ");
-                    tongTienDonHang = 0;
-                    Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
-                }
-                gioHangAdapter.setGioHangs(gioHangEntries);
-            }
-        });
-        super.onResume();
-    }
-
-*/
     ItemTouchHelper.SimpleCallback itemTouchHelper = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {

@@ -16,6 +16,8 @@ import com.example.android.demoapp.activity.DetailActivity;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 
+import org.apache.commons.math3.util.Precision;
+
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -48,10 +50,17 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
 
         String tensanpham = gioHangEntry.getTenSanPham();
         String khoiluongsanpham = gioHangEntry.getKhoiLuong();
+
+        //Rounding curency to make a easy reading
         double giasanpham = gioHangEntry.getGiaSanPham();
+        giasanpham = Precision.round(giasanpham/1000, 0)*1000;
+
+
         int hinhanhsanpham = gioHangEntry.getHinhAnh();
         int soluongsanpham = gioHangEntry.getSoLuong();
+
         double giaDonViSanPham = giasanpham/soluongsanpham;
+        giaDonViSanPham = Precision.round(giaDonViSanPham/1000, 0)*1000;
 
 
         int idsanpham = gioHangEntry.getIdSanPham();

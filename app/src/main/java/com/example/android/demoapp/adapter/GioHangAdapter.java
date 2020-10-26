@@ -20,6 +20,8 @@ import com.example.android.demoapp.activity.DetailActivity;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 
+import org.apache.commons.math3.util.Precision;
+
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -55,10 +57,13 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
 
         String tensanpham = gioHangEntry.getTenSanPham();
         String khoiluongsanpham = gioHangEntry.getKhoiLuong();
-        double giasanpham = gioHangEntry.getGiaSanPham();
         int hinhanhsanpham = gioHangEntry.getHinhAnh();
         int soluongsanpham = gioHangEntry.getSoLuong();
         int idsanpham = gioHangEntry.getIdSanPham();
+
+        //Rounding currency to make a easy reading
+        double giasanpham = gioHangEntry.getGiaSanPham();
+        giasanpham = Precision.round(giasanpham/1000, 0)*1000;
 
         holder.textViewTenItem.setText(tensanpham);
         holder.textViewKhoiLuongItem.setText(khoiluongsanpham);

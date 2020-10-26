@@ -21,6 +21,8 @@ import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.SanPhamEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
 
+import org.apache.commons.math3.util.Precision;
+
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -52,7 +54,11 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
         SanPhamEntry sanPham = sanPhams.get(position);
         holder.tvTensanpham.setText(sanPham.getTenSanPham());
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        holder.tvGiasanpham.setText("Giá :" + decimalFormat.format(sanPham.getGiaSanPham()) + " Đ");
+        double giasp = sanPham.getGiaSanPham();
+
+        //Rounding curency to make a easy reading
+        giasp = Precision.round(giasp/1000, 0)*1000;
+        holder.tvGiasanpham.setText("Giá : " + decimalFormat.format(giasp) + " Đ");
         holder.imgHinhAnhSanpham.setImageResource(sanPham.getHinhAnh());
         final int idsanpham = sanPham.getId();
 
