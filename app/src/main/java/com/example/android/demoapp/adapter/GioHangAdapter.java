@@ -63,7 +63,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
 
         //Rounding currency to make a easy reading
         double giasanpham = gioHangEntry.getGiaSanPham();
-        giasanpham = Precision.round(giasanpham/1000, 0)*1000;
+//        giasanpham = Precision.round(giasanpham/1000, 0)*1000;
 
         holder.textViewTenItem.setText(tensanpham);
         holder.textViewKhoiLuongItem.setText(khoiluongsanpham);

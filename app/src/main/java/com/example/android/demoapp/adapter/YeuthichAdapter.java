@@ -204,7 +204,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, giasanpham, hinhanhsanpham, khoiluongsanpham, 1, idHang));
+                                    mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham/1000,0)*1000, hinhanhsanpham, khoiluongsanpham, 1, idHang));
 
 
                                 }
@@ -219,7 +219,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, giasanpham, hinhanhsanpham, khoiluongsanpham, 1, idHang));
+                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham/1000,0)*1000, hinhanhsanpham, khoiluongsanpham, 1, idHang));
 
 
                             }

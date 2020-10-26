@@ -86,11 +86,9 @@ public class GioHangFragment extends Fragment {
                     emptyView.setVisibility(View.INVISIBLE);
                     for (int i = 0; i < mGiohangs.size(); i++) {
                         tongtien = mGiohangs.get(i).getGiaSanPham();
-                        tongtien = Precision.round(tongtien/1000, 0)*1000;
                         tongTienDonHang += tongtien;
                     }
 
-                    //Rounding currency to make a easy reading
                     DecimalFormat decimalFormat1 = new DecimalFormat("###,###,###");
                     tvTongtien.setText("Tổng số tiền: " + decimalFormat1.format(tongTienDonHang) + " Đ");
                     tongTienDonHang = 0;

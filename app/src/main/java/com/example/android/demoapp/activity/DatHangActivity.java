@@ -82,8 +82,6 @@ public class DatHangActivity extends AppCompatActivity {
                     tongTienDonHang += tongtien;
                 }
 
-                //Rounding currency to make a easy reading
-                tongTienDonHang = Precision.round(tongTienDonHang/1000, 0)*1000;
                 DecimalFormat decimalFormat1 = new DecimalFormat("###,###,###");
                 tongTien.setText("Tổng số tiền: " + decimalFormat1.format(tongTienDonHang) + " Đ");
 
