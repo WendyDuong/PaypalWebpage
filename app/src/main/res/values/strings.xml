@@ -35,7 +35,7 @@ Quý khách hàng có đăng ký gói thành viên TikiNOW sẽ được miễn 
 
     <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
     <string name="empty_view_title_gio_hang">Giỏ hàng của bạn đang trống...</string>
-    <string name="empty_view_tilte_yeu_thich">Danh sách yêu thích của bạn đang trống...</string>
+    <string name="empty_view_tilte_yeu_thich">Danh sách yêu thích đang trống...</string>
 
     <!-- Text in DetailActivity-->
     <string name="chi_tiet_san_pham">Chi tiết sản phẩm</string>
