@@ -37,7 +37,7 @@ import java.util.List;
 
 
 public class DetailActivity extends AppCompatActivity {
-    ImageView imgChiTiet, timImageView;
+    ImageView imgChiTiet, timImageView, imageViewHangSp;
     private static final String INSTANCE_SANPHAM_ID = "instanceID";
     private static final int DEFAULT_ID = -1;
     private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
@@ -87,6 +87,7 @@ public class DetailActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tab_layout3);
         spinner = findViewById(R.id.spinner);
         timImageView = findViewById(R.id.tim_chi_tiet_activity);
+        imageViewHangSp = findViewById(R.id.iv_hang);
         eventSpinner();
 
         addEvent();
@@ -108,75 +109,84 @@ public class DetailActivity extends AppCompatActivity {
 
             switch (idHang) {
                 case 0:
-                    //  imageViewHangSp.setImageResource(R.drawable.hit);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.hit));
+                      imageViewHangSp.setImageResource(R.drawable.hit);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.hit));
                     break;
                 case 1:
-                    // imageViewHangSp.setImageResource(R.drawable.merc);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.merclogo));
+                     imageViewHangSp.setImageResource(R.drawable.merc);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.merclogo));
 
                     break;
                 case 2:
-                    //imageViewHangSp.setImageResource(R.drawable.penny);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.penny));
+                    imageViewHangSp.setImageResource(R.drawable.penny);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.penny));
 
                     break;
                 case 3:
-                    //imageViewHangSp.setImageResource(R.drawable.muller);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.rossmann_logo));
+                    imageViewHangSp.setImageResource(R.drawable.rossmann_logo);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.rossmann));
 
                     break;
                 case 4:
-                    //imageViewHangSp.setImageResource(R.drawable.dell);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.apotheke_logo));
+                    imageViewHangSp.setImageResource(R.drawable.apotheke_logo);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.apotheke_logo));
 
                     break;
                 case 5:
-                    //imageViewHangSp.setImageResource(R.drawable.audi);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.mediamarkt_logo));
+                    imageViewHangSp.setImageResource(R.drawable.mediamarkt_logo);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.mediamarkt_logo));
 
                     break;
                 case 6:
-                    //imageViewHangSp.setImageResource(R.drawable.dior);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.dior));
+                    imageViewHangSp.setImageResource(R.drawable.dior);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.dior));
 
                     break;
                 case 7:
-                    //imageViewHangSp.setImageResource(R.drawable.skii);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.skii));
+                    imageViewHangSp.setImageResource(R.drawable.skii);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.skii));
 
                     break;
                 case 8:
-                    //imageViewHangSp.setImageResource(R.drawable.richy);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.richy));
+                    imageViewHangSp.setImageResource(R.drawable.richy);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.richy));
 
                     break;
             }
         }
+        imageViewHangSp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent0 = new Intent(DetailActivity.this, CatalogActivity.class);
+                intent0.putExtra(DetailActivity.EXTRA_HANG_ID, idHang);
+                DetailActivity.this.startActivity(intent0);
+            }
+        });
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.kinh_lup_icon));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.timdo_bar));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.xe_hang));
-        tabNhaCungCap = tabLayout.getTabAt(0);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
+/*
                     case 0:
                         Intent intent0 = new Intent(DetailActivity.this, CatalogActivity.class);
                         intent0.putExtra(DetailActivity.EXTRA_HANG_ID, idHang);
                         DetailActivity.this.startActivity(intent0);
                         break;
-                    case 1:
+*/
+                    case 0:
                         Intent intent1 = new Intent(DetailActivity.this, TimKiemActivity.class);
                         DetailActivity.this.startActivity(intent1);
                         break;
-                    case 2:
+                    case 1:
                         Intent intent2 = new Intent(DetailActivity.this, YeuthichActivity.class);
                         DetailActivity.this.startActivity(intent2);
                         break;
 
-                    case 3:
+                    case 2:
                         Intent intent3 = new Intent(DetailActivity.this, GioHangActivity.class);
                         DetailActivity.this.startActivity(intent3);
                         break;
@@ -194,6 +204,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
+/*
                     case 0:
 
                         Intent intent0 = new Intent(DetailActivity.this, CatalogActivity.class);
@@ -201,16 +212,17 @@ public class DetailActivity extends AppCompatActivity {
 
                         DetailActivity.this.startActivity(intent0);
                         break;
-                    case 1:
+*/
+                    case 0:
                         Intent intent1 = new Intent(DetailActivity.this, TimKiemActivity.class);
                         DetailActivity.this.startActivity(intent1);
                         break;
-                    case 2:
+                    case 1:
                         Intent intent2 = new Intent(DetailActivity.this, YeuthichActivity.class);
                         DetailActivity.this.startActivity(intent2);
                         break;
 
-                    case 3:
+                    case 2:
                         Intent intent3 = new Intent(DetailActivity.this, GioHangActivity.class);
                         DetailActivity.this.startActivity(intent3);
                         break;
@@ -223,8 +235,8 @@ public class DetailActivity extends AppCompatActivity {
 
         });
 
-        tabYeuThich = tabLayout.getTabAt(2);
-        tabGioHang = tabLayout.getTabAt(3);
+        tabYeuThich = tabLayout.getTabAt(1);
+        tabGioHang = tabLayout.getTabAt(2);
 
         badgeDrawableGioHang = tabGioHang.getOrCreateBadge();
         badgeDrawableYeuthich = tabYeuThich.getOrCreateBadge();
@@ -516,43 +528,48 @@ public class DetailActivity extends AppCompatActivity {
             idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_ID);
             switch (idHang) {
                 case 0:
-                    //  imageViewHangSp.setImageResource(R.drawable.hit);
-                    tabNhaCungCap.setIcon(R.drawable.hit);
+                    imageViewHangSp.setImageResource(R.drawable.hit);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.hit));
                     break;
                 case 1:
-                    // imageViewHangSp.setImageResource(R.drawable.merc);
-                    tabNhaCungCap.setIcon(R.drawable.merclogo);
+                    imageViewHangSp.setImageResource(R.drawable.merc);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.merclogo));
+
                     break;
                 case 2:
-                    //imageViewHangSp.setImageResource(R.drawable.penny);
-                    tabNhaCungCap.setIcon(R.drawable.penny);
+                    imageViewHangSp.setImageResource(R.drawable.penny);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.penny));
+
                     break;
-
-
-
                 case 3:
-                    //imageViewHangSp.setImageResource(R.drawable.muller);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.rossmann_logo));
+                    imageViewHangSp.setImageResource(R.drawable.rossmann_logo);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.rossmann));
+
                     break;
                 case 4:
-                    //imageViewHangSp.setImageResource(R.drawable.dell);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.apotheke_logo));
+                    imageViewHangSp.setImageResource(R.drawable.apotheke_logo);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.apotheke_logo));
+
                     break;
                 case 5:
-                    //imageViewHangSp.setImageResource(R.drawable.audi);
-                    tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.mediamarkt_logo));
+                    imageViewHangSp.setImageResource(R.drawable.mediamarkt_logo);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.mediamarkt_logo));
+
                     break;
                 case 6:
-                    //imageViewHangSp.setImageResource(R.drawable.dior);
-                    tabNhaCungCap.setIcon(R.drawable.dior);
+                    imageViewHangSp.setImageResource(R.drawable.dior);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.dior));
+
                     break;
                 case 7:
-                    //imageViewHangSp.setImageResource(R.drawable.skii);
-                    tabNhaCungCap.setIcon(R.drawable.skii);
+                    imageViewHangSp.setImageResource(R.drawable.skii);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.skii));
+
                     break;
                 case 8:
-                    //imageViewHangSp.setImageResource(R.drawable.richy);
-                    tabNhaCungCap.setIcon(R.drawable.richy);
+                    imageViewHangSp.setImageResource(R.drawable.richy);
+                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.richy));
+
                     break;
             }
         }

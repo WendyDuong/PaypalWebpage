@@ -2,10 +2,12 @@ package com.example.android.demoapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -39,11 +41,18 @@ public class MainAdapter extends  RecyclerView.Adapter<MainAdapter.viewHolderMai
 
 
     @Override
-    public void onBindViewHolder(@NonNull MainAdapter.viewHolderMain holder, int position) {
+    public void onBindViewHolder(@NonNull final MainAdapter.viewHolderMain holder, int position) {
 
         holder.imageView.setImageResource(mImageIds.get(position));
 
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) holder.cardView.getLayoutParams();
+
+        final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) holder.cardView.getLayoutParams();
+
+       /* layoutParams.height = holder.cardView.getMeasuredWidth();
+        holder.cardView.requestLayout();*/
+
+
+
         int left = dptoPx(24);
         int top = dptoPx(12);
         int right = dptoPx(24);
