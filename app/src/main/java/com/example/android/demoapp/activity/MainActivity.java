@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                     switch (position) {
                         case 0: {
-                            tab.setIcon(R.drawable.logokhongnen);
+                            tab.setIcon(R.drawable.iconhome);
                             break;
                         }
                         case 1: {

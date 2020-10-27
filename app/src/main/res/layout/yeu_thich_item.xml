@@ -79,6 +79,7 @@
         android:text="thêm vào giỏ"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/button_xoa_yeu_thich"
         app:layout_constraintStart_toEndOf="@+id/anh_item_yeu_thich"
         app:layout_constraintTop_toBottomOf="@+id/gia_item_yeu_thich" />
 

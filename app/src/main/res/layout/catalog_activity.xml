@@ -17,8 +17,11 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout2"
+            app:tabPaddingEnd="24dp"
+            app:tabPaddingStart="10dp"
+            app:tabIndicator="@null"
             android:background="@android:color/transparent"
-            android:layout_width="230dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             app:tabIndicatorColor="@android:color/transparent">
 

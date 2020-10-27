@@ -26,6 +26,7 @@
             android:id="@+id/iv_hang"
             android:layout_width="100dp"
             android:layout_height="32dp"
+            android:layout_marginStart="8dp"
             android:padding="4dp"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar3"
             app:layout_constraintStart_toStartOf="@+id/toolbar3"
@@ -38,7 +39,9 @@
             android:layout_height="?attr/actionBarSize"
             app:layout_constraintEnd_toEndOf="@+id/toolbar3"
             app:layout_constraintTop_toTopOf="parent"
-            app:tabIndicatorColor="@android:color/transparent" />
+            app:tabIndicator="@null"
+            app:tabPaddingEnd="30dp"
+            app:tabPaddingStart="10dp" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_view_detail"
