@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +38,7 @@ public class FindActivity extends AppCompatActivity {
 
     String mTenSanPham;
     private AppDatabase mDb;
+    TextView emptyTv;
 
     Toolbar toolbar;
     private TabLayout tabLayout;
@@ -51,6 +53,7 @@ public class FindActivity extends AppCompatActivity {
     public static BadgeDrawable badgeDrawableYeuthich;
     List<GioHangEntry> gioHangEntries;
     List<YeuThichEntry> yeuThichEntries;
+    List<SanPhamEntry> sanPhamEntries;
 
 
 
@@ -64,6 +67,8 @@ public class FindActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
+
+        emptyTv = findViewById(R.id.find_empty_tv);
         FindActivityOnCreat = true;
         toolbar = findViewById(R.id.toolbar_tim_do);
         setSupportActionBar(toolbar);
@@ -162,8 +167,13 @@ public class FindActivity extends AppCompatActivity {
             viewModel.getSanPhams().observe(this, new Observer<List<SanPhamEntry>>() {
                 @Override
                 public void onChanged(@Nullable List<SanPhamEntry> sanPhams) {
-                    Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
-                    timKiemAdapter.setSanPhams(sanPhams);
+                    sanPhamEntries = sanPhams;
+                    if (sanPhamEntries.size()>0){
+                        timKiemAdapter.setSanPhams(sanPhams);
+                        emptyTv.setVisibility(View.INVISIBLE);
+                    }
+                    else
+                        emptyTv.setVisibility(View.VISIBLE);
                 }
             });
 
