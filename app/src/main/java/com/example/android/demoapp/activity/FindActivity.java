@@ -1,6 +1,7 @@
 package com.example.android.demoapp.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -155,8 +156,16 @@ public class FindActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra(EXTRA_TEN_SAN_PHAM_TIM_KIEM)) {
             // populate the UI
             mTenSanPham = intent.getStringExtra(EXTRA_TEN_SAN_PHAM_TIM_KIEM);
-            getSupportActionBar().setTitle(mTenSanPham);
-
+            String BarTitle ="";
+            if (mTenSanPham.length() > 4)
+            {
+                BarTitle = mTenSanPham.substring(0, 6) + "...";
+            }
+            else
+            {
+                BarTitle = mTenSanPham;
+            }
+            getSupportActionBar().setTitle(BarTitle);
 
             FindViewModelFactory factory = new FindViewModelFactory(mDb, mTenSanPham);
             // COMPLETED (11) Declare a AddTaskViewModel variable and initialize it by calling ViewModelProviders.of
@@ -214,9 +223,16 @@ public class FindActivity extends AppCompatActivity {
         }
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_tim_do);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(FindActivity.this, 2));
+        Configuration config = getResources().getConfiguration();
+        if (config.smallestScreenWidthDp >= 600)
+        {
+            recyclerView.setLayoutManager(new GridLayoutManager(FindActivity.this, 3));
+        }
+        else
+        {
+            recyclerView.setLayoutManager(new GridLayoutManager(FindActivity.this, 2));
+        }
         recyclerView.setAdapter(timKiemAdapter);
-
 
     }
 

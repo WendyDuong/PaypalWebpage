@@ -1,6 +1,7 @@
 package com.example.android.demoapp.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,10 +61,15 @@ public class DatHangActivity extends AppCompatActivity {
         mDb = AppDatabase.getInstance(this);
 
         datHangRecyclerView = findViewById(R.id.recycler_view_dat_hang);
-        datHangRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        Configuration config = getResources().getConfiguration();
+        if (config.smallestScreenWidthDp >= 600)
+            datHangRecyclerView.setLayoutManager(new GridLayoutManager(DatHangActivity.this, 2));
+        else
+            datHangRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         datHangAdapter = new DatHangAdapter(this);
         datHangRecyclerView.setAdapter(datHangAdapter);
+
         tongTien = findViewById(R.id.tong_so_tien_hang_dat);
         buttonDatHang = findViewById(R.id.dat_hang_button);
         buttonMuaTiep = findViewById(R.id.mua_tiep_button);

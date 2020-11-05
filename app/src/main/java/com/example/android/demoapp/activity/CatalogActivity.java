@@ -1,6 +1,7 @@
 package com.example.android.demoapp.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
@@ -11,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +24,7 @@ import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.SanPhamEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
+import com.example.android.demoapp.ultil.SpacesItemDecoration;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.tabs.TabLayout;
 
@@ -168,7 +171,18 @@ public class CatalogActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_view_catalog);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(CatalogActivity.this, 2));
+        /*int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
+        recyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
+*/
+        Configuration config = getResources().getConfiguration();
+        if (config.smallestScreenWidthDp >= 600)
+        {
+            recyclerView.setLayoutManager(new GridLayoutManager(CatalogActivity.this, 3));
+        }
+        else
+        {
+            recyclerView.setLayoutManager(new GridLayoutManager(CatalogActivity.this, 2));
+        }
         recyclerView.setAdapter(catalogAdapter);
 
 

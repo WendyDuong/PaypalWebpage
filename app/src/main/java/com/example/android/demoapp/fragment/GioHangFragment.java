@@ -1,6 +1,7 @@
 package com.example.android.demoapp.fragment;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.GioHangViewModel;
+import com.example.android.demoapp.activity.CatalogActivity;
 import com.example.android.demoapp.activity.DatHangActivity;
 import com.example.android.demoapp.activity.DetailActivity;
 import com.example.android.demoapp.adapter.GioHangAdapter;
@@ -60,12 +63,23 @@ public class GioHangFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.gio_hang_fragment, container, false);
         buttonDatHang = rootView.findViewById(R.id.button_dat_hang);
-        giohangRecyclerView = rootView.findViewById(R.id.recycler_view_gio_hang);
         emptyView = rootView.findViewById(R.id.empty_view);
-        giohangRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         gioHangAdapter = new GioHangAdapter(getActivity());
-        giohangRecyclerView.setAdapter(gioHangAdapter);
         tvTongtien = rootView.findViewById(R.id.tong_tien);
+
+        giohangRecyclerView = rootView.findViewById(R.id.recycler_view_gio_hang);
+        Configuration config = getResources().getConfiguration();
+        if (config.smallestScreenWidthDp >= 600)
+        {
+            giohangRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        }
+        else
+        {
+            giohangRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        }
+        giohangRecyclerView.setAdapter(gioHangAdapter);
+
+
 
 
 

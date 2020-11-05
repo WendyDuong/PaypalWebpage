@@ -1,5 +1,6 @@
 package com.example.android.demoapp.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -242,7 +244,15 @@ public class YeuThichFragment extends Fragment {
 
 
         recyclerViewYeuThich = rootView.findViewById(R.id.recycler_view_yeu_thich);
-        recyclerViewYeuThich.setLayoutManager(new LinearLayoutManager(getActivity()));
+        Configuration config = getResources().getConfiguration();
+        if (config.smallestScreenWidthDp >= 600)
+        {
+            recyclerViewYeuThich.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        }
+        else
+        {
+            recyclerViewYeuThich.setLayoutManager(new LinearLayoutManager(getActivity()));
+        }
 
         new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(recyclerViewYeuThich);
         yeuThichAdapter = new YeuthichAdapter(getActivity());
