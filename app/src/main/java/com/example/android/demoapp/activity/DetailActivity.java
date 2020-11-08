@@ -1,5 +1,6 @@
 package com.example.android.demoapp.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -94,6 +97,8 @@ public class DetailActivity extends AppCompatActivity {
         yeuthichEvent();
 
         imgChiTiet.setClipToOutline(true);
+
+
         //TODO(4)
 
         if (savedInstanceState != null && savedInstanceState.containsKey(INSTANCE_SANPHAM_ID)) {
@@ -370,6 +375,25 @@ public class DetailActivity extends AppCompatActivity {
         DecimalFormat deci = new DecimalFormat("###,###,###");
         tvGia.setText("Giá " + deci.format(giasp) + " Đ");
         imgChiTiet.setImageResource(hinhanhsp);
+        imgChiTiet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImageView image = new ImageView(DetailActivity.this);
+                image.setImageResource(hinhanhsp);
+
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(DetailActivity.this).
+                                setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).
+                                setView(image);
+                builder.create().show();
+
+            }
+        });
     }
 
     private void addEvent() {
