@@ -1,11 +1,21 @@
 package com.example.android.demoapp.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -15,6 +25,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -47,6 +58,19 @@ public class DetailActivity extends AppCompatActivity {
     private static final String EXTRA_HANG_ID = "extraHangId";
     private static final String TAG = DetailActivity.class.getSimpleName();
     private int idHang, idsanpham;
+    ImageView expandedImageView;
+
+    DetailViewModelFactory factory;
+   DetailViewModel viewModel;
+
+    Toolbar toolBarChiTietActivity;
+    TextView tvMoTaTitle, tvChiTietTitle, devider1, devider2;
+
+    View LayoutChiTietActivity, cardViewSpinner;
+    private Animator currentAnimator;
+    private int shortAnimationDuration;
+
+
 
     private AppDatabase mDb;
     TextView tvTen, tvGia, tvMoTa, tvKhoiluong, tvThuongHieu, tvXuatXu;
@@ -64,14 +88,13 @@ public class DetailActivity extends AppCompatActivity {
     BadgeDrawable badgeDrawableGioHang;
     List<GioHangEntry> gioHangEntries;
     List<YeuThichEntry> yeuThichEntries;
-    List<GioHangEntry> mgioHangEntries;
-    TabLayout.Tab tabNhaCungCap;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_activity);
+        Toast.makeText(DetailActivity.this, "OnCreate", Toast.LENGTH_SHORT).show();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON|
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
@@ -91,19 +114,24 @@ public class DetailActivity extends AppCompatActivity {
         spinner = findViewById(R.id.spinner);
         timImageView = findViewById(R.id.tim_chi_tiet_activity);
         imageViewHangSp = findViewById(R.id.iv_hang);
-        eventSpinner();
 
-        addEvent();
+        LayoutChiTietActivity = findViewById(R.id.card_view_detail);
+        toolBarChiTietActivity = findViewById(R.id.toolbar3);
+        tvMoTaTitle = findViewById(R.id.mo_ta_san_pham_tilte);
+        tvChiTietTitle = findViewById(R.id.chi_tiet_san_pham_tilte);
+        devider1 = findViewById(R.id.devider);
+        devider2 = findViewById(R.id.devider2);
+        cardViewSpinner = findViewById(R.id.card_view_spinner);
+
+        expandedImageView = (ImageView) findViewById(
+                R.id.expanded_image);
+
+        eventSpinner();
         yeuthichEvent();
 
         imgChiTiet.setClipToOutline(true);
 
 
-        //TODO(4)
-
-        if (savedInstanceState != null && savedInstanceState.containsKey(INSTANCE_SANPHAM_ID)) {
-            mTaskId = savedInstanceState.getInt(INSTANCE_SANPHAM_ID, DEFAULT_ID);
-        }
 
         //TODO(3) get ID from Intent
         Intent intent = getIntent();
@@ -175,13 +203,6 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
-/*
-                    case 0:
-                        Intent intent0 = new Intent(DetailActivity.this, CatalogActivity.class);
-                        intent0.putExtra(DetailActivity.EXTRA_HANG_ID, idHang);
-                        DetailActivity.this.startActivity(intent0);
-                        break;
-*/
                     case 0:
                         Intent intent1 = new Intent(DetailActivity.this, TimKiemActivity.class);
                         DetailActivity.this.startActivity(intent1);
@@ -209,15 +230,6 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
-/*
-                    case 0:
-
-                        Intent intent0 = new Intent(DetailActivity.this, CatalogActivity.class);
-                        intent0.putExtra(DetailActivity.EXTRA_HANG_ID, idHang);
-
-                        DetailActivity.this.startActivity(intent0);
-                        break;
-*/
                     case 0:
                         Intent intent1 = new Intent(DetailActivity.this, TimKiemActivity.class);
                         DetailActivity.this.startActivity(intent1);
@@ -252,13 +264,16 @@ public class DetailActivity extends AppCompatActivity {
                 // populate the UI
                 mTaskId = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
 
-                DetailViewModelFactory factory = new DetailViewModelFactory(mDb, mTaskId);
-                final DetailViewModel viewModel
+                factory = new DetailViewModelFactory(mDb, mTaskId);
+                viewModel
                         = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
 
                 viewModel.getDetailSanPham().observe(this, new Observer<SanPhamEntry>() {
                     @Override
                     public void onChanged(SanPhamEntry sanPham) {
+                        Toast.makeText(DetailActivity.this, "Populate UI", Toast.LENGTH_SHORT).show();
+
+
                         populateUI(sanPham);
                     }
 
@@ -270,6 +285,7 @@ public class DetailActivity extends AppCompatActivity {
                         gioHangEntries = gioHang;
                         int sosanphammua = 0;
 
+                        addEvent();
                         if (gioHangEntries.size() > 0) {
                             for (int i = 0; i < gioHangEntries.size(); i++) {
                                 sosanphammua += gioHangEntries.get(i).getSoLuong();
@@ -282,24 +298,20 @@ public class DetailActivity extends AppCompatActivity {
                     }
                 });
 
-                viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
-                    @Override
-                    public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
-                        yeuThichEntries = yeuThich;
-                        KiemTraYeuThich();
-                        if (yeuThichEntries.size() > 0) {
-                            badgeDrawableYeuthich.setVisible(true);
-                            badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
-
-                        } else
-                            badgeDrawableYeuthich.setVisible(false);
-
-                    }
-
-                });
 
             }
         }
+
+
+        imgChiTiet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                zoomImageFromThumb(imgChiTiet, hinhanhsp);
+            }
+        });
+        shortAnimationDuration = getResources().getInteger(
+                android.R.integer.config_shortAnimTime);
+
 
 
     }
@@ -349,12 +361,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(INSTANCE_SANPHAM_ID, mTaskId);
-        super.onSaveInstanceState(outState);
-    }
-
     private void populateUI(SanPhamEntry sanPham) {
         idsanpham = sanPham.getId();
         tensp = sanPham.getTenSanPham();
@@ -375,7 +381,10 @@ public class DetailActivity extends AppCompatActivity {
         DecimalFormat deci = new DecimalFormat("###,###,###");
         tvGia.setText("Giá " + deci.format(giasp) + " Đ");
         imgChiTiet.setImageResource(hinhanhsp);
-        imgChiTiet.setOnClickListener(new View.OnClickListener() {
+
+
+
+/*        imgChiTiet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ImageView image = new ImageView(DetailActivity.this);
@@ -393,20 +402,29 @@ public class DetailActivity extends AppCompatActivity {
                 builder.create().show();
 
             }
+        });*/
+
+
+
+        viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
+                yeuThichEntries = yeuThich;
+                KiemTraYeuThich();
+                if (yeuThichEntries.size() > 0) {
+                    badgeDrawableYeuthich.setVisible(true);
+                    badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
+
+                } else
+                    badgeDrawableYeuthich.setVisible(false);
+
+
+            }
+
         });
     }
 
     private void addEvent() {
-        GioHangViewModel gioHangViewModel = ViewModelProviders.of(this).get(GioHangViewModel.class);
-        gioHangViewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
-            @Override
-            public void onChanged(@Nullable List<GioHangEntry> gioHangEntries) {
-
-                mgioHangEntries = gioHangEntries;
-                Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
-            }
-        });
-
 
         btnDatMua.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -416,14 +434,14 @@ public class DetailActivity extends AppCompatActivity {
                 //TODO(7) them vao gio hang
 
 
-                if (mgioHangEntries.size() > 0) {
+                if (gioHangEntries.size() > 0) {
                     final int sl = Integer.parseInt(spinner.getSelectedItem().toString());
                     boolean exsist = false;
-                    for (int i = 0; i < mgioHangEntries.size(); i++) {
+                    for (int i = 0; i < gioHangEntries.size(); i++) {
 
-                        if (mgioHangEntries.get(i).getIdSanPham() == idsanpham) {
-                            final int soluongcu = mgioHangEntries.get(i).getSoLuong();
-                            final int id = mgioHangEntries.get(i).getId();
+                        if (gioHangEntries.get(i).getIdSanPham() == idsanpham) {
+                            final int soluongcu = gioHangEntries.get(i).getSoLuong();
+                            final int id = gioHangEntries.get(i).getId();
                             final int soluongmoi = soluongcu + sl;
                             // Put the task description and selected mPriority into the ContentValues
 
@@ -518,18 +536,27 @@ public class DetailActivity extends AppCompatActivity {
         boolean exit = false;
 
         if (yeuThichEntries.size() > 0) {
+            Toast.makeText(DetailActivity.this, "idsanpham: "+ idsanpham, Toast.LENGTH_SHORT).show();
+
             for (int vitritim = 0; vitritim < yeuThichEntries.size(); vitritim++) {
                 if (yeuThichEntries.get(vitritim).getIdSanPham() == idsanpham) {
                     timImageView.setImageResource(R.drawable.timdo24);
+                    Toast.makeText(DetailActivity.this, "Tim Do", Toast.LENGTH_SHORT).show();
+
                     exit = true;
                 }
             }
 
-            if (exit == false)
+            if (exit == false) {
+                Toast.makeText(DetailActivity.this, "Tim Den Exit false", Toast.LENGTH_SHORT).show();
+
                 timImageView.setImageResource(R.drawable.timden24);
+            }
 
 
         } else {
+            Toast.makeText(DetailActivity.this, "Tim Den Mang = 0", Toast.LENGTH_SHORT).show();
+
             timImageView.setImageResource(R.drawable.timden24);
         }
 
@@ -538,6 +565,7 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        Toast.makeText(DetailActivity.this, "onStop", Toast.LENGTH_SHORT).show();
         getViewModelStore().clear();
         super.onStop();
 
@@ -546,6 +574,7 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+        Toast.makeText(DetailActivity.this, "onNewIntent", Toast.LENGTH_SHORT).show();
         setIntent(intent);
         intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
@@ -608,7 +637,7 @@ public class DetailActivity extends AppCompatActivity {
             viewModel.getDetailSanPham().observe(this, new Observer<SanPhamEntry>() {
                 @Override
                 public void onChanged(SanPhamEntry sanPham) {
-                    viewModel.getDetailSanPham().removeObserver(this);
+                    //viewModel.getDetailSanPham().removeObserver(this);
                     populateUI(sanPham);
                 }
 
@@ -632,67 +661,182 @@ public class DetailActivity extends AppCompatActivity {
                 }
             });
 
-            viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
-                @Override
-                public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
-                    yeuThichEntries = yeuThich;
-                    if (yeuThichEntries.size() > 0) {
-                        badgeDrawableYeuthich.setVisible(true);
-                        badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
-
-                    } else
-                        badgeDrawableYeuthich.setVisible(false);
-
-                }
-            });
-
         }
         super.onNewIntent(intent);
     }
 
 
-    @Override
-    protected void onRestart() {
-        DetailViewModelFactory factory = new DetailViewModelFactory(mDb, mTaskId);
+    private void zoomImageFromThumb(final View thumbView, int imageResId) {
+        // If there's an animation in progress, cancel it
+        // immediately and proceed with this one.
+        if (currentAnimator != null) {
+            currentAnimator.cancel();
+        }
 
-        final DetailViewModel viewModel
-                = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
+        // Load the high-resolution "zoomed-in" image.
+        expandedImageView.setImageResource(imageResId);
+
+        // Calculate the starting and ending bounds for the zoomed-in image.
+        // This step involves lots of math. Yay, math.
+        final Rect startBounds = new Rect();
+        final Rect finalBounds = new Rect();
+        final Point globalOffset = new Point();
+
+        // The start bounds are the global visible rectangle of the thumbnail,
+        // and the final bounds are the global visible rectangle of the container
+        // view. Also set the container view's offset as the origin for the
+        // bounds, since that's the origin for the positioning animation
+        // properties (X, Y).
+        thumbView.getGlobalVisibleRect(startBounds);
+        findViewById(R.id.container)
+                .getGlobalVisibleRect(finalBounds, globalOffset);
+        startBounds.offset(-globalOffset.x, -globalOffset.y);
+        finalBounds.offset(-globalOffset.x, -globalOffset.y);
+
+        // Adjust the start bounds to be the same aspect ratio as the final
+        // bounds using the "center crop" technique. This prevents undesirable
+        // stretching during the animation. Also calculate the start scaling
+        // factor (the end scaling factor is always 1.0).
+        float startScale;
+        if ((float) finalBounds.width() / finalBounds.height()
+                > (float) startBounds.width() / startBounds.height()) {
+            // Extend start bounds horizontally
+            startScale = (float) startBounds.height() / finalBounds.height();
+            float startWidth = startScale * finalBounds.width();
+            float deltaWidth = (startWidth - startBounds.width()) / 2;
+            startBounds.left -= deltaWidth;
+            startBounds.right += deltaWidth;
+        } else {
+            // Extend start bounds vertically
+            startScale = (float) startBounds.width() / finalBounds.width();
+            float startHeight = startScale * finalBounds.height();
+            float deltaHeight = (startHeight - startBounds.height()) / 2;
+            startBounds.top -= deltaHeight;
+            startBounds.bottom += deltaHeight;
+        }
+
+        // Hide the thumbnail and show the zoomed-in view. When the animation
+        // begins, it will position the zoomed-in view in the place of the
+        // thumbnail.
+        //  thumbView.setAlpha(0f);
+        LayoutChiTietActivity.setVisibility(View.INVISIBLE);
+        expandedImageView.setVisibility(View.VISIBLE);
+
+        cardViewSpinner.setVisibility(View.INVISIBLE);
+        btnDatMua.setVisibility(View.INVISIBLE);
+        tvMoTa.setVisibility(View.INVISIBLE);
+        tvXuatXu.setVisibility(View.INVISIBLE);
+        tvThuongHieu.setVisibility(View.INVISIBLE);
+        tvChiTietTitle.setVisibility(View.INVISIBLE);
+        tvMoTaTitle.setVisibility(View.INVISIBLE);
+        devider1.setVisibility(View.INVISIBLE);
+        devider2.setVisibility(View.INVISIBLE);
 
 
-        viewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
+
+        // Set the pivot point for SCALE_X and SCALE_Y transformations
+        // to the top-left corner of the zoomed-in view (the default
+        // is the center of the view).
+        expandedImageView.setPivotX(0f);
+        expandedImageView.setPivotY(0f);
+
+        // Construct and run the parallel animation of the four translation and
+        // scale properties (X, Y, SCALE_X, and SCALE_Y).
+        AnimatorSet set = new AnimatorSet();
+        set
+                .play(ObjectAnimator.ofFloat(expandedImageView, View.X,
+                        startBounds.left, finalBounds.left))
+                .with(ObjectAnimator.ofFloat(expandedImageView, View.Y,
+                        startBounds.top, finalBounds.top))
+                .with(ObjectAnimator.ofFloat(expandedImageView, View.SCALE_X,
+                        startScale, 1f))
+                .with(ObjectAnimator.ofFloat(expandedImageView,
+                        View.SCALE_Y, startScale, 1f));
+        set.setDuration(shortAnimationDuration);
+        set.setInterpolator(new DecelerateInterpolator());
+        set.addListener(new AnimatorListenerAdapter() {
             @Override
-            public void onChanged(@Nullable List<GioHangEntry> gioHang) {
-                gioHangEntries = gioHang;
-                int sosanphammua = 0;
+            public void onAnimationEnd(Animator animation) {
+                currentAnimator = null;
+            }
 
-                if (gioHangEntries.size() > 0) {
-                    for (int i = 0; i < gioHangEntries.size(); i++) {
-                        sosanphammua += gioHangEntries.get(i).getSoLuong();
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                currentAnimator = null;
+            }
+        });
+        set.start();
+        currentAnimator = set;
+
+        // Upon clicking the zoomed-in image, it should zoom back down
+        // to the original bounds and show the thumbnail instead of
+        // the expanded image.
+        final float startScaleFinal = startScale;
+        expandedImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentAnimator != null) {
+                    currentAnimator.cancel();
+                }
+
+                // Animate the four positioning/sizing properties in parallel,
+                // back to their original values.
+                AnimatorSet set = new AnimatorSet();
+                set.play(ObjectAnimator
+                        .ofFloat(expandedImageView, View.X, startBounds.left))
+                        .with(ObjectAnimator
+                                .ofFloat(expandedImageView,
+                                        View.Y,startBounds.top))
+                        .with(ObjectAnimator
+                                .ofFloat(expandedImageView,
+                                        View.SCALE_X, startScaleFinal))
+                        .with(ObjectAnimator
+                                .ofFloat(expandedImageView,
+                                        View.SCALE_Y, startScaleFinal));
+                set.setDuration(shortAnimationDuration);
+                set.setInterpolator(new DecelerateInterpolator());
+                set.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        //   thumbView.setAlpha(1f);
+                        btnDatMua.setVisibility(View.VISIBLE);
+                        cardViewSpinner.setVisibility(View.VISIBLE);
+                        tvMoTa.setVisibility(View.VISIBLE);
+                        tvXuatXu.setVisibility(View.VISIBLE);
+                        tvThuongHieu.setVisibility(View.VISIBLE);
+                        tvChiTietTitle.setVisibility(View.VISIBLE);
+                        tvMoTaTitle.setVisibility(View.VISIBLE);
+                        devider1.setVisibility(View.VISIBLE);
+                        devider2.setVisibility(View.VISIBLE);
+                        LayoutChiTietActivity.setVisibility(View.VISIBLE);
+                        expandedImageView.setVisibility(View.GONE);
+                        currentAnimator = null;
                     }
-                    badgeDrawableGioHang.setVisible(true);
 
-                    badgeDrawableGioHang.setNumber(sosanphammua);
-                } else
-                    badgeDrawableGioHang.setVisible(false);
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        //      thumbView.setAlpha(1f);
+                        btnDatMua.setVisibility(View.VISIBLE);
+                        cardViewSpinner.setVisibility(View.VISIBLE);
+                        tvMoTa.setVisibility(View.VISIBLE);
+                        tvXuatXu.setVisibility(View.VISIBLE);
+                        tvThuongHieu.setVisibility(View.VISIBLE);
+                        tvChiTietTitle.setVisibility(View.VISIBLE);
+                        tvMoTaTitle.setVisibility(View.VISIBLE);
+                        devider1.setVisibility(View.VISIBLE);
+                        devider2.setVisibility(View.VISIBLE);
+                        LayoutChiTietActivity.setVisibility(View.VISIBLE);
+                        expandedImageView.setVisibility(View.GONE);
+                        currentAnimator = null;
+                    }
+                });
+                set.start();
+                currentAnimator = set;
             }
         });
-
-        viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
-            @Override
-            public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
-                yeuThichEntries = yeuThich;
-                KiemTraYeuThich();
-                if (yeuThichEntries.size() > 0) {
-                    badgeDrawableYeuthich.setVisible(true);
-                    badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
-
-                } else
-                    badgeDrawableYeuthich.setVisible(false);
-
-            }
-        });
-        super.onRestart();
     }
 }
+
+
 
 
