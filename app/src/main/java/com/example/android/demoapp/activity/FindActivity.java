@@ -224,7 +224,7 @@ public class FindActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_tim_do);
         recyclerView.setHasFixedSize(true);
         Configuration config = getResources().getConfiguration();
-        if (config.smallestScreenWidthDp >= 600)
+        if (config.smallestScreenWidthDp >= 720)
         {
             recyclerView.setLayoutManager(new GridLayoutManager(FindActivity.this, 3));
         }

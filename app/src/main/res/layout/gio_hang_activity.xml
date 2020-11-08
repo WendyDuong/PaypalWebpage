@@ -10,14 +10,15 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_gio_hang_activity"
         android:layout_width="match_parent"
-        app:title="Giỏ Hàng"
-        app:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
-        app:titleMarginStart="40dp"
-        app:titleTextColor="#FFFFFF"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="@dimen/action_barsize"
         android:background="@drawable/gradient_toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp"/>
+        app:title="Giỏ Hàng"
+        app:titleMarginStart="40dp"
+        app:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
+        app:titleTextColor="#FFFFFF" />
 
 
     <com.google.android.material.tabs.TabLayout
@@ -35,10 +36,11 @@
         app:tabMode="fixed"/>
 
     <fragment
-        android:layout_width="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:layout_height="match_parent"
+        android:id="@+id/frag_ment_gio_hang"
         android:name="com.example.android.demoapp.fragment.GioHangFragment"
-        android:id="@+id/frag_ment_gio_hang"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/action_barsize"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_gio_hang_activity" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

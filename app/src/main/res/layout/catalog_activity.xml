@@ -10,7 +10,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="@dimen/action_barsize"
         android:background="@drawable/gradient_toolbar"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp">
@@ -47,7 +47,7 @@
         android:id="@+id/recycler_view_catalog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="66dp"
+        android:layout_marginTop="@dimen/action_barsize"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
 

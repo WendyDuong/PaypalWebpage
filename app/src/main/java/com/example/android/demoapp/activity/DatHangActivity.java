@@ -62,7 +62,7 @@ public class DatHangActivity extends AppCompatActivity {
 
         datHangRecyclerView = findViewById(R.id.recycler_view_dat_hang);
         Configuration config = getResources().getConfiguration();
-        if (config.smallestScreenWidthDp >= 600)
+        if (config.smallestScreenWidthDp >= 720)
             datHangRecyclerView.setLayoutManager(new GridLayoutManager(DatHangActivity.this, 2));
         else
             datHangRecyclerView.setLayoutManager(new LinearLayoutManager(this));

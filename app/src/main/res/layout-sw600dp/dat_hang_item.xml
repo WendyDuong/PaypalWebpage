@@ -31,17 +31,20 @@
         app:srcCompat="@drawable/anhbanhnho" />
 
     <TextView
-        android:maxLines = "1"
         android:id="@+id/ten_item_dat"
-        android:layout_width="153dp"
+        style="@style/text_ellipsise"
+        android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:singleLine="false"
-        tools:text="Bánh Sisi Mix Bánh Sisi Mix"
+        android:layout_marginEnd="4dp"
         android:textSize="20sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/image_view_item_dat"
-        app:layout_constraintTop_toTopOf="@+id/image_view_item_dat" />
+        app:layout_constraintTop_toTopOf="@+id/image_view_item_dat"
+        tools:text="Bánh Sisi Mix Bánh Sisi Mix" />
 
     <TextView
         android:id="@+id/khoiluong_item_dat"
@@ -70,32 +73,30 @@
 
     <TextView
         android:id="@+id/gia_item_dat"
-        android:textSize="18sp"
-
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="8dp"
         android:layout_marginBottom="4dp"
         android:text="150.000đ"
 
         android:textColor="#fa3223"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/soluong_item_dat"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_don_gia"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/textView"
-        android:textSize="18sp"
-
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="4dp"
-        tools:text="Tổng cộng: "
+        android:text="Tổng cộng: "
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/gia_item_dat" />
+        app:layout_constraintStart_toStartOf="@+id/text_view_don_gia" />
 
     <TextView
         android:id="@+id/text_view_don_gia"

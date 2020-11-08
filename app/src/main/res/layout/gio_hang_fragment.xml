@@ -47,6 +47,7 @@
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif-medium"
             android:paddingTop="16dp"
+            android:textSize="@dimen/textsize_blank_site"
             android:text="@string/empty_view_title_gio_hang"
             android:textAppearance="?android:textAppearanceMedium" />
 

@@ -34,16 +34,16 @@
 
     <TextView
         android:id="@+id/ten_item_yeu_thich"
+        style="@style/text_ellipsise"
+
         android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:text="Bánh Sisi Mix Brand"
-        android:textSize="16sp"
         android:layout_marginStart="10dp"
-        android:singleLine="false"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/anh_item_yeu_thich"
-        app:layout_constraintTop_toTopOf="@+id/anh_item_yeu_thich" />
+        app:layout_constraintTop_toTopOf="@+id/anh_item_yeu_thich"
+        tools:text="Bánh Sisi Mix Brand" />
 
     <TextView
         android:id="@+id/khoi_luong_item_yeu_thich"
@@ -51,7 +51,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
-        android:text="Khối Lượng: 220g"
+        tools:text="Khối Lượng: 220g"
         app:layout_constraintStart_toEndOf="@id/anh_item_yeu_thich"
         app:layout_constraintTop_toBottomOf="@id/ten_item_yeu_thich" />
 

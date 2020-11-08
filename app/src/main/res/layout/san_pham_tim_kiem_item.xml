@@ -35,13 +35,12 @@
 
             <TextView
                 android:id="@+id/tensanpham"
-
-                android:layout_width="87dp"
-                android:layout_height="47dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
                 android:layout_margin="5dp"
-
-                android:maxLines="1"
-                android:text="Banh Sisi Mix Banh Sisi Mix "
+                style="@style/text_ellipsise"
+                tools:text="Banh Sisi Mix Banh Sisi Mix "
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/anhsanpham" />
 
@@ -53,7 +52,7 @@
                 android:textColor="#fa3223"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tensanpham"
-                android:text="50.000 "/>
+                tools:text="50.000 "/>
 
 
 

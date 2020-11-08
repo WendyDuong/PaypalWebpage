@@ -3,5 +3,9 @@
     <dimen name="spacing">16dp</dimen>
     <dimen name="star_size">15dp</dimen>
     <dimen name="heart_size">32dp</dimen>
+    <dimen name="textsize_blank_site">16sp</dimen>
+    <dimen name="textsize">12sp</dimen>
+
+    <dimen name="action_barsize">56dp</dimen>
 
 </resources>

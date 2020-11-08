@@ -69,7 +69,7 @@ public class GioHangFragment extends Fragment {
 
         giohangRecyclerView = rootView.findViewById(R.id.recycler_view_gio_hang);
         Configuration config = getResources().getConfiguration();
-        if (config.smallestScreenWidthDp >= 600)
+        if (config.smallestScreenWidthDp >= 720)
         {
             giohangRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         }

@@ -156,7 +156,6 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
             imgHinhAnhSanpham = itemView.findViewById(R.id.anhsanpham);
             tvTensanpham = itemView.findViewById(R.id.tensanpham);
             tvGiasanpham = itemView.findViewById(R.id.giasanpham);
-            tvDaban = itemView.findViewById(R.id.da_ban);
             cardViewCatalog = itemView.findViewById(R.id.card_view_catalog);
             imageViewTim = itemView.findViewById(R.id.image_view_tim);
 

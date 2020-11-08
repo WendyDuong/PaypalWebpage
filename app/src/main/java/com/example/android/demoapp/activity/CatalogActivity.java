@@ -175,10 +175,11 @@ public class CatalogActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
 */
         Configuration config = getResources().getConfiguration();
-        if (config.smallestScreenWidthDp >= 600)
+        if (config.smallestScreenWidthDp >= 720)
         {
             recyclerView.setLayoutManager(new GridLayoutManager(CatalogActivity.this, 3));
         }
+
         else
         {
             recyclerView.setLayoutManager(new GridLayoutManager(CatalogActivity.this, 2));

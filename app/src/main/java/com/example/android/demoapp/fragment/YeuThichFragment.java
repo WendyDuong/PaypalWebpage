@@ -245,7 +245,7 @@ public class YeuThichFragment extends Fragment {
 
         recyclerViewYeuThich = rootView.findViewById(R.id.recycler_view_yeu_thich);
         Configuration config = getResources().getConfiguration();
-        if (config.smallestScreenWidthDp >= 600)
+        if (config.smallestScreenWidthDp >= 720)
         {
             recyclerViewYeuThich.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         }

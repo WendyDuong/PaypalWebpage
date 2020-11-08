@@ -27,9 +27,8 @@
         android:id="@+id/imageView4"
         android:layout_width="@dimen/star_size"
         android:layout_height="@dimen/star_size"
-        android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/imageView6"
-        app:layout_constraintTop_toBottomOf="@+id/giasanpham"
+        app:layout_constraintTop_toTopOf="@+id/imageView6"
         app:srcCompat="@drawable/saodanhgia" />
 
     <ImageView
@@ -44,15 +43,16 @@
 
     <TextView
         android:id="@+id/tensanpham"
-        android:maxLines="1"
+        style="@style/text_ellipsise"
 
-        android:layout_width="wrap_content"
-        android:layout_margin="5dp"
-
-        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_margin="4dp"
+        android:layout_marginTop="8dp"
+        android:text="Banh Sisi Mix"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/anhsanpham"
-        android:text="Banh Sisi Mix"/>
+        app:layout_constraintTop_toBottomOf="@id/anhsanpham" />
 
     <TextView
         android:id="@+id/giasanpham"
@@ -67,19 +67,24 @@
     <ImageView
         android:id="@+id/image_view_tim"
         android:layout_width="@dimen/heart_size"
-        android:layout_margin="5dp"
         android:layout_height="@dimen/heart_size"
+        android:layout_margin="5dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
         android:src="@drawable/timden24"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/giasanpham" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toEndOf="@+id/imageView4"
+        app:layout_constraintTop_toBottomOf="@+id/giasanpham" />
 
     <ImageView
         android:id="@+id/saodanhgia"
         android:layout_width="@dimen/star_size"
         android:layout_height="@dimen/star_size"
-        android:layout_marginStart="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/da_ban"
-        app:layout_constraintStart_toEndOf="@+id/image_view_tim"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/giasanpham"
+        app:layout_constraintTop_toBottomOf="@+id/giasanpham"
         app:srcCompat="@drawable/saodanhgia" />
 
     <ImageView
@@ -87,40 +92,34 @@
         android:id="@+id/imageView5"
         android:layout_width="@dimen/star_size"
         android:layout_height="@dimen/star_size"
-        android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/saodanhgia"
-        app:layout_constraintTop_toBottomOf="@+id/giasanpham"
+        app:layout_constraintTop_toTopOf="@+id/saodanhgia"
         app:srcCompat="@drawable/saodanhgia" />
 
     <ImageView
         android:id="@+id/imageView6"
         android:layout_width="@dimen/star_size"
         android:layout_height="@dimen/star_size"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imageView7"
-        app:layout_constraintTop_toBottomOf="@+id/giasanpham"
+        app:layout_constraintTop_toTopOf="@+id/imageView7"
         app:srcCompat="@drawable/saodanhgia" />
 
     <ImageView
         android:id="@+id/imageView7"
         android:layout_width="@dimen/star_size"
         android:layout_height="@dimen/star_size"
-        android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/imageView5"
-        app:layout_constraintTop_toBottomOf="@+id/giasanpham"
+        app:layout_constraintTop_toTopOf="@+id/imageView5"
         app:srcCompat="@drawable/saodanhgia" />
 
-    <TextView
+ <!--   <TextView
         android:id="@+id/da_ban"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
         android:text="Đã bán 100"
         app:layout_constraintStart_toEndOf="@+id/image_view_tim"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView5" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
