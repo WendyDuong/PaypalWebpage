@@ -1,5 +1,6 @@
 package com.example.android.demoapp.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -29,24 +30,21 @@ import java.util.List;
 public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHolder> {
     private List<YeuThichEntry> mYeuThichEntries;
     private AppDatabase mDb;
-
     Context context;
     private List<SanPhamEntry> sanPhams;
     private int iD;
-    private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
     private int idHang;
+    private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
     private static final String EXTRA_HANG_ID = "extraHangId";
-
     public CatalogAdapter(Context context) {
         this.context = context;
     }
 
     @NonNull
     @Override
-    public itemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.san_pham_item, null);
-        itemHolder itemHolder = new itemHolder(view);
-        return itemHolder;
+    public itemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.san_pham_item, parent, false);
+        return new itemHolder(view);
     }
 
     @Override
@@ -58,7 +56,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
 
         //Rounding curency to make a easy reading
         giasp = Precision.round(giasp/1000, 0)*1000;
-        holder.tvGiasanpham.setText("Giá : " + decimalFormat.format(giasp) + " Đ");
+        holder.tvGiasanpham.setText(decimalFormat.format(giasp) + " Đ");
         holder.imgHinhAnhSanpham.setImageResource(sanPham.getHinhAnh());
         final int idsanpham = sanPham.getId();
 
@@ -67,7 +65,6 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
         int top = dptoPx(12);
         int right = dptoPx(24);
         int bottom = dptoPx(12);
-
         boolean isFirst2Iteme = position < 2;
         boolean isLast2tems = position > getItemCount() - 2;
         if (isFirst2Iteme) {
@@ -97,7 +94,6 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                 mDb = AppDatabase.getInstance(context);
                 mYeuThichEntries = mDb.yeuThichDao().loadDanhSachYeuThich();
                 boolean exit = false;
-
                 if (mYeuThichEntries.size() > 0) {
                     for (int vitritim = 0; vitritim < mYeuThichEntries.size(); vitritim++) {
                         if (mYeuThichEntries.get(vitritim).getIdSanPham() == idsanpham) {
@@ -106,33 +102,25 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                         }
                     }
 
-                    if (exit == false)
+                    if (!exit)
                         holder.imageViewTim.setImageResource(R.drawable.timden24);
-
-
                 } else
                     holder.imageViewTim.setImageResource(R.drawable.timden24);
             }
         });
-
-
     }
-
 
     private int dptoPx(int dp) {
         float px = dp + context.getResources().getDisplayMetrics().density;
         return (int) px;
-
     }
 
     @Override
     public int getItemCount() {
         if (sanPhams == null)
             return 0;
-
         return sanPhams.size();
     }
-
 
     public List<SanPhamEntry> getSanPhams() {
         return sanPhams;
@@ -141,7 +129,6 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
     public void setSanPhams(List<SanPhamEntry> sanPhams) {
         this.sanPhams = sanPhams;
         notifyDataSetChanged();
-
     }
 
     public class itemHolder extends RecyclerView.ViewHolder {
@@ -149,8 +136,6 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
         public ImageView imgHinhAnhSanpham, imageViewTim;
         public TextView tvTensanpham;
         public TextView tvGiasanpham;
-        public TextView tvDaban;
-
         public itemHolder(View itemView) {
             super(itemView);
             imgHinhAnhSanpham = itemView.findViewById(R.id.anhsanpham);
@@ -159,28 +144,23 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
             cardViewCatalog = itemView.findViewById(R.id.card_view_catalog);
             imageViewTim = itemView.findViewById(R.id.image_view_tim);
 
-
             imgHinhAnhSanpham.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     SanPhamEntry sanPham = sanPhams.get(getLayoutPosition());
                     iD = sanPham.getId();
                     idHang = sanPham.getIdHang();
-                    Log.i("MainGridViewAdapter", Integer.toString(iD));
-
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra(EXTRA_SANPHAM_ID, iD);
                     intent.putExtra(EXTRA_HANG_ID, idHang);
                     context.startActivity(intent);
-
                 }
             });
 
             imageViewTim.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("UseCompatLoadingForDrawables")
                 @Override
                 public void onClick(View view) {
-
-
                     if (imageViewTim.getDrawable().getConstantState() == context.getResources().getDrawable(R.drawable.timden24).getConstantState()) {
                         final int idhang = sanPhams.get(getLayoutPosition()).getIdHang();
                         final int idsanpham = sanPhams.get(getLayoutPosition()).getId();
@@ -190,25 +170,17 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                         final String khoiluongsanpham = sanPhams.get(getLayoutPosition()).getKhoiLuong();
                         imageViewTim.setImageResource(R.drawable.timdo24);
 
-
-
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
                                     mDb = AppDatabase.getInstance(context);
                                     mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham, hinhanhsanpham, khoiluongsanpham,idhang ));
-                                    Log.d("checkidsanphaminsert", " "+ idsanpham);
-
                                 }
                             });
-
-
                         }
                      else {
                         final int idsanpham = sanPhams.get(getLayoutPosition()).getId();
-
                         imageViewTim.setImageResource(R.drawable.timden24);
-
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
@@ -218,21 +190,14 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                                     int idsanphamxoa = mYeuThichEntries.get(vitrixoa).getIdSanPham() ;
                                     if (idsanphamxoa == idsanpham) {
                                         mDb.yeuThichDao().deleteYeuThich(mYeuThichEntries.get(vitrixoa));
-
                                     }
                                 }
                             }
                         });
-
                     }
-
                 }
-
             });
         }
-
-
-
     }
 }
 

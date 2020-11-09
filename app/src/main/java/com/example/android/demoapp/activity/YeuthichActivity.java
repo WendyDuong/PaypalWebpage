@@ -20,19 +20,12 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.List;
 
 public class YeuthichActivity  extends AppCompatActivity {
-
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private  TabLayout.Tab tabGioHang;
     public static   BadgeDrawable badgeDrawableGioHang;
-    public  static boolean yeuThichActivityOnCreat = false;
-
-
     List<GioHangEntry> gioHangEntries;
-
-
-
-
+    YeuThichViewModel viewModel;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,10 +34,7 @@ public class YeuthichActivity  extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        yeuThichActivityOnCreat = true;
         toolbar = findViewById(R.id.toolbar_yeu_thich_activity);
-
-
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -59,6 +49,7 @@ public class YeuthichActivity  extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.kinh_lup_icon));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.xe_hang));
         tabGioHang= tabLayout.getTabAt(1);
+        assert tabGioHang != null;
         badgeDrawableGioHang = tabGioHang.getOrCreateBadge();
 
 
@@ -83,7 +74,6 @@ public class YeuthichActivity  extends AppCompatActivity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
 
             @Override
@@ -104,15 +94,14 @@ public class YeuthichActivity  extends AppCompatActivity {
             }
 
     });
-
-
-        YeuThichViewModel viewModel = ViewModelProviders.of(this).get(YeuThichViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(YeuThichViewModel.class);
         viewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
             @Override
             public void onChanged(@Nullable List<GioHangEntry> gioHang) {
                 gioHangEntries = gioHang;
                 int sosanphammua = 0;
 
+                assert gioHangEntries != null;
                 if (gioHangEntries.size() > 0){
                     for (int i = 0; i < gioHangEntries.size(); i++) {
                         sosanphammua += gioHangEntries.get(i).getSoLuong();
@@ -126,36 +115,6 @@ public class YeuthichActivity  extends AppCompatActivity {
             }
         });
     }
-
-/*
-    private void setupbadgeDrawableGioHang() {
-
-        int sosanphammua = 0;
-
-        Cursor cursorSoSanPhamGioHang = getContentResolver().query(SanPhamContract.SanPhamEntry.CONTENT_URI, new String[] {SanPhamContract.SanPhamEntry.COLUMN_SOLUONG},null,null,null);
-        if (cursorSoSanPhamGioHang.getCount() > 0){
-            for (int i = 0; i < cursorSoSanPhamGioHang.getCount(); i++) {
-                cursorSoSanPhamGioHang.moveToPosition(i);
-                sosanphammua = sosanphammua + cursorSoSanPhamGioHang.getInt(cursorSoSanPhamGioHang.getColumnIndex(SanPhamContract.SanPhamEntry.COLUMN_SOLUONG));
-            }
-            badgeDrawableGioHang.setVisible(true);
-
-            badgeDrawableGioHang.setNumber(sosanphammua);
-        }
-        else
-            badgeDrawableGioHang.setVisible(false);
-        cursorSoSanPhamGioHang.close();
-    }
-
-
-    @Override
-    protected void onRestart() {
-         setupbadgeDrawableGioHang();
-        super.onRestart();
-    }
-*/
-
-
 }
 
 

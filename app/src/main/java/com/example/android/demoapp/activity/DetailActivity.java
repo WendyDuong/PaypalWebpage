@@ -1,18 +1,14 @@
 package com.example.android.demoapp.activity;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
@@ -21,20 +17,15 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.DetailViewModel;
 import com.example.android.demoapp.ViewModel.DetailViewModelFactory;
-import com.example.android.demoapp.ViewModel.GioHangViewModel;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.SanPhamEntry;
@@ -42,9 +33,7 @@ import com.example.android.demoapp.database.YeuThichEntry;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-
 import org.apache.commons.math3.util.Precision;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,26 +41,18 @@ import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
     ImageView imgChiTiet, timImageView, imageViewHangSp;
-    private static final String INSTANCE_SANPHAM_ID = "instanceID";
     private static final int DEFAULT_ID = -1;
     private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
     private static final String EXTRA_HANG_ID = "extraHangId";
-    private static final String TAG = DetailActivity.class.getSimpleName();
     private int idHang, idsanpham;
     ImageView expandedImageView;
-
     DetailViewModelFactory factory;
-   DetailViewModel viewModel;
-
+    DetailViewModel viewModel;
     Toolbar toolBarChiTietActivity;
     TextView tvMoTaTitle, tvChiTietTitle, devider1, devider2;
-
     View LayoutChiTietActivity, cardViewSpinner;
     private Animator currentAnimator;
     private int shortAnimationDuration;
-
-
-
     private AppDatabase mDb;
     TextView tvTen, tvGia, tvMoTa, tvKhoiluong, tvThuongHieu, tvXuatXu;
     ExtendedFloatingActionButton btnDatMua;
@@ -80,7 +61,6 @@ public class DetailActivity extends AppCompatActivity {
     String tensp, khoiluongsp, thuongHieu, xuatXu;
     private int mTaskId = DEFAULT_ID;
     Spinner spinner;
-
     TabLayout tabLayout;
     TabLayout.Tab tabGioHang;
     TabLayout.Tab tabYeuThich;
@@ -94,7 +74,6 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_activity);
-        Toast.makeText(DetailActivity.this, "OnCreate", Toast.LENGTH_SHORT).show();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON|
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
@@ -114,7 +93,6 @@ public class DetailActivity extends AppCompatActivity {
         spinner = findViewById(R.id.spinner);
         timImageView = findViewById(R.id.tim_chi_tiet_activity);
         imageViewHangSp = findViewById(R.id.iv_hang);
-
         LayoutChiTietActivity = findViewById(R.id.card_view_detail);
         toolBarChiTietActivity = findViewById(R.id.toolbar3);
         tvMoTaTitle = findViewById(R.id.mo_ta_san_pham_tilte);
@@ -122,68 +100,46 @@ public class DetailActivity extends AppCompatActivity {
         devider1 = findViewById(R.id.devider);
         devider2 = findViewById(R.id.devider2);
         cardViewSpinner = findViewById(R.id.card_view_spinner);
+        expandedImageView = (ImageView) findViewById(R.id.expanded_image);
+        imgChiTiet.setClipToOutline(true);
 
-        expandedImageView = (ImageView) findViewById(
-                R.id.expanded_image);
 
         eventSpinner();
         yeuthichEvent();
 
-        imgChiTiet.setClipToOutline(true);
 
 
-
-        //TODO(3) get ID from Intent
         Intent intent = getIntent();
 
         if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
             idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_ID);
-
-
             switch (idHang) {
                 case 0:
                       imageViewHangSp.setImageResource(R.drawable.hit);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.hit));
                     break;
                 case 1:
                      imageViewHangSp.setImageResource(R.drawable.merc);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.merclogo));
-
                     break;
                 case 2:
                     imageViewHangSp.setImageResource(R.drawable.penny);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.penny));
-
                     break;
                 case 3:
                     imageViewHangSp.setImageResource(R.drawable.rossmann_logo);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.rossmann));
-
                     break;
                 case 4:
                     imageViewHangSp.setImageResource(R.drawable.apotheke_logo);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.apotheke_logo));
-
                     break;
                 case 5:
                     imageViewHangSp.setImageResource(R.drawable.mediamarkt_logo);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.mediamarkt_logo));
-
                     break;
                 case 6:
                     imageViewHangSp.setImageResource(R.drawable.dior);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.dior));
-
                     break;
                 case 7:
                     imageViewHangSp.setImageResource(R.drawable.skii);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.skii));
-
                     break;
                 case 8:
                     imageViewHangSp.setImageResource(R.drawable.richy);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.richy));
-
                     break;
             }
         }
@@ -255,25 +211,20 @@ public class DetailActivity extends AppCompatActivity {
         tabYeuThich = tabLayout.getTabAt(1);
         tabGioHang = tabLayout.getTabAt(2);
 
+        assert tabGioHang != null;
         badgeDrawableGioHang = tabGioHang.getOrCreateBadge();
+        assert tabYeuThich != null;
         badgeDrawableYeuthich = tabYeuThich.getOrCreateBadge();
 
 
         if (intent != null && intent.hasExtra(EXTRA_SANPHAM_ID)) {
             if (mTaskId == DEFAULT_ID) {
-                // populate the UI
                 mTaskId = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
-
                 factory = new DetailViewModelFactory(mDb, mTaskId);
-                viewModel
-                        = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
-
+                viewModel = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
                 viewModel.getDetailSanPham().observe(this, new Observer<SanPhamEntry>() {
                     @Override
                     public void onChanged(SanPhamEntry sanPham) {
-                        Toast.makeText(DetailActivity.this, "Populate UI", Toast.LENGTH_SHORT).show();
-
-
                         populateUI(sanPham);
                     }
 
@@ -284,7 +235,6 @@ public class DetailActivity extends AppCompatActivity {
                     public void onChanged(@Nullable List<GioHangEntry> gioHang) {
                         gioHangEntries = gioHang;
                         int sosanphammua = 0;
-
                         addEvent();
                         if (gioHangEntries.size() > 0) {
                             for (int i = 0; i < gioHangEntries.size(); i++) {
@@ -297,8 +247,6 @@ public class DetailActivity extends AppCompatActivity {
                             badgeDrawableGioHang.setVisible(false);
                     }
                 });
-
-
             }
         }
 
@@ -309,36 +257,26 @@ public class DetailActivity extends AppCompatActivity {
                 zoomImageFromThumb(imgChiTiet, hinhanhsp);
             }
         });
-        shortAnimationDuration = getResources().getInteger(
-                android.R.integer.config_shortAnimTime);
-
-
+        shortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
     }
 
+
+
     private void yeuthichEvent() {
-
-
         timImageView.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("UseCompatLoadingForDrawables")
             @Override
             public void onClick(View view) {
                 if (timImageView.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.timden24).getConstantState()) {
-                    //    timImageView.setImageResource(R.drawable.timdo24);
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
                             mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensp, giasp, hinhanhsp, khoiluongsp, idHang));
-                            Log.d("checkidsanphaminsert", " " + idsanpham);
 
                         }
                     });
-
-
                 } else {
-
-
-                    //  timImageView.setImageResource(R.drawable.timden24);
-
                     for (int vitrixoa = 0; vitrixoa < yeuThichEntries.size(); vitrixoa++) {
                         int idsanphamxoa = yeuThichEntries.get(vitrixoa).getIdSanPham();
                         if (idsanphamxoa == idsanpham) {
@@ -352,12 +290,8 @@ public class DetailActivity extends AppCompatActivity {
                         }
                     }
                 }
-
-
             }
         });
-
-
     }
 
 
@@ -379,32 +313,8 @@ public class DetailActivity extends AppCompatActivity {
         tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
         tvXuatXu.setText("Xuất xứ: " + xuatXu);
         DecimalFormat deci = new DecimalFormat("###,###,###");
-        tvGia.setText("Giá " + deci.format(giasp) + " Đ");
+        tvGia.setText(deci.format(giasp) + " Đ");
         imgChiTiet.setImageResource(hinhanhsp);
-
-
-
-/*        imgChiTiet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ImageView image = new ImageView(DetailActivity.this);
-                image.setImageResource(hinhanhsp);
-
-                AlertDialog.Builder builder =
-                        new AlertDialog.Builder(DetailActivity.this).
-                                setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).
-                                setView(image);
-                builder.create().show();
-
-            }
-        });*/
-
-
 
         viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
             @Override
@@ -425,15 +335,9 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void addEvent() {
-
         btnDatMua.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-                //TODO(7) them vao gio hang
-
-
                 if (gioHangEntries.size() > 0) {
                     final int sl = Integer.parseInt(spinner.getSelectedItem().toString());
                     boolean exsist = false;
@@ -443,7 +347,6 @@ public class DetailActivity extends AppCompatActivity {
                             final int soluongcu = gioHangEntries.get(i).getSoLuong();
                             final int id = gioHangEntries.get(i).getId();
                             final int soluongmoi = soluongcu + sl;
-                            // Put the task description and selected mPriority into the ContentValues
 
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
@@ -467,7 +370,7 @@ public class DetailActivity extends AppCompatActivity {
                                     }
                                 });
 
-                                Toast.makeText(DetailActivity.this, "Đã đủ 20 " + " " + tensp + " trong giỏ hàng", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(DetailActivity.this, "Đã đủ 20 "+ tensp + " trong giỏ hàng", Toast.LENGTH_SHORT).show();
 
                             } else {
                                 Toast.makeText(DetailActivity.this, "Đã thêm " + soluongmoi + " " + tensp + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
@@ -479,7 +382,7 @@ public class DetailActivity extends AppCompatActivity {
 
                         }
                     }
-                    if (exsist == false) {
+                    if (!exsist) {
                         final int soluong = Integer.parseInt(spinner.getSelectedItem().toString());
                         final double giamoi = soluong * giasp;
 
@@ -513,15 +416,13 @@ public class DetailActivity extends AppCompatActivity {
 
 
                 }
-           /*
-                Intent intent = new Intent(DetailActivity.this, GioHangActivity.class);
-                startActivity(intent);*/
+
             }
         });
     }
 
     private void eventSpinner() {
-        ArrayList<Integer> arr = new ArrayList<Integer>();
+        ArrayList<Integer> arr = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
             arr.add(i);
         }
@@ -536,36 +437,28 @@ public class DetailActivity extends AppCompatActivity {
         boolean exit = false;
 
         if (yeuThichEntries.size() > 0) {
-            Toast.makeText(DetailActivity.this, "idsanpham: "+ idsanpham, Toast.LENGTH_SHORT).show();
-
             for (int vitritim = 0; vitritim < yeuThichEntries.size(); vitritim++) {
                 if (yeuThichEntries.get(vitritim).getIdSanPham() == idsanpham) {
                     timImageView.setImageResource(R.drawable.timdo24);
-                    Toast.makeText(DetailActivity.this, "Tim Do", Toast.LENGTH_SHORT).show();
 
                     exit = true;
                 }
             }
 
-            if (exit == false) {
-                Toast.makeText(DetailActivity.this, "Tim Den Exit false", Toast.LENGTH_SHORT).show();
+            if (!exit) {
 
                 timImageView.setImageResource(R.drawable.timden24);
             }
 
-
         } else {
-            Toast.makeText(DetailActivity.this, "Tim Den Mang = 0", Toast.LENGTH_SHORT).show();
 
             timImageView.setImageResource(R.drawable.timden24);
         }
 
     }
 
-
     @Override
     protected void onStop() {
-        Toast.makeText(DetailActivity.this, "onStop", Toast.LENGTH_SHORT).show();
         getViewModelStore().clear();
         super.onStop();
 
@@ -574,7 +467,6 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        Toast.makeText(DetailActivity.this, "onNewIntent", Toast.LENGTH_SHORT).show();
         setIntent(intent);
         intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
@@ -582,83 +474,43 @@ public class DetailActivity extends AppCompatActivity {
             switch (idHang) {
                 case 0:
                     imageViewHangSp.setImageResource(R.drawable.hit);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.hit));
                     break;
                 case 1:
                     imageViewHangSp.setImageResource(R.drawable.merc);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.merclogo));
-
                     break;
                 case 2:
                     imageViewHangSp.setImageResource(R.drawable.penny);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.penny));
-
                     break;
                 case 3:
                     imageViewHangSp.setImageResource(R.drawable.rossmann_logo);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.rossmann));
-
                     break;
                 case 4:
                     imageViewHangSp.setImageResource(R.drawable.apotheke_logo);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.apotheke_logo));
-
                     break;
                 case 5:
                     imageViewHangSp.setImageResource(R.drawable.mediamarkt_logo);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.mediamarkt_logo));
-
                     break;
                 case 6:
                     imageViewHangSp.setImageResource(R.drawable.dior);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.dior));
-
                     break;
                 case 7:
                     imageViewHangSp.setImageResource(R.drawable.skii);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.skii));
-
                     break;
                 case 8:
                     imageViewHangSp.setImageResource(R.drawable.richy);
-                    //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.richy));
-
                     break;
             }
         }
         if (intent != null && intent.hasExtra(EXTRA_SANPHAM_ID)) {
-            // populate the UI
             mTaskId = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
-
-            DetailViewModelFactory factory = new DetailViewModelFactory(mDb, mTaskId);
-            final DetailViewModel viewModel
-                    = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
-
+            factory = new DetailViewModelFactory(mDb, mTaskId);
+            viewModel = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
             viewModel.getDetailSanPham().observe(this, new Observer<SanPhamEntry>() {
                 @Override
                 public void onChanged(SanPhamEntry sanPham) {
-                    //viewModel.getDetailSanPham().removeObserver(this);
                     populateUI(sanPham);
                 }
 
-            });
-
-            viewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
-                @Override
-                public void onChanged(@Nullable List<GioHangEntry> gioHang) {
-                    gioHangEntries = gioHang;
-                    int sosanphammua = 0;
-
-                    if (gioHangEntries.size() > 0) {
-                        for (int i = 0; i < gioHangEntries.size(); i++) {
-                            sosanphammua += gioHangEntries.get(i).getSoLuong();
-                        }
-                        badgeDrawableGioHang.setVisible(true);
-
-                        badgeDrawableGioHang.setNumber(sosanphammua);
-                    } else
-                        badgeDrawableGioHang.setVisible(false);
-                }
             });
 
         }

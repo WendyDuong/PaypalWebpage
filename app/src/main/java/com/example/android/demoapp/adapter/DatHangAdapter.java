@@ -35,7 +35,6 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
 
 
 
-
     @Override
     public DatHangAdapter.viewHolderDatHang onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mcontext).inflate(R.layout.dat_hang_item, parent, false);

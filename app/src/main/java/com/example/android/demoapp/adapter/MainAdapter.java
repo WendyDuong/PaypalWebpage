@@ -31,7 +31,6 @@ public class MainAdapter extends  RecyclerView.Adapter<MainAdapter.viewHolderMai
         mImageIds = imageIds;
     }
 
-
     @NonNull
     @Override
     public MainAdapter.viewHolderMain onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,23 +41,14 @@ public class MainAdapter extends  RecyclerView.Adapter<MainAdapter.viewHolderMai
 
     @Override
     public void onBindViewHolder(@NonNull final MainAdapter.viewHolderMain holder, int position) {
-
         holder.imageView.setImageResource(mImageIds.get(position));
-
-
         final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) holder.cardView.getLayoutParams();
-
-       /* layoutParams.height = holder.cardView.getMeasuredWidth();
-        holder.cardView.requestLayout();*/
-
-
-
         int left = dptoPx(24);
         int top = dptoPx(12);
         int right = dptoPx(24);
         int bottom = dptoPx(12);
 
-      boolean isFirst3Iteme = position < 3;
+        boolean isFirst3Iteme = position < 3;
         boolean isLast3tems = position > getItemCount() - 3 ;
         if ( isFirst3Iteme){
             top = dptoPx(24);
@@ -86,13 +76,11 @@ public class MainAdapter extends  RecyclerView.Adapter<MainAdapter.viewHolderMai
         }
         layoutParams.setMargins(left,top,right,bottom);
         holder.cardView.setLayoutParams(layoutParams);
-
     }
 
     private int dptoPx(int dp){
     float px = dp + mContext.getResources().getDisplayMetrics().density;
     return (int) px;
-
     }
 
     @Override
@@ -118,8 +106,6 @@ public class MainAdapter extends  RecyclerView.Adapter<MainAdapter.viewHolderMai
                 @Override
                 public void onClick(View view) {
                     iD = getLayoutPosition();
-                    Log.i("MainGridViewAdapter", Integer.toString(iD));
-
                     Intent intent = new Intent(mContext, CatalogActivity.class);
                     intent.putExtra(EXTRA_HANG_ID, iD);
                     mContext.startActivity(intent);
@@ -128,30 +114,3 @@ public class MainAdapter extends  RecyclerView.Adapter<MainAdapter.viewHolderMai
         }
     }
 }
-   /* @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        ImageView imageView;
-        if (convertView == null) {
-            LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.grid_view_item,null);
-        }
-        imageView = (ImageView) convertView.findViewById(R.id.image_grid_view);
-            // Define the layout parameters
-            imageView.setAdjustViewBounds(true);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-
-
-        // Set the image resource and return the newly created ImageView
-        imageView.setImageResource(mImageIds.get(position));
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, CatalogActivity.class);
-                intent.putExtra("idnhacungcap", position);
-                mContext.startActivity(intent);
-            }
-        });
-
-        return imageView;
-    }
-}*/

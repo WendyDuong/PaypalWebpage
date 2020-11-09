@@ -11,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -19,7 +18,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.GioHangViewModel;
@@ -27,10 +25,7 @@ import com.example.android.demoapp.activity.DetailActivity;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-
 import org.apache.commons.math3.util.Precision;
-
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -38,52 +33,36 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
     private List<YeuThichEntry> yeuThichs;
     private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
     private static final String EXTRA_HANG_ID = "extraHangId";
-    private List<GioHangEntry> mgioHangEntries;
-
     private AppDatabase mDb;
-
     Context mcontext;
-
-
-    public YeuthichAdapter( Context mcontext) {
+    private List<GioHangEntry> mgioHangEntries;
+    public YeuthichAdapter(Context mcontext) {
         this.mcontext = mcontext;
     }
-
-
-
 
     @NonNull
     @Override
     public YeuthichAdapter.viewHolderYeuthich onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.yeu_thich_item, parent, false);
-        viewHolderYeuthich yeuThichItemHolder = new viewHolderYeuthich(view);
-        return yeuThichItemHolder;
+        return new viewHolderYeuthich(view);
     }
 
 
     @Override
     public void onBindViewHolder(@NonNull viewHolderYeuthich holder, int position) {
 
-          YeuThichEntry yeuThichEntry = yeuThichs.get(position);
-
-
+        YeuThichEntry yeuThichEntry = yeuThichs.get(position);
         String tensanpham = yeuThichEntry.getTenSanPham();
         String khoiluongsanpham = yeuThichEntry.getKhoiLuong();
         int hinhanhsanpham = yeuThichEntry.getHinhAnh();
-        int idsanpham = yeuThichEntry.getIdSanPham();
-
-        //Rounding currency to make a easy reading
         double giasanpham = yeuThichEntry.getGiaSanPham();
-        giasanpham = Precision.round(giasanpham/1000, 0)*1000;
-
+        giasanpham = Precision.round(giasanpham / 1000, 0) * 1000;
 
         holder.tvTen.setText(tensanpham);
         holder.tvKhoiluong.setText(khoiluongsanpham);
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         holder.tvGia.setText(decimalFormat.format(giasanpham) + " Đ");
         holder.imgSanPham.setImageResource(hinhanhsanpham);
-
-
 
     }
 
@@ -94,7 +73,6 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
         }
         return yeuThichs.size();
     }
-
 
 
     public class viewHolderYeuthich extends RecyclerView.ViewHolder {
@@ -117,7 +95,6 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
             gioHangViewModel.getGioHang().observe((FragmentActivity) mcontext, new Observer<List<GioHangEntry>>() {
                 @Override
                 public void onChanged(@Nullable List<GioHangEntry> gioHangEntries) {
-
                     mgioHangEntries = gioHangEntries;
                 }
             });
@@ -134,7 +111,6 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                 }
             });
 
-
             buttonXoa.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -145,7 +121,6 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                     buidlder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-
                         }
                     });
                     buidlder.setPositiveButton("Xác nhận", new DialogInterface.OnClickListener() {
@@ -154,7 +129,6 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-
                                     mDb.yeuThichDao().deleteYeuThich(yeuThichs.get(getLayoutPosition()));
                                 }
                             });
@@ -176,56 +150,32 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                     final int hinhanhsanpham = yeuThichs.get(getLayoutPosition()).getHinhAnh();
                     final int idHang = yeuThichs.get(getLayoutPosition()).getIdHang();
 
-
                     if (mgioHangEntries.size() > 0) {
                         boolean exit = false;
                         for (int i = 0; i < mgioHangEntries.size(); i++) {
                             if (mgioHangEntries.get(i).getIdSanPham() == idsanphamhientai) {
-                             /*   final int soluongcu = mgioHangEntries.get(i).getSoLuong();
-                                final  int id = mgioHangEntries.get(i).getId();
-                                // Put the task description and selected mPriority into the ContentValues
-
-                                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanphamhientai, tensanpham,giasanpham * (soluongcu + 1) ,hinhanhsanpham,khoiluongsanpham,soluongcu + 1 ,idHang));
-
-
-
-                                    }
-                                });*/
                                 Toast.makeText(mcontext, tensanpham + " đã có trong giỏ hàng", Toast.LENGTH_SHORT).show();
                                 exit = true;
                             }
                         }
-
-                        if (exit == false) {
-
+                        if (!exit) {
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham/1000,0)*1000, hinhanhsanpham, khoiluongsanpham, 1, idHang));
-
+                                    mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham / 1000, 0) * 1000, hinhanhsanpham, khoiluongsanpham, 1, idHang));
 
                                 }
                             });
-
-
                             Toast.makeText(mcontext, "Đã thêm " + tensanpham + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
-
                         }
                     } else {
-
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham/1000,0)*1000, hinhanhsanpham, khoiluongsanpham, 1, idHang));
-
-
+                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham / 1000, 0) * 1000, hinhanhsanpham, khoiluongsanpham, 1, idHang));
                             }
                         });
                         Toast.makeText(mcontext, "Đã thêm " + tensanpham + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
-
                     }
 
 
@@ -234,11 +184,12 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
 
         }
     }
+
     public List<YeuThichEntry> getYeuThichs() {
         return yeuThichs;
     }
 
-    public void setYeuThichs(List<YeuThichEntry> yeuThichs){
+    public void setYeuThichs(List<YeuThichEntry> yeuThichs) {
         this.yeuThichs = yeuThichs;
         notifyDataSetChanged();
     }

@@ -1,4 +1,5 @@
 package com.example.android.demoapp.widget;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +16,7 @@ public class GridWidgetService extends RemoteViewsService {
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new GridRemoteViewsFactory(this.getApplicationContext());
     }
-
 }
-
 
 class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
@@ -25,7 +24,6 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     public GridRemoteViewsFactory(Context applicationContext) {
         mContext = applicationContext;
-
     }
 
 
@@ -66,7 +64,6 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     public RemoteViews getLoadingView() {
         return null;
     }
-
     @Override
     public int getViewTypeCount() {
         return 1; // Treat all items in the GridView the same

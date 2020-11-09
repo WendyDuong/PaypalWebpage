@@ -1,9 +1,9 @@
 package com.example.android.demoapp.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +24,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.GioHangViewModel;
-import com.example.android.demoapp.activity.CatalogActivity;
 import com.example.android.demoapp.activity.DatHangActivity;
-import com.example.android.demoapp.activity.DetailActivity;
 import com.example.android.demoapp.adapter.GioHangAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
-
-import org.apache.commons.math3.util.Precision;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -42,17 +38,17 @@ public class GioHangFragment extends Fragment {
     RecyclerView giohangRecyclerView;
     View emptyView;
     GioHangAdapter gioHangAdapter;
+    @SuppressLint("StaticFieldLeak")
     public static TextView tvTongtien;
     private AppDatabase mDb;
     private double tongTienDonHang = 0;
     List<GioHangEntry> mGiohangs;
     double tongtien;
-    private static final String TAG = GioHangFragment.class.getSimpleName();
+    GioHangViewModel gioHangViewModel;
 
     public GioHangFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
@@ -60,7 +56,6 @@ public class GioHangFragment extends Fragment {
                              Bundle savedInstanceState) {
         mDb = AppDatabase.getInstance(getActivity());
 
-        // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.gio_hang_fragment, container, false);
         buttonDatHang = rootView.findViewById(R.id.button_dat_hang);
         emptyView = rootView.findViewById(R.id.empty_view);
@@ -79,18 +74,14 @@ public class GioHangFragment extends Fragment {
         }
         giohangRecyclerView.setAdapter(gioHangAdapter);
 
-
-
-
-
-        GioHangViewModel gioHangViewModel = ViewModelProviders.of(this).get(GioHangViewModel.class);
-
+        gioHangViewModel = ViewModelProviders.of(this).get(GioHangViewModel.class);
         gioHangViewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
             @Override
             public void onChanged(@Nullable List<GioHangEntry> gioHangEntries) {
                 tvTongtien = rootView.findViewById(R.id.tong_tien);
                 mGiohangs = gioHangEntries;
 
+                assert mGiohangs != null;
                 if (mGiohangs.size() == 0) {
                     tvTongtien.setVisibility(View.INVISIBLE);
                     emptyView.setVisibility(View.VISIBLE);
@@ -113,9 +104,7 @@ public class GioHangFragment extends Fragment {
         });
 
 
-
         new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(giohangRecyclerView);
-
         buttonDatHang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,12 +116,7 @@ public class GioHangFragment extends Fragment {
                 }
             }
         });
-
-
-
-
         return rootView;
-
     }
 
     ItemTouchHelper.SimpleCallback itemTouchHelper = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -151,10 +135,7 @@ public class GioHangFragment extends Fragment {
                     mDb.gioHangDao().deleteGioHang(gioHangs.get(position));
                 }
             });
-
-
         }
     };
-
 
 }

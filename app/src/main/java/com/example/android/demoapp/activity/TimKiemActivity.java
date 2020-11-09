@@ -18,20 +18,15 @@ import androidx.core.content.ContextCompat;
 import com.example.android.demoapp.R;
 import com.google.android.material.tabs.TabLayout;
 
-public class TimKiemActivity extends AppCompatActivity implements SearchView.OnQueryTextListener  {
-  Toolbar toolbar;
-    private TabLayout tabLayout;
-    private  TabLayout.Tab tabGioHang;
-    private  TabLayout.Tab tabYeuThich;
-
-
+public class TimKiemActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+    Toolbar toolbar;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tim_kiem_activity);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON|
-                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
         toolbar = findViewById(R.id.toolbar_tim_kiem);
@@ -47,9 +42,10 @@ public class TimKiemActivity extends AppCompatActivity implements SearchView.OnQ
 
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_timkiem,menu);
+        getMenuInflater().inflate(R.menu.menu_timkiem, menu);
 
         MenuItem itSearch = menu.findItem(R.id.itSearch);
         SearchView searchView = (SearchView) itSearch.getActionView();
@@ -57,7 +53,7 @@ public class TimKiemActivity extends AppCompatActivity implements SearchView.OnQ
         searchView.setOnQueryTextListener(this);
         searchView.setOnQueryTextListener(this);
         ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_button);
-        searchIcon.setImageDrawable(ContextCompat.getDrawable(TimKiemActivity.this,R.drawable.kinh_lup_icon));
+        searchIcon.setImageDrawable(ContextCompat.getDrawable(TimKiemActivity.this, R.drawable.kinh_lup_icon));
         searchIcon.setColorFilter(Color.WHITE);
         ImageView searchClose = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
         searchClose.setColorFilter(Color.WHITE);
@@ -65,7 +61,9 @@ public class TimKiemActivity extends AppCompatActivity implements SearchView.OnQ
         searchAutoComplete.setHintTextColor(getResources().getColor(android.R.color.white));
         searchAutoComplete.setTextColor(getResources().getColor(android.R.color.white));
         searchView.findViewById(androidx.appcompat.R.id.search_mag_icon).setVisibility(View.GONE);
+/*
         View v = searchView.findViewById(androidx.appcompat.R.id.search_plate);
+*/
 
         return true;
     }
@@ -79,14 +77,6 @@ public class TimKiemActivity extends AppCompatActivity implements SearchView.OnQ
         return false;
 
     }
-
-
-
-
-
-
-
-
 
 
     @Override

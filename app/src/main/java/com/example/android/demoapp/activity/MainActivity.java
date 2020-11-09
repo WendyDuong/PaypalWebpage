@@ -1,15 +1,15 @@
 package com.example.android.demoapp.activity;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -19,8 +19,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-
-import com.example.android.demoapp.Presenter.PresenterLogicXuLyMenu;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.MainViewModel;
 import com.example.android.demoapp.adapter.CategoryAdapter;
@@ -28,58 +26,34 @@ import com.example.android.demoapp.adapter.NavigationViewAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
-import com.example.android.demoapp.model.ModelDangNhap;
 import com.example.android.demoapp.widget.MyService;
-import com.facebook.AccessToken;
-import com.facebook.login.LoginManager;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import android.view.WindowManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    GoogleSignInAccount account ;
     Toolbar toolbar;
-    public static final int RC_SIGN_IN = 1;
     ImageView imageView;
     CategoryAdapter viewPageAdapter;
     TabLayout.Tab tabGioHang;
     TabLayout.Tab tabYeuThich;
-    public static BadgeDrawable badgeDrawableYeuthich;
-    public static BadgeDrawable badgeDrawableGioHang;
-
-    private RecyclerView list;
-    private NavigationViewAdapter recyclerAdapter;
-    private DrawerLayout mDrawerLayout;
-
-
-
-    private AppDatabase mDb;
+    RecyclerView list;
+    NavigationViewAdapter recyclerAdapter;
+    DrawerLayout mDrawerLayout;
     List<GioHangEntry> gioHangEntries;
     List<YeuThichEntry> yeuThichEntries;
-
-
-    public  static boolean mainActivityOnCreat = false;
-    AccessToken accessToken;
-    PresenterLogicXuLyMenu logicXuLyMenu;
     ViewPager2 viewPager2;
-    public static TabLayout tabLayout;
-    Button buttonDangNhap;
-    Button buttonDangXuat;
-    GoogleSignInClient mGoogleSignInClient ;
-    ModelDangNhap modelDangNhap = new ModelDangNhap();
+    TabLayout tabLayout;
+    MainViewModel mainViewModel;
+    AppDatabase mDb;
+    private BadgeDrawable badgeDrawableYeuthich;
+    private BadgeDrawable badgeDrawableGioHang;
+    private static final int REQUEST_OVERLAY_PERMISSION = 5469;
 
-    TextView textViewTenKhachHang;
-    String tennguoidung = "";
-
-
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,17 +63,18 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-
+        if(!Settings.canDrawOverlays(this)){
+            // ask for setting
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, REQUEST_OVERLAY_PERMISSION);
+        }
         Intent intent = new Intent(this, MyService.class);
         startService(intent);
-
-
         init();
-        mainActivityOnCreat = true;
-        ArrayList<String> caNhan = new ArrayList<String>();
+        ArrayList<String> caNhan = new ArrayList<>();
 
         caNhan.add(getString(R.string.hinh_thuc_thanh_toan));
-
         caNhan.add(getString(R.string.giao_hang));
         caNhan.add(getString(R.string.chinh_sach_doi_tra));
         caNhan.add(getString(R.string.lien_he));
@@ -111,15 +86,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         list.setLayoutManager(layoutManager);
         recyclerAdapter = new NavigationViewAdapter(MainActivity.this, caNhan);
         list.setAdapter(recyclerAdapter);
-
-        //ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, toolbar,R.string.app_name, R.string.app_name);
-
-
 
     }
 
@@ -135,17 +105,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         private void init () {
-
             toolbar = findViewById(R.id.toolbar);
             mDrawerLayout = findViewById(R.id.drawer_layout);
             imageView = findViewById(R.id.anhcanhan);
-
-
             list = (RecyclerView) findViewById(R.id.recycleview);
-
-
-
-
             viewPager2 = (ViewPager2) findViewById(R.id.viewpager);
             viewPageAdapter = new CategoryAdapter(this);
             viewPager2.setAdapter(viewPageAdapter);
@@ -176,21 +139,21 @@ public class MainActivity extends AppCompatActivity {
             });
 
             tabLayoutMediator.attach();
-
             tabYeuThich = tabLayout.getTabAt(2);
             tabGioHang = tabLayout.getTabAt(3);
-
+            assert tabGioHang != null;
             badgeDrawableGioHang = tabGioHang.getOrCreateBadge();
+            assert tabYeuThich != null;
             badgeDrawableYeuthich = tabYeuThich.getOrCreateBadge();
 
             mDb = AppDatabase.getInstance(getApplicationContext());
-            MainViewModel mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+            mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
             mainViewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
                 @Override
                 public void onChanged(@Nullable List<GioHangEntry> gioHang) {
                     gioHangEntries = gioHang;
                     int sosanphammua = 0;
-
+                    assert gioHangEntries != null;
                     if (gioHangEntries.size() > 0) {
                         for (int i = 0; i < gioHangEntries.size(); i++) {
                             sosanphammua += gioHangEntries.get(i).getSoLuong();
@@ -207,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
                     yeuThichEntries = yeuThich;
+                    assert yeuThichEntries != null;
                     if (yeuThichEntries.size() > 0) {
                         badgeDrawableYeuthich.setVisible(true);
                         badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
@@ -217,79 +181,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-
         }
         }
 
-/*
 
-  private DrawerLayout mDrawerLayout;
-    private RecyclerView list;
-    private adapter recyclerAdapter;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navigation_view11);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        list = (RecyclerView) findViewById(R.id.list);
-        //Data
-        ArrayList<String> nav_item = new ArrayList<>();
-        nav_item.add("Home");
-        nav_item.add("App");
-        nav_item.add("Blog");
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        list.setLayoutManager(layoutManager);
-        recyclerAdapter = new adapter(NavigationViewActivity11.this, nav_item);
-        list.setAdapter(recyclerAdapter);
-
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, toolbar,R.string.app_name, R.string.app_name);
-
-        mDrawerLayout.addDrawerListener(mDrawerToggle);
-
-        mDrawerToggle.syncState();
-
-    }
-
-    private class adapter extends RecyclerView.Adapter<adapter.myViewHolder> {
-        Context context;
-        List<String> mData;
-
-        public adapter(Context context, List<String> data) {
-            this.context = context;
-            this.mData = data;
-        }
-
-        @Override
-        public adapter.myViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(context).inflate(R.layout.navigationrecyclerview_adapter11, parent, false);
-            return new myViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(adapter.myViewHolder holder, int position) {
-            holder.country.setText(mData.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return mData.size();
-        }
-        public class myViewHolder extends RecyclerView.ViewHolder {
-            TextView nav;
-
-            public myViewHolder(View itemView) {
-                super(itemView);
-                nav = (TextView) itemView.findViewById(R.id.nav);
-            }
-        }
-    }
-
-*/
 
 
 

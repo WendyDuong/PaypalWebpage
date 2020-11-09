@@ -34,8 +34,6 @@ public class GiaoHang extends AppCompatActivity {
         });
         TextView tv = findViewById(R.id.tv_giao_hang);
         tv.setText(R.string.thong_tin_giao_hang);
-
-
     }
 
 }

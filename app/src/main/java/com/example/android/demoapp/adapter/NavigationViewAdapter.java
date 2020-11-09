@@ -29,9 +29,7 @@ public class NavigationViewAdapter extends RecyclerView.Adapter<NavigationViewAd
         add(R.drawable.ic_baseline_payment_24);
         add(R.drawable.ic_baseline_local_shipping_24);
         add(R.drawable.ic_baseline_assignment_return_24);
-      add(R.drawable.ic_baseline_contact_mail_24);
-
-
+        add(R.drawable.ic_baseline_contact_mail_24);
     }};
 
     public NavigationViewAdapter(Context context, List<String> data) {
@@ -55,6 +53,7 @@ public class NavigationViewAdapter extends RecyclerView.Adapter<NavigationViewAd
     public int getItemCount() {
         return mData.size();
     }
+
     public class myViewHolder extends RecyclerView.ViewHolder {
         TextView nav;
         ImageView iconView;
@@ -62,31 +61,31 @@ public class NavigationViewAdapter extends RecyclerView.Adapter<NavigationViewAd
         public myViewHolder(final View itemView) {
             super(itemView);
             nav = (TextView) itemView.findViewById(R.id.nav);
-            iconView= itemView.findViewById(R.id.icon_image_view);
+            iconView = itemView.findViewById(R.id.icon_image_view);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int pos = getLayoutPosition();
-                    switch (pos){
+                    switch (pos) {
                         case 0:
                             Toast.makeText(context, "Hinh thuc thanh toan", Toast.LENGTH_SHORT).show();
                             Intent intentThanhToan = new Intent(context, ThanhToan.class);
                             context.startActivity(intentThanhToan);
                             break;
-                            case 1:
+                        case 1:
                             Toast.makeText(context, "Giao hang", Toast.LENGTH_SHORT).show();
-                                Intent intentGiaoHang = new Intent(context, GiaoHang.class);
-                                context.startActivity(intentGiaoHang);
+                            Intent intentGiaoHang = new Intent(context, GiaoHang.class);
+                            context.startActivity(intentGiaoHang);
                             break;
-                            case 2:
+                        case 2:
                             Toast.makeText(context, "Doi tra", Toast.LENGTH_SHORT).show();
-                                Intent intentDoiTra = new Intent(context, DoiTra.class);
-                                context.startActivity(intentDoiTra);
+                            Intent intentDoiTra = new Intent(context, DoiTra.class);
+                            context.startActivity(intentDoiTra);
                             break;
-                            case 3:
+                        case 3:
                             Toast.makeText(context, "Lien he", Toast.LENGTH_SHORT).show();
-                                Intent intentLienHe = new Intent(context, LienHe.class);
-                                context.startActivity(intentLienHe);
+                            Intent intentLienHe = new Intent(context, LienHe.class);
+                            context.startActivity(intentLienHe);
                             break;
                     }
                 }

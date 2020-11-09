@@ -15,8 +15,6 @@ import java.util.List;
 public interface GioHangDao {
     @Query("SELECT * FROM giohang")
     LiveData<List<GioHangEntry>> loadAllGioHang();
-
-
     @Insert
     void insertGioHang(GioHangEntry gioHangEntry);
 

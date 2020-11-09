@@ -21,19 +21,18 @@ import java.util.List;
 
 public class GioHangActivity extends AppCompatActivity {
     private Toolbar toolbar;
-    private    TabLayout tabLayout;
-    private  TabLayout.Tab tabYeuThich;
-    public static  BadgeDrawable badgeDrawableYeuthich;
+    private TabLayout tabLayout;
+    private TabLayout.Tab tabYeuThich;
+    public static BadgeDrawable badgeDrawableYeuthich;
     List<YeuThichEntry> yeuThichEntries;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gio_hang_activity);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON|
-                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
 
@@ -45,13 +44,14 @@ public class GioHangActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             onBackPressed();
+                onBackPressed();
 
             }
         });
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.kinh_lup_icon));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.timdo_bar));
         tabYeuThich = tabLayout.getTabAt(1);
+        assert tabYeuThich != null;
         badgeDrawableYeuthich = tabYeuThich.getOrCreateBadge();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -64,7 +64,7 @@ public class GioHangActivity extends AppCompatActivity {
                         break;
                     case 1:
                         Intent intent1 = new Intent(GioHangActivity.this, YeuthichActivity.class);
-                       startActivity(intent1);
+                        startActivity(intent1);
                         break;
                     default:
                         break;
@@ -98,43 +98,17 @@ public class GioHangActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
                 yeuThichEntries = yeuThich;
-                if (yeuThichEntries.size()>0){
+                assert yeuThichEntries != null;
+                if (yeuThichEntries.size() > 0) {
                     badgeDrawableYeuthich.setVisible(true);
                     badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
 
-                }
-                else
+                } else
                     badgeDrawableYeuthich.setVisible(false);
 
             }
         });
     }
-
-
-
-/*
-    private void setupbadgeDrawableYeuThich() {
-        Cursor cursorSoSanPhamYeuThich = getContentResolver().query(SanPhamContract.SanPhamEntry.CONTENT_URI_2, null, null, null, null);
-        if (cursorSoSanPhamYeuThich.getCount() > 0) {
-            badgeDrawableYeuthich.setVisible(true);
-
-            badgeDrawableYeuthich.setNumber(cursorSoSanPhamYeuThich.getCount());
-        } else
-            badgeDrawableYeuthich.setVisible(false);
-
-        cursorSoSanPhamYeuThich.close();
-    }
-
-
-    @Override
-    protected void onRestart() {
-
-        setupbadgeDrawableYeuThich();
-        super.onRestart();
-    }
-*/
-
-
 }
 
 

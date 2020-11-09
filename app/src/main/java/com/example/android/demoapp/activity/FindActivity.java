@@ -28,49 +28,37 @@ import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
+import java.util.Objects;
 
 public class FindActivity extends AppCompatActivity {
-    private static final String TAG = FindActivity.class.getSimpleName();
-
-    private static final String INSTANCE_ID = "instanceID";
-
     private static final String EXTRA_TEN_SAN_PHAM_TIM_KIEM = "tensanphamtimkiem";
-    private static final String DEFAULT_STRING = "";
-
     String mTenSanPham;
     private AppDatabase mDb;
     TextView emptyTv;
-
     Toolbar toolbar;
     private TabLayout tabLayout;
     private TabLayout.Tab tabGioHang;
     private TabLayout.Tab tabYeuThich;
-
     CatalogAdapter timKiemAdapter;
     RecyclerView recyclerView;
-    public static boolean FindActivityOnCreat = false;
-
     public static BadgeDrawable badgeDrawableGioHang;
     public static BadgeDrawable badgeDrawableYeuthich;
     List<GioHangEntry> gioHangEntries;
     List<YeuThichEntry> yeuThichEntries;
     List<SanPhamEntry> sanPhamEntries;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find);
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON|
-                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
 
         emptyTv = findViewById(R.id.find_empty_tv);
-        FindActivityOnCreat = true;
         toolbar = findViewById(R.id.toolbar_tim_do);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back);
@@ -90,7 +78,9 @@ public class FindActivity extends AppCompatActivity {
 
         tabYeuThich = tabLayout.getTabAt(1);
         tabGioHang = tabLayout.getTabAt(2);
+        assert tabGioHang != null;
         badgeDrawableGioHang = tabGioHang.getOrCreateBadge();
+        assert tabYeuThich != null;
         badgeDrawableYeuthich = tabYeuThich.getOrCreateBadge();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -104,15 +94,11 @@ public class FindActivity extends AppCompatActivity {
                     case 1:
                         Intent intent1 = new Intent(FindActivity.this, YeuthichActivity.class);
                         startActivity(intent1);
-
                         break;
                     case 2:
                         Intent intent2 = new Intent(FindActivity.this, GioHangActivity.class);
                         startActivity(intent2);
-
                         break;
-
-
                     default:
                         break;
                 }
@@ -120,7 +106,6 @@ public class FindActivity extends AppCompatActivity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
 
             @Override
@@ -133,15 +118,11 @@ public class FindActivity extends AppCompatActivity {
                     case 1:
                         Intent intent1 = new Intent(FindActivity.this, YeuthichActivity.class);
                         startActivity(intent1);
-
                         break;
                     case 2:
                         Intent intent2 = new Intent(FindActivity.this, GioHangActivity.class);
                         startActivity(intent2);
-
                         break;
-
-
                     default:
                         break;
                 }
@@ -154,22 +135,18 @@ public class FindActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_TEN_SAN_PHAM_TIM_KIEM)) {
-            // populate the UI
             mTenSanPham = intent.getStringExtra(EXTRA_TEN_SAN_PHAM_TIM_KIEM);
-            String BarTitle ="";
-            if (mTenSanPham.length() > 4)
-            {
+            String BarTitle;
+            assert mTenSanPham != null;
+            if (mTenSanPham.length() > 4) {
                 BarTitle = mTenSanPham.substring(0, 6) + "...";
-            }
-            else
-            {
+            } else {
                 BarTitle = mTenSanPham;
             }
-            getSupportActionBar().setTitle(BarTitle);
+            Objects.requireNonNull(getSupportActionBar()).setTitle(BarTitle);
 
             FindViewModelFactory factory = new FindViewModelFactory(mDb, mTenSanPham);
-            // COMPLETED (11) Declare a AddTaskViewModel variable and initialize it by calling ViewModelProviders.of
-            // for that use the factory created above AddTaskViewModel
+
             final FindViewModel viewModel
                     = ViewModelProviders.of(this, factory).get(FindViewModel.class);
 
@@ -177,11 +154,11 @@ public class FindActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(@Nullable List<SanPhamEntry> sanPhams) {
                     sanPhamEntries = sanPhams;
-                    if (sanPhamEntries.size()>0){
+                    assert sanPhamEntries != null;
+                    if (sanPhamEntries.size() > 0) {
                         timKiemAdapter.setSanPhams(sanPhams);
                         emptyTv.setVisibility(View.INVISIBLE);
-                    }
-                    else
+                    } else
                         emptyTv.setVisibility(View.VISIBLE);
                 }
             });
@@ -191,16 +168,15 @@ public class FindActivity extends AppCompatActivity {
                 public void onChanged(@Nullable List<GioHangEntry> gioHang) {
                     gioHangEntries = gioHang;
                     int sosanphammua = 0;
-
-                    if (gioHangEntries.size() > 0){
+                    assert gioHangEntries != null;
+                    if (gioHangEntries.size() > 0) {
                         for (int i = 0; i < gioHangEntries.size(); i++) {
                             sosanphammua += gioHangEntries.get(i).getSoLuong();
                         }
                         badgeDrawableGioHang.setVisible(true);
 
                         badgeDrawableGioHang.setNumber(sosanphammua);
-                    }
-                    else
+                    } else
                         badgeDrawableGioHang.setVisible(false);
                 }
             });
@@ -209,14 +185,12 @@ public class FindActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
                     yeuThichEntries = yeuThich;
-                    if (yeuThichEntries.size()>0){
+                    assert yeuThichEntries != null;
+                    if (yeuThichEntries.size() > 0) {
                         badgeDrawableYeuthich.setVisible(true);
                         badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
-
-                    }
-                    else
+                    } else
                         badgeDrawableYeuthich.setVisible(false);
-
                 }
             });
 
@@ -224,12 +198,9 @@ public class FindActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_tim_do);
         recyclerView.setHasFixedSize(true);
         Configuration config = getResources().getConfiguration();
-        if (config.smallestScreenWidthDp >= 720)
-        {
+        if (config.smallestScreenWidthDp >= 720) {
             recyclerView.setLayoutManager(new GridLayoutManager(FindActivity.this, 3));
-        }
-        else
-        {
+        } else {
             recyclerView.setLayoutManager(new GridLayoutManager(FindActivity.this, 2));
         }
         recyclerView.setAdapter(timKiemAdapter);

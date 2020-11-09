@@ -17,8 +17,8 @@ import com.example.android.demoapp.activity.MainActivity;
 public class DemoAppWidgetProvider extends AppWidgetProvider {
 
 
-void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+    void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+                         int appWidgetId) {
 
         Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
         int width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
@@ -66,6 +66,7 @@ void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
     }
+
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         // Perform any action when one or more AppWidget instances have been deleted
@@ -75,6 +76,7 @@ void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
     }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager,

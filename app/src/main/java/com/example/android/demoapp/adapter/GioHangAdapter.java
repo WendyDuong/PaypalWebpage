@@ -9,37 +9,28 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.activity.DetailActivity;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
-
-import org.apache.commons.math3.util.Precision;
-
 import java.text.DecimalFormat;
 import java.util.List;
 
 public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHolderGioHang> {
     Context context;
     private AppDatabase mDb;
-
     private List<GioHangEntry> gioHangs;
     private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
     private static final String EXTRA_HANG_ID = "extraHangId";
 
+
     public GioHangAdapter(Context context) {
         this.context = context;
     }
-
-
-
-
 
     @NonNull
     @Override
@@ -48,23 +39,15 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
         return new viewHolderGioHang(view);
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull GioHangAdapter.viewHolderGioHang holder, int position) {
         GioHangEntry gioHangEntry = gioHangs.get(position);
-
-
-        // Determine the values of the wanted data
-
         String tensanpham = gioHangEntry.getTenSanPham();
         String khoiluongsanpham = gioHangEntry.getKhoiLuong();
         int hinhanhsanpham = gioHangEntry.getHinhAnh();
         int soluongsanpham = gioHangEntry.getSoLuong();
         int idsanpham = gioHangEntry.getIdSanPham();
-
-        //Rounding currency to make a easy reading
         double giasanpham = gioHangEntry.getGiaSanPham();
-//        giasanpham = Precision.round(giasanpham/1000, 0)*1000;
 
         holder.textViewTenItem.setText(tensanpham);
         holder.textViewKhoiLuongItem.setText(khoiluongsanpham);
@@ -74,18 +57,16 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
         holder.textViewSoLuongItem.setText(soluongsanpham + "");
         holder.itemView.setTag(idsanpham);
 
-
         if (soluongsanpham < 2) {
             holder.buttonGiam.setVisibility(View.INVISIBLE);
             holder.buttonTang.setVisibility(View.VISIBLE);
-        } else if (soluongsanpham >= 2 && soluongsanpham < 20) {
+        } else if (soluongsanpham < 20) {
             holder.buttonGiam.setVisibility(View.VISIBLE);
             holder.buttonTang.setVisibility(View.VISIBLE);
         } else {
             holder.buttonTang.setVisibility(View.INVISIBLE);
             holder.buttonGiam.setVisibility(View.VISIBLE);
         }
-
 
     }
 
@@ -106,6 +87,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
             buttonGiam = view.findViewById(R.id.button_giam);
             buttonTang = view.findViewById(R.id.button_tang);
             imageButton = view.findViewById(R.id.button_xoa_gio_hang);
+            mDb = AppDatabase.getInstance(context);
 
             imageViewITem.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -124,13 +106,12 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                 @Override
                 public void onClick(View view) {
                     final AlertDialog.Builder buidlder = new AlertDialog.Builder(context);
-                    buidlder.setMessage("Bạn có chắc chắn muốn xóa sản phẩm này không ?");
+                    buidlder.setMessage("Bạn có muốn xóa sản phẩm này không ?");
                     buidlder.setIcon(android.R.drawable.ic_delete);
                     buidlder.setTitle("Xác nhận xóa");
                     buidlder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-
                         }
                     });
                     buidlder.setPositiveButton("Xác nhận", new DialogInterface.OnClickListener() {
@@ -139,7 +120,6 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-
                                     mDb = AppDatabase.getInstance(context);
                                     mDb.gioHangDao().deleteGioHang(gioHangs.get(getLayoutPosition()));
                                 }
@@ -155,7 +135,6 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
             buttonTang.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     final int id = gioHangs.get(getLayoutPosition()).getId();
                     final int  idsanpham =   gioHangs.get(getLayoutPosition()).getIdSanPham();
                     final String tensanpham = gioHangs.get(getLayoutPosition()).getTenSanPham();
@@ -167,18 +146,13 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                     final int soluongsanphammoi;
                     soluongsanphammoi = soluongsanphamcu + 1;
                     textViewSoLuongItem.setText(soluongsanphammoi+"");
-
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb = AppDatabase.getInstance(context);
                             mDb.gioHangDao().updateGioHang(new GioHangEntry(id , idsanpham,tensanpham, giasanpham * soluongsanphammoi /soluongsanphamcu,  hinhanhsanpham,khoiluongsanpham,soluongsanphammoi,idhang ));
 
                         }
                     });
-
-
-
                     if(soluongsanphammoi>19){
                         buttonTang.setVisibility(View.INVISIBLE);
                         buttonGiam.setVisibility(View.VISIBLE);
@@ -189,36 +163,11 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                         buttonGiam.setVisibility(View.VISIBLE);
                         textViewSoLuongItem.setText(soluongsanphammoi+"");
                     }
-
-                   /* long tongtien=0;
-                    int sosanphammua= 0;
-
-                    Cursor cursorGiaTien = mcontext.getContentResolver().query(SanPhamContract.SanPhamEntry.CONTENT_URI,null,null,null,null);
-                    for(int i = 0; i< cursorGiaTien.getCount(); i++){
-                        cursorGiaTien.moveToPosition(i);
-                        tongtien+= cursorGiaTien.getDouble(cursorGiaTien.getColumnIndex(SanPhamContract.SanPhamEntry.COLUMN_GIA));
-                        sosanphammua = sosanphammua + cursorGiaTien.getInt(cursorGiaTien.getColumnIndex(SanPhamContract.SanPhamEntry.COLUMN_SOLUONG));
-
-                    }
-                    cursorGiaTien.close();
-
-                    DecimalFormat decimalFormat1=new DecimalFormat("###,###,###");
-                    // GioHangActivity.tvTongtien.setText(decimalFormat1.format(tongtien)+" Đ");
-                    GioHangFragment.tvTongtien.setText(decimalFormat1.format(tongtien)+" Đ");
-
-                    if (MainActivity.mainActivityOnCreat)
-
-                    {     MainActivity.badgeDrawableGioHang.setVisible(true);
-                        MainActivity.badgeDrawableGioHang.setNumber(sosanphammua);}
-
-                }}*/
                 }
             });
             buttonGiam.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-
                     final int id = gioHangs.get(getLayoutPosition()).getId();
                     final int idsanpham = gioHangs.get(getLayoutPosition()).getIdSanPham();
                     final String tensanpham = gioHangs.get(getLayoutPosition()).getTenSanPham();
@@ -230,18 +179,12 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                     final int soluongsanphammoi;
                     soluongsanphammoi = soluongsanphamcu - 1;
                     textViewSoLuongItem.setText(soluongsanphammoi + "");
-
-
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb = AppDatabase.getInstance(context);
                             mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensanpham, giasanpham * soluongsanphammoi / soluongsanphamcu, hinhanhsanpham, khoiluongsanpham, soluongsanphammoi, idhang));
-
                         }
                     });
-
-
                     if (soluongsanphammoi < 2) {
                         buttonGiam.setVisibility(View.INVISIBLE);
                         buttonTang.setVisibility(View.VISIBLE);
@@ -251,47 +194,12 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                         buttonGiam.setVisibility(View.VISIBLE);
                         textViewSoLuongItem.setText(soluongsanphammoi + "");
                     }
-
-  /*                  long tongtien=0;
-                    int sosanphammua= 0;
-
-                    String[] projection2 = {
-                            SanPhamContract.SanPhamEntry.COLUMN_GIA,
-                            SanPhamContract.SanPhamEntry.COLUMN_SOLUONG,
-                    };
-
-                    Cursor cursorGiaTien = mcontext.getContentResolver().query(SanPhamContract.SanPhamEntry.CONTENT_URI,projection2,null,null,null);
-                    assert cursorGiaTien != null;
-                    for(int i = 0; i< cursorGiaTien.getCount(); i++){
-                        cursorGiaTien.moveToPosition(i);
-                        tongtien+= cursorGiaTien.getDouble(cursorGiaTien.getColumnIndex(SanPhamContract.SanPhamEntry.COLUMN_GIA));
-                        sosanphammua = sosanphammua + cursorGiaTien.getInt(cursorGiaTien.getColumnIndex(SanPhamContract.SanPhamEntry.COLUMN_SOLUONG));
-
-                    }
-                    cursorGiaTien.close();
-
-                    DecimalFormat decimalFormat1=new DecimalFormat("###,###,###");
-                    GioHangFragment.tvTongtien.setText(decimalFormat1.format(tongtien)+" Đ");
-
-                    if (MainActivity.mainActivityOnCreat)
-
-                    {     MainActivity.badgeDrawableGioHang.setVisible(true);
-                        MainActivity.badgeDrawableGioHang.setNumber(sosanphammua);}
-
-
-                }*/
                 }
             });
 
 
         }
     }
-
-
-
-
-
-
     @Override
     public int getItemCount() {
         if (gioHangs == null)
@@ -300,7 +208,6 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
         return gioHangs.size();
     }
 
-
     public List<GioHangEntry> getGioHangs() {
         return gioHangs;
     }
@@ -308,9 +215,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
     public  void setGioHangs (List<GioHangEntry> gioHangs){
         this.gioHangs = gioHangs;
         notifyDataSetChanged();
-
     }
-
 
 }
 

@@ -31,7 +31,6 @@ public class TimKiemFragment extends Fragment {
             }
         });
 
-
         return rootView;
     }
 }

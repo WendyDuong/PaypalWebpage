@@ -34,7 +34,6 @@ public class MainFragment extends Fragment {
         add(R.drawable.dior);
         add(R.drawable.skii);
         add(R.drawable.richy);
-
     }};
 
     public MainFragment() {

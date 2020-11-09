@@ -18,7 +18,7 @@
         android:padding="20dp"
         android:layout_margin="20dp"
         android:ems="10"
-        android:text="Tìm kiếm sản phẩm của bạn"
+        android:text="Tìm kiếm sản phẩm"
         android:drawableStart="@drawable/kinhlupvangcustom"
         android:background="@drawable/background_edit_text"
         android:drawableEnd="@drawable/mixvangcustom"

@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "yeuthich")
 public class YeuThichEntry {
-
     @PrimaryKey(autoGenerate = true)
     private int id;
     private int idSanPham;
@@ -16,7 +15,6 @@ public class YeuThichEntry {
     private int hinhAnh;
     private String khoiLuong;
     private int idHang;
-
 
     @Ignore
     public YeuThichEntry(int idSanPham, String tenSanPham, double giaSanPham, int hinhAnh, String khoiLuong, int idHang) {

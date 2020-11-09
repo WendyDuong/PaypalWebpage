@@ -19,15 +19,11 @@ public class YeuThichViewModel extends AndroidViewModel {
     private LiveData<List<YeuThichEntry>> sanPhams;
     private LiveData<List<GioHangEntry>> gioHang;
 
-
-
     public YeuThichViewModel(@NonNull Application application) {
         super(application);
         AppDatabase database = AppDatabase.getInstance(this.getApplication());
         sanPhams = database.yeuThichDao().loadAllYeuThich();
         gioHang = database.gioHangDao().loadAllGioHang();
-
-
     }
 
     public LiveData<List<YeuThichEntry>> getYeuThich() {

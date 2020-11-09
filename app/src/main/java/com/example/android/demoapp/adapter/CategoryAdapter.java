@@ -13,12 +13,9 @@ import com.example.android.demoapp.fragment.TimKiemFragment;
 import com.example.android.demoapp.fragment.MainFragment;
 
 public class CategoryAdapter extends FragmentStateAdapter {
-    private Context mContext;
-
     public CategoryAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
-
     @NonNull
     @Override
     public  Fragment createFragment(int position) {
@@ -28,17 +25,10 @@ public class CategoryAdapter extends FragmentStateAdapter {
             return new TimKiemFragment();
         } else if (position == 2) {
             return new YeuThichFragment();
-
-
         } else  {
             return new GioHangFragment();
-
         }
     }
-
-
-
-
     @Override
     public int getItemCount() {
         return 4;

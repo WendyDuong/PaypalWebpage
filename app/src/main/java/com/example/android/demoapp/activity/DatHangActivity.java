@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
@@ -13,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -21,7 +19,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.DatHangViewModel;
@@ -29,7 +26,6 @@ import com.example.android.demoapp.adapter.DatHangAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 
-import org.apache.commons.math3.util.Precision;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -37,18 +33,14 @@ import java.util.List;
 public class DatHangActivity extends AppCompatActivity {
     DatHangAdapter datHangAdapter;
     List<GioHangEntry> mDatHangs;
-
-    private static final String TAG = DatHangActivity.class.getSimpleName();
     TextView tongTien;
     private double tongTienDonHang = 0;
     double tongtien;
     private AppDatabase mDb;
-
-
     RecyclerView datHangRecyclerView;
     EditText editTextTen, editTextSoDt, editTextDiaChi, editTextEmail;
     Button buttonDatHang, buttonMuaTiep;
-    private static final int TASK_LOADER_ID = 2;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,15 +76,14 @@ public class DatHangActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<GioHangEntry> datHangs) {
                 mDatHangs = datHangs;
+                assert mDatHangs != null;
                 for (int i = 0; i < mDatHangs.size(); i++) {
                     tongtien = mDatHangs.get(i).getGiaSanPham();
                     tongTienDonHang += tongtien;
                 }
 
                 DecimalFormat decimalFormat1 = new DecimalFormat("###,###,###");
-                tongTien.setText("Tổng số tiền: " + decimalFormat1.format(tongTienDonHang) + " Đ");
-
-                Log.d(TAG, "load data in List dat hang");
+                tongTien.setText( "Tổng số tiền: " + decimalFormat1.format(tongTienDonHang) + " Đ");
                 datHangAdapter.setDatHang(mDatHangs);
             }
         });
@@ -102,7 +93,6 @@ public class DatHangActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intentMuaTiep = new Intent(DatHangActivity.this, MainActivity.class);
                 startActivity(intentMuaTiep);
-
             }
         });
 
@@ -133,10 +123,7 @@ public class DatHangActivity extends AppCompatActivity {
                         tongTienDonHang += tongtien;
 
                     }
-
-
                     noidungtinnhan += ("\nTổng tiền: " + decimalFormat.format(tongtien) + " Đ");
-
                     intent.putExtra(Intent.EXTRA_TEXT, noidungtinnhan);
 
                     if (intent.resolveActivity(getPackageManager()) != null) {

@@ -25,7 +25,6 @@ public interface SanPhamDao {
     LiveData<List<SanPhamEntry>> loadSanPhamByTen( String tensp);
 
 
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertSanPham(SanPhamEntry sanPhamEntry);
 

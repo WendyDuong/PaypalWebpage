@@ -1,5 +1,6 @@
 package com.example.android.demoapp.ViewModel;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -14,6 +15,7 @@ public class FindViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         mTenSanPham = tenSanPham;
     }
 
+    @NonNull
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
         //noinspection unchecked

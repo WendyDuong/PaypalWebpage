@@ -24,14 +24,6 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="@dimen/star_size"
-        android:layout_height="@dimen/star_size"
-        app:layout_constraintStart_toEndOf="@+id/imageView6"
-        app:layout_constraintTop_toTopOf="@+id/imageView6"
-        app:srcCompat="@drawable/saodanhgia" />
-
-    <ImageView
         android:id="@+id/anhsanpham"
         android:layout_width="240dp"
         android:layout_height="240dp"
@@ -70,50 +62,13 @@
         android:id="@+id/image_view_tim"
         android:layout_width="@dimen/heart_size"
         android:layout_height="@dimen/heart_size"
-        android:layout_margin="5dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_margin="20dp"
         android:src="@drawable/timden24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.8"
-        app:layout_constraintStart_toEndOf="@+id/imageView4"
         app:layout_constraintTop_toBottomOf="@id/giasanpham" />
 
-    <ImageView
-        android:id="@+id/saodanhgia"
-        android:layout_width="@dimen/star_size"
-        android:layout_height="@dimen/star_size"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="@+id/giasanpham"
-        app:layout_constraintTop_toBottomOf="@+id/giasanpham"
-        app:srcCompat="@drawable/saodanhgia" />
-
-    <ImageView
-
-        android:id="@+id/imageView5"
-        android:layout_width="@dimen/star_size"
-        android:layout_height="@dimen/star_size"
-        app:layout_constraintStart_toEndOf="@+id/saodanhgia"
-        app:layout_constraintTop_toTopOf="@+id/saodanhgia"
-        app:srcCompat="@drawable/saodanhgia" />
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="@dimen/star_size"
-        android:layout_height="@dimen/star_size"
-        app:layout_constraintStart_toEndOf="@+id/imageView7"
-        app:layout_constraintTop_toTopOf="@+id/imageView7"
-        app:srcCompat="@drawable/saodanhgia" />
-
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="@dimen/star_size"
-        android:layout_height="@dimen/star_size"
-        app:layout_constraintStart_toEndOf="@+id/imageView5"
-        app:layout_constraintTop_toTopOf="@+id/imageView5"
-        app:srcCompat="@drawable/saodanhgia" />
-<!--
+    <!--
     <TextView
         android:id="@+id/da_ban"
         android:layout_width="wrap_content"
