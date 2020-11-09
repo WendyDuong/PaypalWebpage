@@ -139,7 +139,7 @@ public class FindActivity extends AppCompatActivity {
             String BarTitle;
             assert mTenSanPham != null;
             if (mTenSanPham.length() > 4) {
-                BarTitle = mTenSanPham.substring(0, 6) + "...";
+                BarTitle = mTenSanPham.substring(0, 5) + "...";
             } else {
                 BarTitle = mTenSanPham;
             }

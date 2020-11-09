@@ -93,7 +93,8 @@ public class DetailActivity extends AppCompatActivity {
         spinner = findViewById(R.id.spinner);
         timImageView = findViewById(R.id.tim_chi_tiet_activity);
         imageViewHangSp = findViewById(R.id.iv_hang);
-        LayoutChiTietActivity = findViewById(R.id.card_view_detail);
+        //LayoutChiTietActivity = findViewById(R.id.card_view_detail);
+        LayoutChiTietActivity = findViewById(R.id.constraintLayout);
         toolBarChiTietActivity = findViewById(R.id.toolbar3);
         tvMoTaTitle = findViewById(R.id.mo_ta_san_pham_tilte);
         tvChiTietTitle = findViewById(R.id.chi_tiet_san_pham_tilte);

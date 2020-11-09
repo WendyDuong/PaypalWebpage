@@ -31,16 +31,17 @@
             app:tabMode="fixed" />
 
 
-
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_tim_do"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/action_barsize"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/toolbar_tim_do" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_tim_do"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/find_empty_tv"

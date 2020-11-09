@@ -11,6 +11,7 @@
         android:id="@+id/recycler_view_gio_hang"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="24dp"
         android:layout_marginBottom="100dp"
         app:layout_constraintBottom_toTopOf="@+id/button_dat_hang"
         app:layout_constraintEnd_toEndOf="parent"
