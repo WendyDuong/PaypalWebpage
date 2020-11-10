@@ -50,14 +50,19 @@
                    android:id="@+id/card_view_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal" android:layout_marginStart="32dp"
-                android:layout_marginTop="12dp" android:layout_marginEnd="32dp" app:cardCornerRadius="15dp"
+                android:layout_gravity="center_horizontal"
+                   android:layout_marginStart="32dp"
+                android:layout_marginTop="12dp"
+                   android:layout_marginEnd="32dp"
+                   app:cardCornerRadius="15dp"
                 app:cardElevation="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar3">-->
+                app:layout_constraintTop_toBottomOf="@id/toolbar3">
 
                    <com.github.chrisbanes.photoview.PhotoView
+                       android:paddingStart="8dp"
+                       android:paddingEnd="8dp"
                        android:id="@+id/image_view_chi_tiet"
                        android:layout_width="match_parent"
                        android:layout_height="wrap_content"
@@ -67,7 +72,8 @@
                        android:src="@drawable/taomy"
                        app:layout_constraintEnd_toEndOf="parent"
                        app:layout_constraintStart_toStartOf="parent"
-                       app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
+                       app:layout_constraintTop_toBottomOf="@+id/toolbar3"
+                       tools:ignore="MissingClass" />
 
 
                </androidx.cardview.widget.CardView>
@@ -160,7 +166,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="32dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -176,7 +182,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="32dp"
-                android:text="@string/chi_tiet_san_pham"
+                android:text="@string/thong_tin_san_pham"
                 android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/devider"

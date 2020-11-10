@@ -3,6 +3,7 @@ package com.example.android.demoapp.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +14,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
+import com.example.android.demoapp.activity.CatalogActivity;
 import com.example.android.demoapp.activity.DetailActivity;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.SanPhamEntry;
@@ -84,8 +87,44 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
             left = dptoPx(12);
         }
 
+
+        Configuration config = context.getResources().getConfiguration();
+        if (config.smallestScreenWidthDp >= 720)
+        {
+            boolean isFirst3Iteme = position < 3;
+            boolean isLast3tems = position > getItemCount() - 3 ;
+            if ( isFirst3Iteme){
+                top = dptoPx(24);
+            }
+            if (isLast3tems){
+                bottom = dptoPx(24);
+            }
+
+            isLeftSide =  position % 3 == 0;
+            isRightSide = ( position + 1) % 3 == 0;
+
+            if (isLeftSide) {
+                right = dptoPx(0);
+                left = dptoPx(36);
+            }
+            if(isRightSide) {
+                left = dptoPx(0);
+                right = dptoPx(36);
+            }
+            boolean isMiddle = (position + 2) % 3 == 0;
+            if ( isMiddle)
+            {
+                right = dptoPx(18);
+                left = dptoPx(18);
+            }
+        }
+
         layoutParams.setMargins(left, top, right, bottom);
         holder.cardViewCatalog.setLayoutParams(layoutParams);
+
+
+
+
 
 
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
@@ -132,7 +171,6 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
 
     public void setYeuThichs(List<YeuThichEntry> yeuThichEntries){
         this.mYeuThichEntries = yeuThichEntries;
-        notifyDataSetChanged();
 
     }
 

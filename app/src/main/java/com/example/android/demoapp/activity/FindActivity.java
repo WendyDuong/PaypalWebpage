@@ -186,6 +186,7 @@ public class FindActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
                     yeuThichEntries = yeuThich;
+                    timKiemAdapter.setYeuThichs(yeuThich);
                     assert yeuThichEntries != null;
                     if (yeuThichEntries.size() > 0) {
                         badgeDrawableYeuthich.setVisible(true);

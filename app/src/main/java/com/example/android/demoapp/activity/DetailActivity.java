@@ -31,6 +31,7 @@ import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.SanPhamEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
 import com.github.chrisbanes.photoview.PhotoView;
+
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -50,7 +51,7 @@ public class DetailActivity extends AppCompatActivity {
     DetailViewModel viewModel;
     Toolbar toolBarChiTietActivity;
     TextView tvMoTaTitle, tvChiTietTitle, devider1, devider2;
-    View LayoutChiTietActivity, cardViewSpinner;
+    View cardViewSpinner;
     PhotoView imgChiTiet;
     private AppDatabase mDb;
     TextView tvTen, tvGia, tvMoTa, tvKhoiluong, tvThuongHieu, tvXuatXu;
@@ -92,8 +93,6 @@ public class DetailActivity extends AppCompatActivity {
         spinner = findViewById(R.id.spinner);
         timImageView = findViewById(R.id.tim_chi_tiet_activity);
         imageViewHangSp = findViewById(R.id.iv_hang);
-        //LayoutChiTietActivity = findViewById(R.id.card_view_detail);
-        LayoutChiTietActivity = findViewById(R.id.constraintLayout);
         toolBarChiTietActivity = findViewById(R.id.toolbar3);
         tvMoTaTitle = findViewById(R.id.mo_ta_san_pham_tilte);
         tvChiTietTitle = findViewById(R.id.chi_tiet_san_pham_tilte);
@@ -309,7 +308,7 @@ public class DetailActivity extends AppCompatActivity {
 
         tvTen.setText(tensp);
         tvMoTa.setText(sanPham.getMoTa());
-        tvKhoiluong.setText(khoiluongsp);
+        tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
         tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
         tvXuatXu.setText("Xuất xứ: " + xuatXu);
         DecimalFormat deci = new DecimalFormat("###,###,###");

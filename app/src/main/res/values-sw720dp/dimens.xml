@@ -3,7 +3,7 @@
     <dimen name="spacing">20dp</dimen>
     <dimen name="star_size">20dp</dimen>
     <dimen name="heart_size">32dp</dimen>
-    <dimen name="textsize_blank_site">24sp</dimen>
+    <dimen name="textsize_blank_site">26sp</dimen>
     <dimen name="textsize">16sp</dimen>
 
     <dimen name="action_barsize">84dp</dimen>

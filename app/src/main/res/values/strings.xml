@@ -38,7 +38,7 @@ Quý khách hàng có đăng ký gói thành viên TikiNOW sẽ được miễn 
     <string name="empty_view_tilte_yeu_thich">Danh sách yêu thích đang trống...</string>
 
     <!-- Text in DetailActivity-->
-    <string name="chi_tiet_san_pham">Chi tiết sản phẩm</string>
+    <string name="thong_tin_san_pham">Thông tin sản phẩm</string>
     <string name="mo_ta_san_pham">Mô tả sản phẩm</string>
 
     <!-- Subtitle text for the empty view that prompts the user to add a pet [CHAR LIMIT=50] -->
