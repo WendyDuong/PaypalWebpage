@@ -19,8 +19,10 @@ public interface YeuThichDao {
 
     @Delete
     void deleteYeuThich(YeuThichEntry yeuThichEntry);
+/*
 
     @Query("SELECT * FROM yeuthich")
     List<YeuThichEntry> loadDanhSachYeuThich();
+*/
 
 }

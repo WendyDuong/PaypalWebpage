@@ -118,13 +118,11 @@
 
     <ImageButton
         android:id="@+id/button_xoa_gio_hang"
-        android:layout_width="54dp"
-        android:layout_height="70dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/delete_36"
+        android:src="@drawable/cancel_128"
         android:textSize="17sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

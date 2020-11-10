@@ -116,7 +116,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                 public void onClick(View view) {
                     final AlertDialog.Builder buidlder = new AlertDialog.Builder(mcontext);
                     buidlder.setMessage("Bạn có chắc chắn muốn xóa sản phẩm này không ?");
-                    buidlder.setIcon(android.R.drawable.ic_delete);
+                    buidlder.setIcon(R.drawable.cancel_128);
                     buidlder.setTitle("Xác nhận xóa");
                     buidlder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
                         @Override

@@ -53,7 +53,7 @@ public class GioHangActivity extends AppCompatActivity {
         tabYeuThich = tabLayout.getTabAt(1);
         assert tabYeuThich != null;
         badgeDrawableYeuthich = tabYeuThich.getOrCreateBadge();
-
+        badgeDrawableYeuthich.setMaxCharacterCount(3);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

@@ -93,7 +93,6 @@
         android:id="@+id/button_xoa_yeu_thich"
         android:layout_width="50dp"
         android:layout_height="50dp"
-
         android:background="@android:color/transparent"
         android:src="@drawable/cancel_64"
         android:textSize="17sp"

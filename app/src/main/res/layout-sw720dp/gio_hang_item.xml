@@ -16,116 +16,115 @@
         android:layout_margin="10dp"
         >
 
-<androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
 
-    android:layout_width="match_parent"
-    android:layout_height="190dp"
-    >
+            android:layout_width="match_parent"
+            android:layout_height="190dp">
 
 
-    <TextView
-        android:id="@+id/ten_item_gio_hang"
-        style="@style/text_ellipsise"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="30dp"
-        android:minWidth="100dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/button_xoa_gio_hang"
-        app:layout_constraintStart_toEndOf="@id/anh_item_gio_hang"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Bánh Sisi Mix Brand" />
+            <TextView
+                android:id="@+id/ten_item_gio_hang"
+                style="@style/text_ellipsise"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:minWidth="100dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/button_xoa_gio_hang"
+                app:layout_constraintStart_toEndOf="@id/anh_item_gio_hang"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Bánh Sisi Mix Brand" />
 
-    <ImageView
-        android:id="@+id/anh_item_gio_hang"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_marginStart="10dp"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/anhbanhnho" />
+            <ImageView
+                android:id="@+id/anh_item_gio_hang"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_marginStart="10dp"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/anhbanhnho" />
 
-    <TextView
-        android:id="@+id/khoi_luong_item_gio_hang"
-        android:textSize="18sp"
+            <TextView
+                android:id="@+id/khoi_luong_item_gio_hang"
+                android:layout_width="wrap_content"
 
-        android:layout_width="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="10dp"
-        android:layout_height="0dp"
-        tools:text="Khối Lượng: 220g"
-        app:layout_constraintStart_toEndOf="@id/anh_item_gio_hang"
-        app:layout_constraintTop_toBottomOf="@id/ten_item_gio_hang" />
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@id/anh_item_gio_hang"
+                app:layout_constraintTop_toBottomOf="@id/ten_item_gio_hang"
+                tools:text="Khối Lượng: 220g" />
 
-    <TextView
-        android:textSize="18sp"
+            <TextView
+                android:id="@+id/gia_item_gio_hang"
 
-        android:id="@+id/gia_item_gio_hang"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="50.000"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="10dp"
-        android:textColor="#fa3223"
-        app:layout_constraintStart_toEndOf="@id/anh_item_gio_hang"
-        app:layout_constraintTop_toBottomOf="@id/khoi_luong_item_gio_hang" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:textColor="#fa3223"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@id/anh_item_gio_hang"
+                app:layout_constraintTop_toBottomOf="@id/khoi_luong_item_gio_hang"
+                tools:text="50.000" />
 
-    <ImageButton
-        android:id="@+id/button_giam"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:src="@drawable/minus"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/anh_item_gio_hang"
-        app:layout_constraintTop_toBottomOf="@+id/gia_item_gio_hang"
-        app:layout_constraintVertical_bias="0.571" />
+            <ImageButton
+                android:id="@+id/button_giam"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/minus"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/anh_item_gio_hang"
+                app:layout_constraintTop_toBottomOf="@+id/gia_item_gio_hang"
+                app:layout_constraintVertical_bias="0.571" />
 
-    <TextView
-        android:id="@+id/so_luong_item"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button_giam"
-        app:layout_constraintTop_toBottomOf="@+id/gia_item_gio_hang"
-        app:layout_constraintVertical_bias="0.52"
-        tools:text="1" />
+            <TextView
+                android:id="@+id/so_luong_item"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/button_giam"
+                app:layout_constraintTop_toBottomOf="@+id/gia_item_gio_hang"
+                app:layout_constraintVertical_bias="0.52"
+                tools:text="1" />
 
-    <ImageButton
-        android:id="@+id/button_tang"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:src="@drawable/add"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/so_luong_item"
-        app:layout_constraintTop_toBottomOf="@+id/gia_item_gio_hang"
-        app:layout_constraintVertical_bias="0.52" />
+            <ImageButton
+                android:id="@+id/button_tang"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/add"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/so_luong_item"
+                app:layout_constraintTop_toBottomOf="@+id/gia_item_gio_hang"
+                app:layout_constraintVertical_bias="0.52" />
 
-    <ImageButton
-        android:id="@+id/button_xoa_gio_hang"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/cancel_64"
-        android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <ImageButton
+                android:id="@+id/button_xoa_gio_hang"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/cancel_64"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 </FrameLayout>

@@ -30,6 +30,7 @@ import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.SanPhamEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -40,19 +41,17 @@ import java.util.List;
 
 
 public class DetailActivity extends AppCompatActivity {
-    ImageView imgChiTiet, timImageView, imageViewHangSp;
+    ImageView timImageView, imageViewHangSp;
     private static final int DEFAULT_ID = -1;
     private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
     private static final String EXTRA_HANG_ID = "extraHangId";
     private int idHang, idsanpham;
-    ImageView expandedImageView;
     DetailViewModelFactory factory;
     DetailViewModel viewModel;
     Toolbar toolBarChiTietActivity;
     TextView tvMoTaTitle, tvChiTietTitle, devider1, devider2;
     View LayoutChiTietActivity, cardViewSpinner;
-    private Animator currentAnimator;
-    private int shortAnimationDuration;
+    PhotoView imgChiTiet;
     private AppDatabase mDb;
     TextView tvTen, tvGia, tvMoTa, tvKhoiluong, tvThuongHieu, tvXuatXu;
     ExtendedFloatingActionButton btnDatMua;
@@ -101,7 +100,6 @@ public class DetailActivity extends AppCompatActivity {
         devider1 = findViewById(R.id.devider);
         devider2 = findViewById(R.id.devider2);
         cardViewSpinner = findViewById(R.id.card_view_spinner);
-        expandedImageView = (ImageView) findViewById(R.id.expanded_image);
         imgChiTiet.setClipToOutline(true);
 
 
@@ -216,7 +214,8 @@ public class DetailActivity extends AppCompatActivity {
         badgeDrawableGioHang = tabGioHang.getOrCreateBadge();
         assert tabYeuThich != null;
         badgeDrawableYeuthich = tabYeuThich.getOrCreateBadge();
-
+        badgeDrawableGioHang.setMaxCharacterCount(3);
+        badgeDrawableYeuthich.setMaxCharacterCount(3);
 
         if (intent != null && intent.hasExtra(EXTRA_SANPHAM_ID)) {
             if (mTaskId == DEFAULT_ID) {
@@ -252,14 +251,14 @@ public class DetailActivity extends AppCompatActivity {
         }
 
 
-        imgChiTiet.setOnClickListener(new View.OnClickListener() {
+ /*       imgChiTiet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 zoomImageFromThumb(imgChiTiet, hinhanhsp);
             }
         });
         shortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
+*/
     }
 
 
@@ -359,19 +358,19 @@ public class DetailActivity extends AppCompatActivity {
                             });
 
 
-                            if (soluongmoi >= 20) {
+                            if (soluongmoi >= 50) {
 
 
                                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * 20)/1000,0)*1000, hinhanhsp, khoiluongsp, 20, idHang));
+                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * 20)/1000,0)*1000, hinhanhsp, khoiluongsp, 50, idHang));
 
 
                                     }
                                 });
 
-                                Toast.makeText(DetailActivity.this, "Đã đủ 20 "+ tensp + " trong giỏ hàng", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(DetailActivity.this, "Đã đủ 50 "+ tensp + " trong giỏ hàng", Toast.LENGTH_SHORT).show();
 
                             } else {
                                 Toast.makeText(DetailActivity.this, "Đã thêm " + soluongmoi + " " + tensp + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
@@ -519,7 +518,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
-    private void zoomImageFromThumb(final View thumbView, int imageResId) {
+    /*private void zoomImageFromThumb(final View thumbView, int imageResId) {
         // If there's an animation in progress, cancel it
         // immediately and proceed with this one.
         if (currentAnimator != null) {
@@ -687,7 +686,7 @@ public class DetailActivity extends AppCompatActivity {
                 currentAnimator = set;
             }
         });
-    }
+    }*/
 }
 
 

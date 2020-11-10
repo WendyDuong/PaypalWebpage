@@ -82,7 +82,8 @@ public class FindActivity extends AppCompatActivity {
         badgeDrawableGioHang = tabGioHang.getOrCreateBadge();
         assert tabYeuThich != null;
         badgeDrawableYeuthich = tabYeuThich.getOrCreateBadge();
-
+        badgeDrawableGioHang.setMaxCharacterCount(3);
+        badgeDrawableYeuthich.setMaxCharacterCount(3);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

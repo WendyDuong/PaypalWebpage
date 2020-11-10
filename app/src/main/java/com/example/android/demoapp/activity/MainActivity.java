@@ -145,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
             badgeDrawableGioHang = tabGioHang.getOrCreateBadge();
             assert tabYeuThich != null;
             badgeDrawableYeuthich = tabYeuThich.getOrCreateBadge();
+            badgeDrawableGioHang.setMaxCharacterCount(3);
+            badgeDrawableYeuthich.setMaxCharacterCount(3);
 
             mDb = AppDatabase.getInstance(getApplicationContext());
             mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
@@ -174,6 +176,11 @@ public class MainActivity extends AppCompatActivity {
                     if (yeuThichEntries.size() > 0) {
                         badgeDrawableYeuthich.setVisible(true);
                         badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
+
+                        if(yeuThichEntries.size() > 99){
+                            badgeDrawableYeuthich.setVisible(true);
+                            badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
+                        }
 
                     } else
                         badgeDrawableYeuthich.setVisible(false);

@@ -67,7 +67,8 @@ public class CatalogActivity extends AppCompatActivity {
         badgeDrawableGioHang = tabGioHang.getOrCreateBadge();
         assert tabYeuThich != null;
         badgeDrawableYeuthich = tabYeuThich.getOrCreateBadge();
-
+        badgeDrawableGioHang.setMaxCharacterCount(3);
+        badgeDrawableYeuthich.setMaxCharacterCount(3);
         catalogAdapter = new CatalogAdapter(CatalogActivity.this);
         mDb = AppDatabase.getInstance(getApplicationContext());
 
@@ -283,18 +284,24 @@ public class CatalogActivity extends AppCompatActivity {
                     public void onChanged(@Nullable List<SanPhamEntry> sanPhams) {
                         catalogAdapter.setSanPhams(sanPhams);
                     }
+                });
 
-
+                viewModel1.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
+                    @Override
+                    public void onChanged(List<YeuThichEntry> yeuThichEntries) {
+                        catalogAdapter.setYeuThichs(yeuThichEntries);
+                    }
                 });
             }
 
+
         }
 
-    @Override
+   /* @Override
     protected void onRestart() {
         catalogAdapter.notifyDataSetChanged();
         super.onRestart();
-    }
+    }*/
 
     @Override
     protected void onStop() {

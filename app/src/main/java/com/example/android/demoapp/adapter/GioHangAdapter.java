@@ -60,7 +60,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
         if (soluongsanpham < 2) {
             holder.buttonGiam.setVisibility(View.INVISIBLE);
             holder.buttonTang.setVisibility(View.VISIBLE);
-        } else if (soluongsanpham < 20) {
+        } else if (soluongsanpham < 50) {
             holder.buttonGiam.setVisibility(View.VISIBLE);
             holder.buttonTang.setVisibility(View.VISIBLE);
         } else {
@@ -107,7 +107,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                 public void onClick(View view) {
                     final AlertDialog.Builder buidlder = new AlertDialog.Builder(context);
                     buidlder.setMessage("Bạn có muốn xóa sản phẩm này không ?");
-                    buidlder.setIcon(android.R.drawable.ic_delete);
+                    buidlder.setIcon(R.drawable.cancel_128);
                     buidlder.setTitle("Xác nhận xóa");
                     buidlder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
                         @Override
@@ -153,7 +153,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
 
                         }
                     });
-                    if(soluongsanphammoi>19){
+                    if(soluongsanphammoi>49){
                         buttonTang.setVisibility(View.INVISIBLE);
                         buttonGiam.setVisibility(View.VISIBLE);
                         textViewSoLuongItem.setText(soluongsanphammoi+"");

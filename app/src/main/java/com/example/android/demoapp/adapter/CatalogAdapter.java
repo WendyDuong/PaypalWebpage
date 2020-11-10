@@ -91,8 +91,6 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                mDb = AppDatabase.getInstance(context);
-                mYeuThichEntries = mDb.yeuThichDao().loadDanhSachYeuThich();
                 boolean exit = false;
                 if (mYeuThichEntries.size() > 0) {
                     for (int vitritim = 0; vitritim < mYeuThichEntries.size(); vitritim++) {
@@ -131,6 +129,14 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
         notifyDataSetChanged();
     }
 
+
+    public void setYeuThichs(List<YeuThichEntry> yeuThichEntries){
+        this.mYeuThichEntries = yeuThichEntries;
+        notifyDataSetChanged();
+
+    }
+
+
     public class itemHolder extends RecyclerView.ViewHolder {
         CardView cardViewCatalog;
         public ImageView imgHinhAnhSanpham, imageViewTim;
@@ -143,6 +149,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
             tvGiasanpham = itemView.findViewById(R.id.giasanpham);
             cardViewCatalog = itemView.findViewById(R.id.card_view_catalog);
             imageViewTim = itemView.findViewById(R.id.image_view_tim);
+            mDb = AppDatabase.getInstance(context);
 
             imgHinhAnhSanpham.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -173,7 +180,6 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mDb = AppDatabase.getInstance(context);
                                     mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham, hinhanhsanpham, khoiluongsanpham,idhang ));
                                 }
                             });
@@ -184,8 +190,6 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb = AppDatabase.getInstance(context);
-                                mYeuThichEntries = mDb.yeuThichDao().loadDanhSachYeuThich();
                                 for (int vitrixoa = 0; vitrixoa < mYeuThichEntries.size(); vitrixoa++) {
                                     int idsanphamxoa = mYeuThichEntries.get(vitrixoa).getIdSanPham() ;
                                     if (idsanphamxoa == idsanpham) {

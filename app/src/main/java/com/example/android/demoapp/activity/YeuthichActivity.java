@@ -51,7 +51,7 @@ public class YeuthichActivity  extends AppCompatActivity {
         tabGioHang= tabLayout.getTabAt(1);
         assert tabGioHang != null;
         badgeDrawableGioHang = tabGioHang.getOrCreateBadge();
-
+        badgeDrawableGioHang.setMaxCharacterCount(3);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
