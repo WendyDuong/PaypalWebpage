@@ -105,7 +105,6 @@ public class CatalogActivity extends AppCompatActivity {
                             sosanphammua += gioHangEntries.get(i).getSoLuong();
                         }
                         badgeDrawableGioHang.setVisible(true);
-
                         badgeDrawableGioHang.setNumber(sosanphammua);
                     }
                     else
@@ -117,6 +116,7 @@ public class CatalogActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
                     yeuThichEntries = yeuThich;
+                    catalogAdapter.setYeuThichs(yeuThich);
                     assert yeuThichEntries != null;
                     if (yeuThichEntries.size()>0){
                         badgeDrawableYeuthich.setVisible(true);
