@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="25dp"
+        android:paddingEnd="4dp"
         android:text="Bánh Sisi Mix Brand Sisi Mix Brand"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -47,7 +48,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/anhbanhnho" />
+         />
 
     <TextView
         android:id="@+id/khoi_luong_item_gio_hang"

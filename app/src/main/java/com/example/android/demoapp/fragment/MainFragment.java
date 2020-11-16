@@ -25,15 +25,15 @@ public class MainFragment extends Fragment {
     ViewFlipper viewFlipper;
     RecyclerView recyclerViewMain;
     public static final List<Integer> ImageList = new ArrayList<Integer>() {{
-        add(R.drawable.hit);
-        add(R.drawable.merc);
-        add(R.drawable.penny);
-        add(R.drawable.rossmann_logo);
+        add(R.drawable.logo_wmf);
+        add(R.drawable.logo_silit);
+        add(R.drawable.muller);
+        add(R.drawable.logo_dm);
+        add(R.drawable.logo_saturn);
         add(R.drawable.apotheke_logo);
+        add(R.drawable.rossmann_logo);
+        add(R.drawable.worldofsweet_photos);
         add(R.drawable.mediamarkt_logo);
-        add(R.drawable.dior);
-        add(R.drawable.skii);
-        add(R.drawable.richy);
     }};
 
     public MainFragment() {

@@ -132,31 +132,31 @@ public class CatalogActivity extends AppCompatActivity {
 
         switch (mIdHang){
             case 0:
-                imageViewNhaCungCap.setImageResource(R.drawable.hit);
+                imageViewNhaCungCap.setImageResource(R.drawable.logo_wmf);
                 break;
             case 1:
-                imageViewNhaCungCap.setImageResource(R.drawable.merclogo);
+                imageViewNhaCungCap.setImageResource(R.drawable.logo_silit);
                 break;
             case 2:
-                imageViewNhaCungCap.setImageResource(R.drawable.penny);
+                imageViewNhaCungCap.setImageResource(R.drawable.muller);
                 break;
             case 3:
-                imageViewNhaCungCap.setImageResource(R.drawable.rossmann_logo);
+                imageViewNhaCungCap.setImageResource(R.drawable.logo_dm);
                 break;
             case 4:
-                imageViewNhaCungCap.setImageResource(R.drawable.apotheke_logo);
+                imageViewNhaCungCap.setImageResource(R.drawable.logo_saturn);
                 break;
             case 5:
-                imageViewNhaCungCap.setImageResource(R.drawable.mediamarkt_logo);
+                imageViewNhaCungCap.setImageResource(R.drawable.apotheke_logo);
                 break;
             case 6:
-                imageViewNhaCungCap.setImageResource(R.drawable.dior);
+                imageViewNhaCungCap.setImageResource(R.drawable.rossmann_logo);
                 break;
             case 7:
-                imageViewNhaCungCap.setImageResource(R.drawable.skii);
+                imageViewNhaCungCap.setImageResource(R.drawable.logo_worldofsweets);
                 break;
             case 8:
-                imageViewNhaCungCap.setImageResource(R.drawable.richy);
+                imageViewNhaCungCap.setImageResource(R.drawable.mediamarkt_logo);
                 break;
         }
 
@@ -248,31 +248,31 @@ public class CatalogActivity extends AppCompatActivity {
                 mIdHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_HANG_ID);
                 switch (mIdHang){
                     case 0:
-                        imageViewNhaCungCap.setImageResource(R.drawable.hit);
+                        imageViewNhaCungCap.setImageResource(R.drawable.logo_wmf);
                         break;
                     case 1:
-                        imageViewNhaCungCap.setImageResource(R.drawable.merclogo);
+                        imageViewNhaCungCap.setImageResource(R.drawable.logo_silit);
                         break;
                     case 2:
-                        imageViewNhaCungCap.setImageResource(R.drawable.penny);
+                        imageViewNhaCungCap.setImageResource(R.drawable.muller);
                         break;
                     case 3:
-                        imageViewNhaCungCap.setImageResource(R.drawable.rossmann_logo);
+                        imageViewNhaCungCap.setImageResource(R.drawable.logo_dm);
                         break;
                     case 4:
-                        imageViewNhaCungCap.setImageResource(R.drawable.apotheke_logo);
+                        imageViewNhaCungCap.setImageResource(R.drawable.logo_saturn);
                         break;
                     case 5:
-                        imageViewNhaCungCap.setImageResource(R.drawable.mediamarkt_logo);
+                        imageViewNhaCungCap.setImageResource(R.drawable.apotheke_logo);
                         break;
                     case 6:
-                        imageViewNhaCungCap.setImageResource(R.drawable.dior);
+                        imageViewNhaCungCap.setImageResource(R.drawable.rossmann_logo);
                         break;
                     case 7:
-                        imageViewNhaCungCap.setImageResource(R.drawable.skii);
+                        imageViewNhaCungCap.setImageResource(R.drawable.logo_worldofsweets);
                         break;
                     case 8:
-                        imageViewNhaCungCap.setImageResource(R.drawable.richy);
+                        imageViewNhaCungCap.setImageResource(R.drawable.mediamarkt_logo);
                         break;
                 }
 

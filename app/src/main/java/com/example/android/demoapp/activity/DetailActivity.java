@@ -113,31 +113,31 @@ public class DetailActivity extends AppCompatActivity {
             idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_ID);
             switch (idHang) {
                 case 0:
-                      imageViewHangSp.setImageResource(R.drawable.hit);
+                    imageViewHangSp.setImageResource(R.drawable.logo_wmf);
                     break;
                 case 1:
-                     imageViewHangSp.setImageResource(R.drawable.merc);
+                    imageViewHangSp.setImageResource(R.drawable.logo_silit);
                     break;
                 case 2:
-                    imageViewHangSp.setImageResource(R.drawable.penny);
+                    imageViewHangSp.setImageResource(R.drawable.muller);
                     break;
                 case 3:
-                    imageViewHangSp.setImageResource(R.drawable.rossmann_logo);
+                    imageViewHangSp.setImageResource(R.drawable.logo_dm);
                     break;
                 case 4:
-                    imageViewHangSp.setImageResource(R.drawable.apotheke_logo);
+                    imageViewHangSp.setImageResource(R.drawable.logo_saturn);
                     break;
                 case 5:
-                    imageViewHangSp.setImageResource(R.drawable.mediamarkt_logo);
+                    imageViewHangSp.setImageResource(R.drawable.apotheke_logo);
                     break;
                 case 6:
-                    imageViewHangSp.setImageResource(R.drawable.dior);
+                    imageViewHangSp.setImageResource(R.drawable.rossmann_logo);
                     break;
                 case 7:
-                    imageViewHangSp.setImageResource(R.drawable.skii);
+                    imageViewHangSp.setImageResource(R.drawable.logo_worldofsweets);
                     break;
                 case 8:
-                    imageViewHangSp.setImageResource(R.drawable.richy);
+                    imageViewHangSp.setImageResource(R.drawable.mediamarkt_logo);
                     break;
             }
         }
@@ -472,31 +472,31 @@ public class DetailActivity extends AppCompatActivity {
             idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_ID);
             switch (idHang) {
                 case 0:
-                    imageViewHangSp.setImageResource(R.drawable.hit);
+                    imageViewHangSp.setImageResource(R.drawable.logo_wmf);
                     break;
                 case 1:
-                    imageViewHangSp.setImageResource(R.drawable.merc);
+                    imageViewHangSp.setImageResource(R.drawable.logo_silit);
                     break;
                 case 2:
-                    imageViewHangSp.setImageResource(R.drawable.penny);
+                    imageViewHangSp.setImageResource(R.drawable.muller);
                     break;
                 case 3:
-                    imageViewHangSp.setImageResource(R.drawable.rossmann_logo);
+                    imageViewHangSp.setImageResource(R.drawable.logo_dm);
                     break;
                 case 4:
-                    imageViewHangSp.setImageResource(R.drawable.apotheke_logo);
+                    imageViewHangSp.setImageResource(R.drawable.logo_saturn);
                     break;
                 case 5:
-                    imageViewHangSp.setImageResource(R.drawable.mediamarkt_logo);
+                    imageViewHangSp.setImageResource(R.drawable.apotheke_logo);
                     break;
                 case 6:
-                    imageViewHangSp.setImageResource(R.drawable.dior);
+                    imageViewHangSp.setImageResource(R.drawable.rossmann_logo);
                     break;
                 case 7:
-                    imageViewHangSp.setImageResource(R.drawable.skii);
+                    imageViewHangSp.setImageResource(R.drawable.logo_worldofsweets);
                     break;
                 case 8:
-                    imageViewHangSp.setImageResource(R.drawable.richy);
+                    imageViewHangSp.setImageResource(R.drawable.mediamarkt_logo);
                     break;
             }
         }
