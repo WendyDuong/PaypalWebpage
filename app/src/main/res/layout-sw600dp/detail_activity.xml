@@ -65,7 +65,7 @@
                     android:paddingEnd="8dp"
                     android:id="@+id/image_view_chi_tiet"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="450dp"
                     android:adjustViewBounds="true"
                     android:background="@drawable/image_view_custom"
                     android:scaleType="fitXY"
