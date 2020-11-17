@@ -134,7 +134,7 @@ public class DetailActivity extends AppCompatActivity {
                     imageViewHangSp.setImageResource(R.drawable.rossmann_logo);
                     break;
                 case 7:
-                    imageViewHangSp.setImageResource(R.drawable.worldofsweet_photos);
+                    imageViewHangSp.setImageResource(R.drawable.worldofsweet);
                     break;
                 case 8:
                     imageViewHangSp.setImageResource(R.drawable.mediamarkt_logo);
@@ -493,7 +493,7 @@ public class DetailActivity extends AppCompatActivity {
                     imageViewHangSp.setImageResource(R.drawable.rossmann_logo);
                     break;
                 case 7:
-                    imageViewHangSp.setImageResource(R.drawable.worldofsweet_photos);
+                    imageViewHangSp.setImageResource(R.drawable.worldofsweet);
                     break;
                 case 8:
                     imageViewHangSp.setImageResource(R.drawable.mediamarkt_logo);

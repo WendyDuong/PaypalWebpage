@@ -32,7 +32,7 @@ public class MainFragment extends Fragment {
         add(R.drawable.logo_saturn);
         add(R.drawable.apotheke_logo);
         add(R.drawable.rossmann_logo);
-        add(R.drawable.worldofsweet_photos);
+        add(R.drawable.worldofsweet);
         add(R.drawable.mediamarkt_logo);
     }};
 

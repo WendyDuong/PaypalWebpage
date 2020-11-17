@@ -153,7 +153,7 @@ public class CatalogActivity extends AppCompatActivity {
                 imageViewNhaCungCap.setImageResource(R.drawable.rossmann_logo);
                 break;
             case 7:
-                imageViewNhaCungCap.setImageResource(R.drawable.worldofsweet_photos);
+                imageViewNhaCungCap.setImageResource(R.drawable.worldofsweet);
                 break;
             case 8:
                 imageViewNhaCungCap.setImageResource(R.drawable.mediamarkt_logo);
@@ -269,7 +269,7 @@ public class CatalogActivity extends AppCompatActivity {
                         imageViewNhaCungCap.setImageResource(R.drawable.rossmann_logo);
                         break;
                     case 7:
-                        imageViewNhaCungCap.setImageResource(R.drawable.worldofsweet_photos);
+                        imageViewNhaCungCap.setImageResource(R.drawable.worldofsweet);
                         break;
                     case 8:
                         imageViewNhaCungCap.setImageResource(R.drawable.mediamarkt_logo);

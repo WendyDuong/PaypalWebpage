@@ -420,14 +420,14 @@ public abstract class AppDatabase extends RoomDatabase {
                                         "tăng cường sức mạnh cho da và " +
                                         "tăng độ ẩm với axit hyaluronic và PCA\n" +
                                         "Sản phẩm không chứa cồn, thuốc nhuộm, paraben, dầu khoáng, dẫn xuất PEG / PEG và silicon", "Frei dầu dưỡng", "Đức"));
-                                sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(6, "Kem nền CC Cream", 610000, R.drawable.r14, "50 ml", "Sự chăm sóc kết hợp bảy ưu điểm chỉ trong một sản phẩm:                                          \n" +
-                                        "1.Làm mềm rõ rệt các nếp nhăn" +
-                                        " 2. Giúp da giữ ẩm \n" +
+                                sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(6, "Kem nền CC Cream", 610000, R.drawable.r14, "50 ml", "Sự chăm sóc kết hợp bảy ưu điểm chỉ trong một sản phẩm:\n\n" +
+                                        "1.Làm mềm rõ rệt các nếp nhăn\n" +
+                                        "2. Giúp da giữ ẩm \n" +
                                         "3.Đảm bảo làn da đều màu \n" +
-                                        "4.àm cho lỗ chân lông trông mịn hơn \n" +
+                                        "4.Làm cho lỗ chân lông trông mịn hơn \n" +
                                         "5.Cho cấu trúc da đồng đều \n" +
                                         "6.Mang lại Làm sáng da\n" +
-                                        "7.Dưỡng ẩm cho làn da săn chắc hơn. \n" +
+                                        "7.Dưỡng ẩm cho làn da săn chắc hơn. \n\n" +
                                         "Thành phần phức hợp của Olaz Total Effects BB Cream với niacinamide, pro-vitamin B5 và vitamin E loại bỏ tế bào da chết để cải thiện quá trình tự đổi mới tự nhiên của da - cho làn da khỏe mạnh hơn. Công thức không nhờn dính, hấp thụ nhanh chóng đảm bảo lỗ chân lông trên da không bị tắc nghẽn.", "Olaz", "Đức"));
                                 sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(6, "Son dưỡng môi chống nắng Sunozon", 75000, R.drawable.r15, "4,8 g", "Sản phẩm với bơ hạt mỡ và dầu jojoba bảo vệ cao cho đôi môi nhạy cảm với ánh nắng ngay lập tức khỏi tia UVA + UVB\n" +
                                         "Khả năng tương thích da đã được phê duyệt, sản phẩm không chứa octocrylene" , "Sunozon", "Đức"));
@@ -459,7 +459,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                 sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(6, "Dao cạo dưỡng ẩm WILKINSON", 600000, R.drawable.r31, "", "Dao cạo với 5 lưỡi hoàn hảo, giữ ẩm lên đến 2 giờ sau khi cạo cho làn da của bạn. Thiết kế có chỗ để treo trong phồng tắm.", "Wilkinson Sword", "Đức"));
                                 sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(6, "Kem bôi cao cấp Glysolid Hautbalsam", 75000, R.drawable.r32, "100 ml", "Sản phẩm chăm sóc chuyên sâu  này giúp làm dịu nhanh chóng làn da thô ráp và nứt nẻ . GLYSOLID chăm sóc, bảo vệ, hỗ trợ tái tạo da và duy trì độ ẩm tự nhiên cho da. Với việc sử dụng thường xuyên, làn da được cải thiện nhanh chóng và bền vững.", "Glysolid", "Đức"));
                                 sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(6, "Kem dưỡng toàn thân NIVEA Soft Creme", 150000, R.drawable.r33, "200 ml", "kem dưỡng ẩm với dầu jojoba và vitamin E phù hợp cho mặt, tay và cơ thể", "NIVEA", "Đức"));
-                                sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(6, "Kem dưỡng da Satina", 100000, R.drawable.r34, "75 ml", "với phức hợp vitamin C và khoáng chất giúp chăm sóc sắc đẹp cho da nhạy cảm,\n" +
+                                sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(6, "Kem dưỡng da Satina", 100000, R.drawable.r34, "75 ml", "Với phức hợp vitamin C và khoáng chất giúp chăm sóc sắc đẹp cho da nhạy cảm," +
                                         "xây dựng bảo vệ làn da tự nhiên.", "Satina", "Đức"));
                                 sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(6, "Kem chống nắng em bé LSF 50+", 200000, R.drawable.r35, "75 ml", "Kem chống nắng Babydream Sun Cream SPF 50+ cung cấp mức độ bảo vệ rất cao và thích hợp cho bệnh viêm da dị ứng và đặc biệt nhạy cảm với ánh nắng mặt trời và da chưa được chăm sóc của trẻ nhỏ. * Bức xạ IR-A thúc đẩy quá trình oxy hóa trên da. kem chống nắng Babydream  bảo vệ tế bào IR-A khỏi tia UVA / UVB .", "Babydream", "Đức"));
                                 sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(6, "Kem chống côn trùng Zeckito", 150000, R.drawable.r36, "100 ml", "Kem dưỡng da chống côn trùng Zeckito bảo vệ da em bé một cách đáng tin cậy, hiệu quả\n" +
