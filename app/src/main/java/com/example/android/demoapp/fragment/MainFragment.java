@@ -64,10 +64,7 @@ public class MainFragment extends Fragment {
     private void actionViewFlipper() {
         ArrayList<Integer> mangquangcao = new ArrayList<>();
         mangquangcao.add(R.drawable.banner01);
-        mangquangcao.add(R.drawable.banner02);
-        mangquangcao.add(R.drawable.banner03);
         mangquangcao.add(R.drawable.banner04);
-        mangquangcao.add(R.drawable.banner05);
 
         for (int i = 0; i < mangquangcao.size(); i++) {
             ImageView imageView = new ImageView(getContext());
