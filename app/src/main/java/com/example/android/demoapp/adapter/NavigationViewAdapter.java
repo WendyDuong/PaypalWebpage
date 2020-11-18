@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.demoapp.activity.GiaoHang;
 import com.example.android.demoapp.R;
-import com.example.android.demoapp.activity.DoiTra;
+import com.example.android.demoapp.activity.DatHangHoActivity;
 import com.example.android.demoapp.activity.LienHe;
 import com.example.android.demoapp.activity.ThanhToan;
 
@@ -79,7 +79,7 @@ public class NavigationViewAdapter extends RecyclerView.Adapter<NavigationViewAd
                             break;
                         case 2:
                             Toast.makeText(context, "Doi tra", Toast.LENGTH_SHORT).show();
-                            Intent intentDoiTra = new Intent(context, DoiTra.class);
+                            Intent intentDoiTra = new Intent(context, DatHangHoActivity.class);
                             context.startActivity(intentDoiTra);
                             break;
                         case 3:

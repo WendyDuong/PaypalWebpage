@@ -81,7 +81,7 @@
             />
 
         <activity
-            android:name=".activity.DoiTra"
+            android:name=".activity.DatHangHoActivity"
             android:launchMode="singleTask"
             android:showOnLockScreen="true"
             android:configChanges="orientation"

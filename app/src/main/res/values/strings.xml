@@ -20,16 +20,30 @@
     <string name="hinh_thuc_thanh_toan">Hình Thức Thanh Toán</string>
     <string name="cac_don_hang">Các Đơn Hàng</string>
     <string name="giao_hang">Giao hàng</string>
-    <string name="chinh_sach_doi_tra">Chính sách đổi trả</string>
-<string name="lien_he">Thông tin liên hệ</string>
-    <string name="thong_tin_thanh_toan">Tiki hiện có các phương thức thanh toán sau: ... Thanh toán qua thẻ ATM có đăng ký thanh toán trực tuyến (miễn phí thanh toán): Để sử dụng phương thức thanh toán này, tài khoản ngân hàng của quý khách cần đăng ký dịch vụ Internet Banking với ngân hàng. Tiki hiện hỗ trợ thanh toán cho phần lớn các ngân hàng tại Việt Nam.</string>
-    <string name="thong_tin_giao_hang">Chính sách hỗ trợ phí vận chuyển: tùy vào chính sách hỗ trợ riêng ở mỗi thời điểm của từng nhà cung cấp/nhà bán hàng, đơn hàng sẽ thể hiện mức phí vận chuyển cuối cùng khác nhau. Bên cạnh đó, quý khách còn có thể hưởng ưu đãi phí giao hàng từ Tiki được cập nhật hằng tháng tại phần “Thông báo của tôi” (áp dụng cho hình thức giao hàng tiêu chuẩn)
+    <string name="chinh_sach_doi_tra">Đặt hàng theo yêu cầu</string>
+    <string name="lien_he">Thông tin liên hệ</string>
+    <string name="thong_tin_thanh_toan">Qúy khách tiến hàng gửi email đặt hàng đến địa chỉ: cskh.shoppingsquare@gmail.com
+\nShopping Square sẽ liên lạc với quý khách để hoàn tất quá trình đặt hàng.
+\n\nĐể thanh toán quý khách vui lòng chuyển khoản tới:
+\nSố Tài Khoản: 0541000321788
+\nTên Tài Khoản: Dương Thị Ngát
+\nChi Nhánh: Vietcombank Long Biên
 
-Quý khách hàng có đăng ký gói thành viên TikiNOW sẽ được miễn phí vận chuyển cho tất cả mọi đơn hàng. Chi tiết về gói thành viên TikiNOW </string>
+\n\nKhi chuyển khoản quý khách vui lòng ghi thêm thông tin vào phần nội dung chuyển tiền của ngân hàng như sau:
+\nTên người gửi- Số điện thoại hoặc email.
+\nVD: Dương Minh Hiếu– minhhieu@gmail.com/0968686868
+Sau khi nhận được tiền, công ty sẽ tiến hành đặt hàng cho quý khách.
 
-    <string name="thong_tin_doi_tra">Tại Tiki, chúng tôi trân trọng sự tin tưởng của khách hàng khi đặt mua sản phẩm. Chính sách hậu mãi ở Tiki được xây dựng dựa trên cam kết bảo vệ quyền lợi người tiêu dùng để quý khách có thể yên tâm mua sắm và trải nghiệm dịch vụ tại Tiki.</string>
-    <string name="thong_tin_lien_he">Quý khách vui lòng liên hệ với Tiki.vn hoặc tổng đài mạng di động qua các số điện thoại sau: Tổng đài Tiki ( 8h - 21h ): 1900 6035. Email: hotro@tiki.vn. Tổng đài Viettel (24/24): 1800.8198 - 1900.8198</string>
+</string>
+    <string name="thong_tin_giao_hang">Hàng sẽ được giao trung bình từ 2-3 tuần (Các dịp cao điểm Sale của Đức, tết Việt Nam, mưa bão có thể sẽ hơn một chút).
+        \nSau khi hàng về đến Việt Nam, đại lý phân phối ở Việt Nam sẽ liên hệ trực tiếp để giao hàng cho quý khách.
+\nQúy khách vui lòng kiểm tra kỹ số lượng, xem lại sản phẩm khi nhận hàng tại đại lý phân phối. Nếu có gì sai sót báo ngay cho đại lý phân phối hoặc liên hệ email cskh.shoppingsquare@gmail.com. Shopping Square sẽ giải quyết trong thời gian nhanh nhất có thể.
+</string>
 
+    <string name="dat_hang_ho">Để thoả mãn nhu cầu của quý khách, Shopping Square hộ trợ đặt hàng theo yêu cầu của quý khách.</string>
+    <string name="thong_tin_lien_he">Mọi thắc mắc xin vui lòng liên hệ:
+    Email: cskh.shoppingsquare@gmail.com
+    </string>
     <string name="dang_xuat">Đăng Xuất</string>
     <string name="dummy_button">Dummy Button</string>
 
