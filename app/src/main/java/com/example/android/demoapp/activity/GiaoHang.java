@@ -19,6 +19,8 @@ public class GiaoHang extends AppCompatActivity {
         setContentView(R.layout.activity_giao_hang);
         Toolbar toolbar = findViewById(R.id.toolbar_tim_do);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Hình thức giao hàng");
+
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_tim_do"
         android:layout_width="match_parent"
@@ -15,36 +21,40 @@
         android:background="@drawable/gradient_toolbar"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp"/>
-    <TextView
+
+<!--    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="16dp"
         android:textColorHighlight="@color/colorAccent"
         android:textStyle="bold"
         android:padding="10dp"
-        android:textSize="28sp"
+        android:textSize="@dimen/tilte_size"
         android:gravity="center_horizontal"
-
-        android:text="Chính sách đổi trả"/>
+        android:text="Đặt hàng theo yêu cầu"/>-->
 
     <TextView
-        android:id="@+id/tv_doi_tra"
+        android:layout_marginTop="24dp"
+
+        android:id="@+id/tv_dat_hang_ho_thong_tin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-        android:text="Đổi trả"
-        android:textSize="18sp"
+        android:text="Thông tin"
+        android:textSize="@dimen/description"
   />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:paddingTop="10dp"
         android:id="@+id/recycler_view_dathangho"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:minHeight="450dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="10dp"
         android:numColumns="3"
@@ -52,3 +62,4 @@
 
 
 </LinearLayout>
+</ScrollView>

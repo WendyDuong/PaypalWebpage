@@ -20,6 +20,8 @@ public class LienHe extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_tim_do);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Thông tin liên hệ");
+
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

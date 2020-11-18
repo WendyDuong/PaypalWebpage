@@ -68,22 +68,18 @@ public class NavigationViewAdapter extends RecyclerView.Adapter<NavigationViewAd
                     int pos = getLayoutPosition();
                     switch (pos) {
                         case 0:
-                            Toast.makeText(context, "Hinh thuc thanh toan", Toast.LENGTH_SHORT).show();
                             Intent intentThanhToan = new Intent(context, ThanhToan.class);
                             context.startActivity(intentThanhToan);
                             break;
                         case 1:
-                            Toast.makeText(context, "Giao hang", Toast.LENGTH_SHORT).show();
                             Intent intentGiaoHang = new Intent(context, GiaoHang.class);
                             context.startActivity(intentGiaoHang);
                             break;
                         case 2:
-                            Toast.makeText(context, "Doi tra", Toast.LENGTH_SHORT).show();
                             Intent intentDoiTra = new Intent(context, DatHangHoActivity.class);
                             context.startActivity(intentDoiTra);
                             break;
                         case 3:
-                            Toast.makeText(context, "Lien he", Toast.LENGTH_SHORT).show();
                             Intent intentLienHe = new Intent(context, LienHe.class);
                             context.startActivity(intentLienHe);
                             break;

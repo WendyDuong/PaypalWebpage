@@ -18,6 +18,7 @@ public class ThanhToan extends AppCompatActivity {
         setContentView(R.layout.activity_thanh_toan);
         Toolbar toolbar = findViewById(R.id.toolbar_tim_do);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Hình thức thanh toán");
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

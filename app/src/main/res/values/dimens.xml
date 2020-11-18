@@ -5,6 +5,8 @@
     <dimen name="heart_size">30dp</dimen>
     <dimen name="textsize_blank_site">16sp</dimen>
     <dimen name="textsize">12sp</dimen>
+    <dimen name="tilte_size">24sp</dimen>
+    <dimen name="description">16sp</dimen>
 
     <dimen name="action_barsize">56dp</dimen>
 
