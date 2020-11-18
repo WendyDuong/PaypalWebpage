@@ -28,6 +28,7 @@ import com.example.android.demoapp.database.GioHangEntry;
 
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DatHangActivity extends AppCompatActivity {
@@ -110,7 +111,8 @@ public class DatHangActivity extends AppCompatActivity {
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.setData(Uri.parse("mailto:"));
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Order from " + ten);
-                    String noidungtinnhan = "Họ và tên: " + ten + "\nSố điện thoại: " + sdt + "\nĐịa chỉ: " + diachi + "\n" + "Danh sách sản phẩm mua: \n";
+                    intent.putExtra(Intent.EXTRA_EMAIL, new String[] { "cskh.shoppingsquare@gmail.com" });
+                    String noidungtinnhan = "Họ và tên: " + ten + "\nEmail: " + email + "\nSố điện thoại: " + sdt + "\nĐịa chỉ: " + diachi + "\n" + "Danh sách sản phẩm mua: \n";
 
 
                     double tongtien = 0;

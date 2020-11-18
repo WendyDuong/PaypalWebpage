@@ -632,8 +632,9 @@ public abstract class AppDatabase extends RoomDatabase {
                                 sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(8,"Ấm đun nước PROFI COOK 1107", 1294000, R.drawable.h94, "2200 Watt", "Sử dụng ấm đun nước PROFI COOK PC-WKS 1107 G công suất mạnh mẽ 2200 watt giúp bạn làm nóng nước ngay lập tức. Sản phẩm có thiết kế inox cổ điển cùng kính chịu nhiệt trang nhã, lịch sự. Dung tích 1.5 l giúp thiết bị đáp ứng đầy đủ các yêu cầu hàng ngày.", "PROFI COOK", "Đức"));
                                 sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(8 ,"Ấm đun nước KOENIC KWK 2220", 1261000, R.drawable.h95, "2200 Watt", "Ấm đun nước KOENIC KWK 2220 với dáng vẻ hiện đại, công suất 2200 Watt mạnh mẽ và dung tích cao 1,7 l luôn sẵn sàng phục vụ một tách trà hay ly nước nóng cho bạn. Sản phẩm sở hữu thiết kế bằng thép không gỉ và kính giúp dễ lau chùi.", "KOENIC", "Đức"));
 
-
-
+                                sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(8,"Máy hút bụi MIELE Swing H1", 9265000, R.drawable.h190, "", "Hút bụi MIELE Swing H1 tiết kiệm năng lượng làm sạch vượt trội và hiệu quả nhờ đầu hút EcoTeQ-Plus loại bỏ cả những hạt bụi nhỏ nhất. Máy sở hữu bộ lọc AirClean và có thể điều chỉnh độ cao làm việc.", "MIELE", "Đức"));
+                                sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(8,"Máy hút bụi MIELE Complete C3 Silence EcoLine", 11372000, R.drawable.h191, "", "Máy hút bụi MIELE Complete C3 Silence EcoLine có động cơ tiết kiệm điện với hiệu suất cao làm sạch tuyệt vời và hiệu quả nhờ đầu hút EcoTeQ-Plus. Máy sở hữu bộ lọc không khí cao cấp cùng bánh xe DynamicDrive giúp hoạt động đặc biệt yên tĩnh và nhẹ nhàng.", "MIELE", "Đức"));
+                                sInstance.sanPhamDao().insertSanPham(new SanPhamEntry(8,"Máy hút bụi MIELE Blizzard CX1 ", 14865000, R.drawable.h192, "", "Máy hút bụi dạng không túi MIELE Blizzard CX1 sở hữu tay cầm Eco Comfort cùng đầu hút  EcoTeQ Plus  hút sạch bụi nhanh chóng và mạnh mẽ nhờ công nghệ Vortex và bộ lọc HEPA AirClean Lifetime", "MIELE", "Đức"));
                                 Log.v("kiem tra insert sanpham", "da insert");
 
                             }
