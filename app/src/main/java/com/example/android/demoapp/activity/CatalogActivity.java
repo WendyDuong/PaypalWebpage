@@ -47,11 +47,6 @@ public class CatalogActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.catalog_activity);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON|
-                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-
         tabLayout = (TabLayout) findViewById(R.id.tab_layout2);
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.iconhome));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.kinh_lup_icon));
@@ -297,11 +292,6 @@ public class CatalogActivity extends AppCompatActivity {
 
         }
 
-   /* @Override
-    protected void onRestart() {
-        catalogAdapter.notifyDataSetChanged();
-        super.onRestart();
-    }*/
 
     @Override
     protected void onStop() {
