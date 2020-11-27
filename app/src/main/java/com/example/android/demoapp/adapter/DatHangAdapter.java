@@ -15,8 +15,7 @@ import com.example.android.demoapp.R;
 import com.example.android.demoapp.activity.DetailActivity;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
-
-import org.apache.commons.math3.util.Precision;
+import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -51,7 +50,7 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
         String khoiluongsanpham = gioHangEntry.getKhoiLuong();
 
         double giasanpham = gioHangEntry.getGiaSanPham();
-        int hinhanhsanpham = gioHangEntry.getHinhAnh();
+        String hinhanhsanpham = gioHangEntry.getHinhAnhSanPham();
         int soluongsanpham = gioHangEntry.getSoLuong();
         double giaDonViSanPham = giasanpham/soluongsanpham;
         int idsanpham = gioHangEntry.getIdSanPham();
@@ -61,7 +60,7 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         holder.textViewGiaItem.setText(decimalFormat.format(giasanpham) + " Đ");
         holder.textViewDonGia.setText(decimalFormat.format(giaDonViSanPham) + " Đ");
-        holder.imageViewITem.setImageResource(hinhanhsanpham);
+        Picasso.get().load(hinhanhsanpham).into(holder.imageViewITem);
         holder.textViewSoLuongItem.setText(soluongsanpham + "x");
         holder.itemView.setTag(idsanpham);
 

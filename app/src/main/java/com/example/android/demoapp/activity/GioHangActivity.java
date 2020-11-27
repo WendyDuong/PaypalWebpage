@@ -3,7 +3,6 @@ package com.example.android.demoapp.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +11,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.android.demoapp.R;
-import com.example.android.demoapp.ViewModel.GioHangViewModel;
+import com.example.android.demoapp.ViewModel.YeuThichViewModel;
 import com.example.android.demoapp.database.YeuThichEntry;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.tabs.TabLayout;
@@ -88,7 +87,7 @@ public class GioHangActivity extends AppCompatActivity {
             }
 
         });
-        GioHangViewModel viewModel = ViewModelProviders.of(this).get(GioHangViewModel.class);
+        YeuThichViewModel viewModel = ViewModelProviders.of(this).get(YeuThichViewModel.class);
         viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
             @Override
             public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {

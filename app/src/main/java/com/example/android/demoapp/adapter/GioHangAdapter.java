@@ -17,6 +17,8 @@ import com.example.android.demoapp.R;
 import com.example.android.demoapp.activity.DetailActivity;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
+import com.squareup.picasso.Picasso;
+
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
         GioHangEntry gioHangEntry = gioHangs.get(position);
         String tensanpham = gioHangEntry.getTenSanPham();
         String khoiluongsanpham = gioHangEntry.getKhoiLuong();
-        int hinhanhsanpham = gioHangEntry.getHinhAnh();
+        String hinhanhsanpham = gioHangEntry.getHinhAnhSanPham();
         int soluongsanpham = gioHangEntry.getSoLuong();
         int idsanpham = gioHangEntry.getIdSanPham();
         double giasanpham = gioHangEntry.getGiaSanPham();
@@ -53,7 +55,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
         holder.textViewKhoiLuongItem.setText(khoiluongsanpham);
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         holder.textViewGiaItem.setText(decimalFormat.format(giasanpham) + " Đ");
-        holder.imageViewITem.setImageResource(hinhanhsanpham);
+        Picasso.get().load(hinhanhsanpham).into(holder.imageViewITem);
         holder.textViewSoLuongItem.setText(soluongsanpham + "");
         holder.itemView.setTag(idsanpham);
 
@@ -139,7 +141,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                     final int  idsanpham =   gioHangs.get(getLayoutPosition()).getIdSanPham();
                     final String tensanpham = gioHangs.get(getLayoutPosition()).getTenSanPham();
                     final double giasanpham = gioHangs.get(getLayoutPosition()).getGiaSanPham();
-                    final int  hinhanhsanpham = gioHangs.get(getLayoutPosition()).getHinhAnh();
+                    final String  hinhanhsanpham = gioHangs.get(getLayoutPosition()).getHinhAnhSanPham();
                     final String khoiluongsanpham = gioHangs.get(getLayoutPosition()).getKhoiLuong();
                     final int idhang = gioHangs.get(getLayoutPosition()).getIdHang();
                     final int soluongsanphamcu= Integer.parseInt(textViewSoLuongItem.getText().toString());
@@ -172,7 +174,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                     final int idsanpham = gioHangs.get(getLayoutPosition()).getIdSanPham();
                     final String tensanpham = gioHangs.get(getLayoutPosition()).getTenSanPham();
                     final double giasanpham = gioHangs.get(getLayoutPosition()).getGiaSanPham();
-                    final int hinhanhsanpham = gioHangs.get(getLayoutPosition()).getHinhAnh();
+                    final String hinhanhsanpham = gioHangs.get(getLayoutPosition()).getHinhAnhSanPham();
                     final String khoiluongsanpham = gioHangs.get(getLayoutPosition()).getKhoiLuong();
                     final int soluongsanphamcu = Integer.parseInt(textViewSoLuongItem.getText().toString());
                     final int idhang = gioHangs.get(getLayoutPosition()).getIdHang();

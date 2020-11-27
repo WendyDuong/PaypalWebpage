@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
-import com.example.android.demoapp.ViewModel.GioHangViewModel;
+import com.example.android.demoapp.ViewModel.YeuThichViewModel;
 import com.example.android.demoapp.activity.DatHangActivity;
 import com.example.android.demoapp.adapter.GioHangAdapter;
 import com.example.android.demoapp.database.AppDatabase;
@@ -44,7 +44,7 @@ public class GioHangFragment extends Fragment {
     private double tongTienDonHang = 0;
     List<GioHangEntry> mGiohangs;
     double tongtien;
-    GioHangViewModel gioHangViewModel;
+    YeuThichViewModel gioHangViewModel;
 
     public GioHangFragment() {
         // Required empty public constructor
@@ -74,7 +74,7 @@ public class GioHangFragment extends Fragment {
         }
         giohangRecyclerView.setAdapter(gioHangAdapter);
 
-        gioHangViewModel = ViewModelProviders.of(this).get(GioHangViewModel.class);
+        gioHangViewModel = ViewModelProviders.of(this).get(YeuThichViewModel.class);
         gioHangViewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
             @Override
             public void onChanged(@Nullable List<GioHangEntry> gioHangEntries) {

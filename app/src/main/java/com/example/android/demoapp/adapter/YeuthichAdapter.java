@@ -20,11 +20,13 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
-import com.example.android.demoapp.ViewModel.GioHangViewModel;
+import com.example.android.demoapp.ViewModel.YeuThichViewModel;
 import com.example.android.demoapp.activity.DetailActivity;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
+import com.squareup.picasso.Picasso;
+
 import org.apache.commons.math3.util.Precision;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -54,7 +56,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
         YeuThichEntry yeuThichEntry = yeuThichs.get(position);
         String tensanpham = yeuThichEntry.getTenSanPham();
         String khoiluongsanpham = yeuThichEntry.getKhoiLuong();
-        int hinhanhsanpham = yeuThichEntry.getHinhAnh();
+        String hinhanhsanpham = yeuThichEntry.getHinhAnhSanPham();
         double giasanpham = yeuThichEntry.getGiaSanPham();
         giasanpham = Precision.round(giasanpham / 1000, 0) * 1000;
 
@@ -62,7 +64,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
         holder.tvKhoiluong.setText(khoiluongsanpham);
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         holder.tvGia.setText(decimalFormat.format(giasanpham) + " Đ");
-        holder.imgSanPham.setImageResource(hinhanhsanpham);
+        Picasso.get().load(hinhanhsanpham).into(holder.imgSanPham);
 
     }
 
@@ -91,7 +93,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
             buttonXoa = viewTong.findViewById(R.id.button_xoa_yeu_thich);
             mDb = AppDatabase.getInstance(mcontext);
 
-            GioHangViewModel gioHangViewModel = ViewModelProviders.of((FragmentActivity) mcontext).get(GioHangViewModel.class);
+            YeuThichViewModel gioHangViewModel = ViewModelProviders.of((FragmentActivity) mcontext).get(YeuThichViewModel.class);
             gioHangViewModel.getGioHang().observe((FragmentActivity) mcontext, new Observer<List<GioHangEntry>>() {
                 @Override
                 public void onChanged(@Nullable List<GioHangEntry> gioHangEntries) {
@@ -147,7 +149,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                     final String tensanpham = yeuThichs.get(getLayoutPosition()).getTenSanPham();
                     final String khoiluongsanpham = yeuThichs.get(getLayoutPosition()).getKhoiLuong();
                     final double giasanpham = yeuThichs.get(getLayoutPosition()).getGiaSanPham();
-                    final int hinhanhsanpham = yeuThichs.get(getLayoutPosition()).getHinhAnh();
+                    final String hinhanhsanpham = yeuThichs.get(getLayoutPosition()).getHinhAnhSanPham();
                     final int idHang = yeuThichs.get(getLayoutPosition()).getIdHang();
 
                     if (mgioHangEntries.size() > 0) {

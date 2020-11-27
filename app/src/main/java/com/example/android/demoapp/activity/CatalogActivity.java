@@ -3,41 +3,61 @@ package com.example.android.demoapp.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.R;
-import com.example.android.demoapp.ViewModel.SanPhamViewModel;
-import com.example.android.demoapp.ViewModel.SanPhamViewModelFactory;
+import com.example.android.demoapp.ViewModel.YeuThichViewModel;
 import com.example.android.demoapp.adapter.CatalogAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
-import com.example.android.demoapp.database.SanPhamEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
+import com.example.android.demoapp.fragment.MainFragment;
+import com.example.android.demoapp.model.SanPham;
+import com.example.android.demoapp.utils.Server;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.tabs.TabLayout;
+import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CatalogActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     CatalogAdapter catalogAdapter;
     private AppDatabase mDb;
-    private int mIdHang;
-    SanPhamViewModelFactory factory1;
+    private int idHang;
+    private String anhHang;
     private static final String TAG = CatalogActivity.class.getSimpleName();
     public static final String EXTRA_HANG_ID = "extraHangId";
+    private static final String EXTRA_ANH_HANG = "extraAnhHang";
+
     private static final int DEFAULT_HANG_ID = -1;
     ImageView imageViewNhaCungCap;
     TabLayout tabLayout;
     TabLayout.Tab tabGioHang;
     TabLayout.Tab tabYeuThich;
+    public static ArrayList<SanPham> sanPhams;
     List<GioHangEntry> gioHangEntries;
     List<YeuThichEntry> yeuThichEntries;
     public static BadgeDrawable badgeDrawableYeuthich;
@@ -45,7 +65,9 @@ public class CatalogActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        sanPhams = new ArrayList<SanPham>();
         setContentView(R.layout.catalog_activity);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout2);
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.iconhome));
@@ -64,30 +86,23 @@ public class CatalogActivity extends AppCompatActivity {
         badgeDrawableYeuthich = tabYeuThich.getOrCreateBadge();
         badgeDrawableGioHang.setMaxCharacterCount(3);
         badgeDrawableYeuthich.setMaxCharacterCount(3);
-        catalogAdapter = new CatalogAdapter(CatalogActivity.this);
         mDb = AppDatabase.getInstance(getApplicationContext());
 
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
 
-            mIdHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_HANG_ID);
-            factory1 = new SanPhamViewModelFactory(mDb, mIdHang);
+            idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_HANG_ID);
+            anhHang = MainFragment.ImageList.get(idHang);
+            Picasso.get().load(anhHang).error(R.drawable.error).into(imageViewNhaCungCap);
 
-            final SanPhamViewModel viewModel1
-                    = ViewModelProviders.of(this, factory1).get(SanPhamViewModel.class);
-
-            viewModel1.getSanPhams().observe(this, new Observer<List<SanPhamEntry>>() {
-                @Override
-                public void onChanged(@Nullable List<SanPhamEntry> sanPhams) {
-                    Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
-                    catalogAdapter.setSanPhams(sanPhams);
-
-                }
+            //Load data from server in sanphams array
+            getData();
+            catalogAdapter = new CatalogAdapter(CatalogActivity.this, sanPhams);
 
 
-            });
-
+            final YeuThichViewModel viewModel1
+                    = ViewModelProviders.of(this).get(YeuThichViewModel.class);
 
             viewModel1.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
                 @Override
@@ -124,36 +139,6 @@ public class CatalogActivity extends AppCompatActivity {
             });
         }
 
-
-        switch (mIdHang){
-            case 0:
-                imageViewNhaCungCap.setImageResource(R.drawable.logo_wmf);
-                break;
-            case 1:
-                imageViewNhaCungCap.setImageResource(R.drawable.logo_silit);
-                break;
-            case 2:
-                imageViewNhaCungCap.setImageResource(R.drawable.muller);
-                break;
-            case 3:
-                imageViewNhaCungCap.setImageResource(R.drawable.logo_dm);
-                break;
-            case 4:
-                imageViewNhaCungCap.setImageResource(R.drawable.logo_saturn);
-                break;
-            case 5:
-                imageViewNhaCungCap.setImageResource(R.drawable.apotheke_logo);
-                break;
-            case 6:
-                imageViewNhaCungCap.setImageResource(R.drawable.rossmann_logo);
-                break;
-            case 7:
-                imageViewNhaCungCap.setImageResource(R.drawable.worldofsweet);
-                break;
-            case 8:
-                imageViewNhaCungCap.setImageResource(R.drawable.mediamarkt_logo);
-                break;
-        }
 
         recyclerView = findViewById(R.id.recycler_view_catalog);
         recyclerView.setHasFixedSize(true);
@@ -233,53 +218,90 @@ public class CatalogActivity extends AppCompatActivity {
 
     }
 
-        @Override
-        protected void onNewIntent(Intent intent) {
+
+    private void getData() {
+        RequestQueue requestQueue= Volley.newRequestQueue(CatalogActivity.this);
+        String duongdan;
+        switch (idHang){
+            case 0:
+                duongdan = Server.duongdansanphamhang0;
+                break;
+            case 1:
+                duongdan = Server.duongdansanphamhang1;
+                break;
+            case 2:
+                duongdan = Server.duongdansanphamhang2;
+                break;
+            case 3:
+                duongdan = Server.duongdansanphamhang3;
+                break;
+            case 4:
+                duongdan = Server.duongdansanphamhang4;
+                break;
+            case 5:
+                duongdan = Server.duongdansanphamhang5;
+                break;
+            case 6:
+                duongdan = Server.duongdansanphamhang6;
+                break;
+            case 7:
+                duongdan = Server.duongdansanphamhang7;
+                break;
+            default:
+                duongdan = Server.duongdansanphamhang8;
+                break;
+        }
+        StringRequest str = new StringRequest(Request.Method.POST, duongdan, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if(response!=null){
+                    try {
+                        JSONArray json=new JSONArray(response);
+                        int dodai = json.length();
+                        for(int i = 0; i < json.length(); i++){
+                            JSONObject object=json.getJSONObject(i);
+                            sanPhams.add(new SanPham(object.getInt("id"),object.getInt("idHang"),object.getString("tenSanPham"),object.getDouble("giaSanPham"),object.getString("hinhAnhSanPham"),object.getString("khoiLuong"),object.getString("moTa"),object.getString("thuongHieu"),object.getString("xuatXu")));
+
+                            catalogAdapter.notifyDataSetChanged();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String,String> param=new HashMap<String, String>();
+                param.put(EXTRA_HANG_ID, String.valueOf(idHang));
+                return param;
+            }
+        }
+                ;
+        requestQueue.add(str);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
             super.onNewIntent(intent);
             setIntent(intent);
 
             intent = getIntent();
             if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
-                mIdHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_HANG_ID);
-                switch (mIdHang){
-                    case 0:
-                        imageViewNhaCungCap.setImageResource(R.drawable.logo_wmf);
-                        break;
-                    case 1:
-                        imageViewNhaCungCap.setImageResource(R.drawable.logo_silit);
-                        break;
-                    case 2:
-                        imageViewNhaCungCap.setImageResource(R.drawable.muller);
-                        break;
-                    case 3:
-                        imageViewNhaCungCap.setImageResource(R.drawable.logo_dm);
-                        break;
-                    case 4:
-                        imageViewNhaCungCap.setImageResource(R.drawable.logo_saturn);
-                        break;
-                    case 5:
-                        imageViewNhaCungCap.setImageResource(R.drawable.apotheke_logo);
-                        break;
-                    case 6:
-                        imageViewNhaCungCap.setImageResource(R.drawable.rossmann_logo);
-                        break;
-                    case 7:
-                        imageViewNhaCungCap.setImageResource(R.drawable.worldofsweet);
-                        break;
-                    case 8:
-                        imageViewNhaCungCap.setImageResource(R.drawable.mediamarkt_logo);
-                        break;
-                }
+                idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_HANG_ID);
+                anhHang = MainFragment.ImageList.get(idHang);
+                Picasso.get().load(anhHang).error(R.drawable.error).into(imageViewNhaCungCap);
 
-                factory1 = new SanPhamViewModelFactory(mDb, mIdHang);
-                final SanPhamViewModel viewModel1
-                        = ViewModelProviders.of(this, factory1).get(SanPhamViewModel.class);
-                viewModel1.getSanPhams().observe(this, new Observer<List<SanPhamEntry>>() {
-                    @Override
-                    public void onChanged(@Nullable List<SanPhamEntry> sanPhams) {
-                        catalogAdapter.setSanPhams(sanPhams);
-                    }
-                });
+
+                final YeuThichViewModel viewModel1
+                        = ViewModelProviders.of(this).get(YeuThichViewModel.class);
 
                 viewModel1.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
                     @Override

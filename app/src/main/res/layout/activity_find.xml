@@ -47,6 +47,7 @@
             android:id="@+id/find_empty_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:text="Không có kết quả phù hợp, vui lòng thử lại..."
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/recycler_view_tim_do"

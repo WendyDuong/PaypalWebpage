@@ -17,18 +17,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.activity.CatalogActivity;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainAdapter extends  RecyclerView.Adapter<MainAdapter.viewHolderMain> {
     private Context mContext;
-    private List<Integer> mImageIds;
+    private List<String> anhhangsp;
     private int iD;
+    private String anhHang;
     private static final String EXTRA_HANG_ID = "extraHangId";
+    private static final String EXTRA_ANH_HANG = "extraAnhHang";
 
-    public MainAdapter(Context context, List<Integer> imageIds) {
+    public MainAdapter(Context context, ArrayList<String> anhhangsp) {
         mContext = context;
-        mImageIds = imageIds;
+        this.anhhangsp = anhhangsp;
     }
 
     @NonNull
@@ -41,7 +45,8 @@ public class MainAdapter extends  RecyclerView.Adapter<MainAdapter.viewHolderMai
 
     @Override
     public void onBindViewHolder(@NonNull final MainAdapter.viewHolderMain holder, int position) {
-        holder.imageView.setImageResource(mImageIds.get(position));
+        Picasso.get().load(anhhangsp.get(position)).error(R.drawable.error).into(holder.imageView);
+
         final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) holder.cardView.getLayoutParams();
         int left = dptoPx(24);
         int top = dptoPx(12);
@@ -91,7 +96,7 @@ public class MainAdapter extends  RecyclerView.Adapter<MainAdapter.viewHolderMai
 
     @Override
     public int getItemCount() {
-        return mImageIds.size();
+        return anhhangsp.size();
     }
 
     class viewHolderMain extends RecyclerView.ViewHolder {
@@ -106,8 +111,10 @@ public class MainAdapter extends  RecyclerView.Adapter<MainAdapter.viewHolderMai
                 @Override
                 public void onClick(View view) {
                     iD = getLayoutPosition();
+                    anhHang = anhhangsp.get(iD);
                     Intent intent = new Intent(mContext, CatalogActivity.class);
                     intent.putExtra(EXTRA_HANG_ID, iD);
+                    intent.putExtra(EXTRA_ANH_HANG, anhHang);
                     mContext.startActivity(intent);
                 }
             });

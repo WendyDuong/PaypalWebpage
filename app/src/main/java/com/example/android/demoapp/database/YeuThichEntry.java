@@ -12,26 +12,26 @@ public class YeuThichEntry {
     private int idSanPham;
     private String tenSanPham;
     private double giaSanPham;
-    private int hinhAnh;
+    private String hinhAnhSanPham;
     private String khoiLuong;
     private int idHang;
 
     @Ignore
-    public YeuThichEntry(int idSanPham, String tenSanPham, double giaSanPham, int hinhAnh, String khoiLuong, int idHang) {
+    public YeuThichEntry(int idSanPham, String tenSanPham, double giaSanPham, String hinhAnhSanPham, String khoiLuong, int idHang) {
         this.idSanPham = idSanPham;
         this.tenSanPham = tenSanPham;
         this.giaSanPham = giaSanPham;
-        this.hinhAnh = hinhAnh;
+        this.hinhAnhSanPham = hinhAnhSanPham;
         this.khoiLuong = khoiLuong;
         this.idHang = idHang;
     }
 
-    public YeuThichEntry(int id, int idSanPham, String tenSanPham, double giaSanPham, int hinhAnh, String khoiLuong, int idHang) {
+    public YeuThichEntry(int id, int idSanPham, String tenSanPham, double giaSanPham, String hinhAnhSanPham, String khoiLuong, int idHang) {
         this.id = id;
         this.idSanPham = idSanPham;
         this.tenSanPham = tenSanPham;
         this.giaSanPham = giaSanPham;
-        this.hinhAnh = hinhAnh;
+        this.hinhAnhSanPham = hinhAnhSanPham;
         this.khoiLuong = khoiLuong;
         this.idHang = idHang;
     }
@@ -68,12 +68,12 @@ public class YeuThichEntry {
         this.giaSanPham = giaSanPham;
     }
 
-    public int getHinhAnh() {
-        return hinhAnh;
+    public String getHinhAnhSanPham() {
+        return hinhAnhSanPham;
     }
 
-    public void setHinhAnh(int hinhAnh) {
-        this.hinhAnh = hinhAnh;
+    public void setHinhAnhSanPham(String hinhAnhSanPham) {
+        this.hinhAnhSanPham = hinhAnhSanPham;
     }
 
     public String getKhoiLuong() {

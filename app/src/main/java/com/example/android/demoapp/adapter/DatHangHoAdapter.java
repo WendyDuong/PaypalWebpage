@@ -15,18 +15,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.activity.CatalogActivity;
+import com.example.android.demoapp.model.HangSanPham;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DatHangHoAdapter extends  RecyclerView.Adapter<DatHangHoAdapter.viewHolderDatHangHo> {
     private Context mContext;
-    private List<Integer> mImageIds;
+    private ArrayList<String> mImageIds;
     private int iD;
     private static final String EXTRA_HANG_ID = "extraHangId";
     private String browser;
 
 
-    public DatHangHoAdapter(Context context, List<Integer> imageIds) {
+    public DatHangHoAdapter(Context context, ArrayList<String> imageIds) {
         mContext = context;
         mImageIds = imageIds;
     }
@@ -40,7 +43,7 @@ public class DatHangHoAdapter extends  RecyclerView.Adapter<DatHangHoAdapter.vie
 
     @Override
     public void onBindViewHolder(@NonNull final viewHolderDatHangHo holder, int position) {
-        holder.imageView.setImageResource(mImageIds.get(position));
+        Picasso.get().load(mImageIds.get(position)).error(R.drawable.error).into(holder.imageView);
         final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) holder.cardView.getLayoutParams();
         int left = dptoPx(24);
         int top = dptoPx(12);
@@ -109,69 +112,70 @@ public class DatHangHoAdapter extends  RecyclerView.Adapter<DatHangHoAdapter.vie
                     iD = getLayoutPosition();
                     switch (iD){
                         case 0:
+                            browser ="https://www.wmf.com/de/";
+                            break;
+                        case 1:
+                            browser ="https://www.wmf.com/de/catalogsearch/result/index/?filtermarke=Silit&followSearch=9998&q=Silit";
+                            break;
+                        case 2:
+                            browser ="https://www.mueller.de/";
+                            break;
+                        case 3:
+                            browser ="https://www.dm.de/";
+                            break;
+                        case 4:
+                            browser ="https://www.saturn.de/";
+                            break;
+                        case 5:
+                            browser ="https://www.shop-apotheke.com/";
+                            break;
+                        case 6:
+                            browser ="https://www.rossmann.de/de/";
+                            break;
+                        case 7:
+                            browser ="https://www.worldofsweets.de/";
+                            break;
+                        case 8:
+                            browser ="https://www.mediamarkt.de/";
+                            break;
+                        case 9:
                             browser ="https://www.adidas.de/";
 
                             break;
-                        case 1:
+                        case 10:
                             browser ="https://www.nike.com/de";
                             break;
-                        case 2:
+                        case 11:
                             browser ="https://www.amazon.de/";
                             break;
-                        case 3:
+                        case 12:
                             browser ="https://www.bershka.com/";
                             break;
-                        case 4:
+                        case 13:
                             browser ="https://www.c-and-a.com/eu/en/shop";
                             break;
-                        case 5:
+                        case 14:
                             browser ="https://www.esprit.de/";
                             break;
-                        case 6:
+                        case 15:
                             browser ="https://www2.hm.com/de_de/index.html";
                             break;
-                        case 7:
+                        case 16:
                             browser ="https://shop.mango.com/de";
                             break;
-                        case 8:
+                        case 17:
                             browser ="https://www.massimodutti.com/de/";
                             break;
-                        case 9:
+                        case 18:
                             browser ="https://www.zara.com/de/";
                             break;
-                        case 10:
+                        case 19:
                             browser ="https://www.pullandbear.com/";
                             break;
-                        case 11:
+                        case 20:
                             browser ="https://www.douglas.de/";
                             break;
-                        case 12:
-                            browser ="https://www.wmf.com/de/";
-                            break;
-                        case 13:
-                            browser ="https://www.wmf.com/de/catalogsearch/result/index/?filtermarke=Silit&followSearch=9998&q=Silit";
-                            break;
-                        case 14:
-                            browser ="https://www.mueller.de/";
-                            break;
-                        case 15:
-                            browser ="https://www.dm.de/";
-                            break;
-                        case 16:
-                            browser ="https://www.saturn.de/";
-                            break;
-                        case 17:
-                            browser ="https://www.shop-apotheke.com/";
-                            break;
-                        case 18:
-                            browser ="https://www.rossmann.de/de/";
-                            break;
-                        case 19:
-                            browser ="https://www.worldofsweets.de/";
-                            break;
-                        case 20:
-                            browser ="https://www.mediamarkt.de/";
-                            break;
+
                     }
 
                     if (!browser.startsWith("http://") && !browser.startsWith("https://"))

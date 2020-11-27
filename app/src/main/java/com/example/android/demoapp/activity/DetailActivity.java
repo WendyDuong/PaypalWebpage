@@ -1,44 +1,54 @@
 package com.example.android.demoapp.activity;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
-import com.example.android.demoapp.ViewModel.DetailViewModel;
-import com.example.android.demoapp.ViewModel.DetailViewModelFactory;
+import com.example.android.demoapp.ViewModel.YeuThichViewModel;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
-import com.example.android.demoapp.database.SanPhamEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
+import com.example.android.demoapp.fragment.MainFragment;
+import com.example.android.demoapp.model.SanPham;
+import com.example.android.demoapp.utils.Server;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.squareup.picasso.Picasso;
+
 import org.apache.commons.math3.util.Precision;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class DetailActivity extends AppCompatActivity {
@@ -46,9 +56,9 @@ public class DetailActivity extends AppCompatActivity {
     private static final int DEFAULT_ID = -1;
     private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
     private static final String EXTRA_HANG_ID = "extraHangId";
-    private int idHang, idsanpham;
-    DetailViewModelFactory factory;
-    DetailViewModel viewModel;
+
+    private int idHang;
+    YeuThichViewModel viewModel;
     Toolbar toolBarChiTietActivity;
     TextView tvMoTaTitle, tvChiTietTitle, devider1, devider2;
     View cardViewSpinner;
@@ -56,10 +66,10 @@ public class DetailActivity extends AppCompatActivity {
     private AppDatabase mDb;
     TextView tvTen, tvGia, tvMoTa, tvKhoiluong, tvThuongHieu, tvXuatXu;
     ExtendedFloatingActionButton btnDatMua;
-    int  hinhanhsp;
+    String hinhanhsp;
     double giasp;
     String tensp, khoiluongsp, thuongHieu, xuatXu;
-    private int mTaskId = DEFAULT_ID;
+    private int idsanpham = DEFAULT_ID;
     Spinner spinner;
     TabLayout tabLayout;
     TabLayout.Tab tabGioHang;
@@ -68,6 +78,7 @@ public class DetailActivity extends AppCompatActivity {
     BadgeDrawable badgeDrawableGioHang;
     List<GioHangEntry> gioHangEntries;
     List<YeuThichEntry> yeuThichEntries;
+    ArrayList<String> anhhangsp;
 
 
     @Override
@@ -100,41 +111,13 @@ public class DetailActivity extends AppCompatActivity {
         eventSpinner();
         yeuthichEvent();
 
-
-
         Intent intent = getIntent();
 
+        anhhangsp = MainFragment.ImageList;
         if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
             idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_ID);
-            switch (idHang) {
-                case 0:
-                    imageViewHangSp.setImageResource(R.drawable.logo_wmf);
-                    break;
-                case 1:
-                    imageViewHangSp.setImageResource(R.drawable.logo_silit);
-                    break;
-                case 2:
-                    imageViewHangSp.setImageResource(R.drawable.muller);
-                    break;
-                case 3:
-                    imageViewHangSp.setImageResource(R.drawable.logo_dm);
-                    break;
-                case 4:
-                    imageViewHangSp.setImageResource(R.drawable.logo_saturn);
-                    break;
-                case 5:
-                    imageViewHangSp.setImageResource(R.drawable.apotheke_logo);
-                    break;
-                case 6:
-                    imageViewHangSp.setImageResource(R.drawable.rossmann_logo);
-                    break;
-                case 7:
-                    imageViewHangSp.setImageResource(R.drawable.worldofsweet);
-                    break;
-                case 8:
-                    imageViewHangSp.setImageResource(R.drawable.mediamarkt_logo);
-                    break;
-            }
+            Picasso.get().load(anhhangsp.get(idHang)).into(imageViewHangSp);
+
         }
         imageViewHangSp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,49 +195,75 @@ public class DetailActivity extends AppCompatActivity {
         badgeDrawableYeuthich.setMaxCharacterCount(3);
 
         if (intent != null && intent.hasExtra(EXTRA_SANPHAM_ID)) {
-            if (mTaskId == DEFAULT_ID) {
-                mTaskId = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
-                factory = new DetailViewModelFactory(mDb, mTaskId);
-                viewModel = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
-                viewModel.getDetailSanPham().observe(this, new Observer<SanPhamEntry>() {
-                    @Override
-                    public void onChanged(SanPhamEntry sanPham) {
-                        populateUI(sanPham);
-                    }
 
-                });
+            idsanpham = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
+            getsanphamtheoid(idsanpham);
 
-                viewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
-                    @Override
-                    public void onChanged(@Nullable List<GioHangEntry> gioHang) {
-                        gioHangEntries = gioHang;
-                        int sosanphammua = 0;
-                        addEvent();
-                        if (gioHangEntries.size() > 0) {
-                            for (int i = 0; i < gioHangEntries.size(); i++) {
-                                sosanphammua += gioHangEntries.get(i).getSoLuong();
-                            }
-                            badgeDrawableGioHang.setVisible(true);
+            YeuThichViewModel viewModel = ViewModelProviders.of(this).get(YeuThichViewModel.class);
+            viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
+                @Override
+                public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
+                    yeuThichEntries = yeuThich;
+                    KiemTraYeuThich();
+                    if (yeuThichEntries.size() > 0) {
+                        badgeDrawableYeuthich.setVisible(true);
+                        badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
 
-                            badgeDrawableGioHang.setNumber(sosanphammua);
-                        } else
-                            badgeDrawableGioHang.setVisible(false);
-                    }
-                });
-            }
+                    } else
+                        badgeDrawableYeuthich.setVisible(false);
+
+
+                }
+
+            });
+
+            viewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
+                @Override
+                public void onChanged(@Nullable List<GioHangEntry> gioHang) {
+                    gioHangEntries = gioHang;
+                    int sosanphammua = 0;
+                    addEvent();
+                    if (gioHangEntries.size() > 0) {
+                        for (int i = 0; i < gioHangEntries.size(); i++) {
+                            sosanphammua += gioHangEntries.get(i).getSoLuong();
+                        }
+                        badgeDrawableGioHang.setVisible(true);
+
+                        badgeDrawableGioHang.setNumber(sosanphammua);
+                    } else
+                        badgeDrawableGioHang.setVisible(false);
+                }
+            });
         }
-
-
- /*       imgChiTiet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                zoomImageFromThumb(imgChiTiet, hinhanhsp);
-            }
-        });
-        shortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
-*/
     }
 
+    private void getsanphamtheoid(int idsanpham) {
+        RequestQueue requestQueue = Volley.newRequestQueue(DetailActivity.this);
+        final String duongdan = Server.duongdansanphamidsanpham + idsanpham;
+        StringRequest str = new StringRequest(Request.Method.POST, duongdan, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                if (response != null) {
+                    try {
+                        JSONArray json = new JSONArray(response);
+                            JSONObject object = json.getJSONObject(0);
+                            populateUI(new SanPham(object.getInt("id"), object.getInt("idHang"), object.getString("tenSanPham"), object.getDouble("giaSanPham"), object.getString("hinhAnhSanPham"), object.getString("khoiLuong"), object.getString("moTa"), object.getString("thuongHieu"), object.getString("xuatXu")));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        requestQueue.add(str);
+
+
+    }
 
 
     private void yeuthichEvent() {
@@ -289,17 +298,17 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
-    private void populateUI(SanPhamEntry sanPham) {
+    private void populateUI(SanPham sanPham) {
         idsanpham = sanPham.getId();
         tensp = sanPham.getTenSanPham();
-        hinhanhsp = sanPham.getHinhAnh();
+        hinhanhsp = sanPham.getHinhAnhSanPham();
         khoiluongsp = sanPham.getKhoiLuong();
         thuongHieu = sanPham.getThuongHieu();
         xuatXu = sanPham.getXuatXu();
 
         //Rounding currency to make a easy reading
         giasp = sanPham.getGiaSanPham();
-        giasp = Precision.round(giasp/1000, 0)*1000;
+        giasp = Precision.round(giasp / 1000, 0) * 1000;
 
         tvTen.setText(tensp);
         tvMoTa.setText(sanPham.getMoTa());
@@ -308,24 +317,8 @@ public class DetailActivity extends AppCompatActivity {
         tvXuatXu.setText("Xuất xứ: " + xuatXu);
         DecimalFormat deci = new DecimalFormat("###,###,###");
         tvGia.setText(deci.format(giasp) + " Đ");
-        imgChiTiet.setImageResource(hinhanhsp);
+        Picasso.get().load(hinhanhsp).into(imgChiTiet);
 
-        viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
-            @Override
-            public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
-                yeuThichEntries = yeuThich;
-                KiemTraYeuThich();
-                if (yeuThichEntries.size() > 0) {
-                    badgeDrawableYeuthich.setVisible(true);
-                    badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
-
-                } else
-                    badgeDrawableYeuthich.setVisible(false);
-
-
-            }
-
-        });
     }
 
     private void addEvent() {
@@ -345,7 +338,7 @@ public class DetailActivity extends AppCompatActivity {
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * soluongmoi)/1000,0)*1000, hinhanhsp, khoiluongsp, soluongmoi, idHang));
+                                    mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * soluongmoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluongmoi, idHang));
 
 
                                 }
@@ -358,13 +351,13 @@ public class DetailActivity extends AppCompatActivity {
                                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * 20)/1000,0)*1000, hinhanhsp, khoiluongsp, 50, idHang));
+                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * 20) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, 50, idHang));
 
 
                                     }
                                 });
 
-                                Toast.makeText(DetailActivity.this, "Đã đủ 50 "+ tensp + " trong giỏ hàng", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(DetailActivity.this, "Đã đủ 50 " + tensp + " trong giỏ hàng", Toast.LENGTH_SHORT).show();
 
                             } else {
                                 Toast.makeText(DetailActivity.this, "Đã thêm " + soluongmoi + " " + tensp + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
@@ -383,7 +376,7 @@ public class DetailActivity extends AppCompatActivity {
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp,Precision.round((giamoi)/1000,0)*1000 , hinhanhsp, khoiluongsp, soluong, idHang));
+                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, Precision.round((giamoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluong, idHang));
 
 
                             }
@@ -401,7 +394,7 @@ public class DetailActivity extends AppCompatActivity {
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp,Precision.round((giamoi)/1000,0)*1000 , hinhanhsp, khoiluongsp, soluong, idHang));
+                            mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, Precision.round((giamoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluong, idHang));
 
 
                         }
@@ -463,53 +456,26 @@ public class DetailActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
         intent = getIntent();
-        if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
+        if (intent != null && intent.hasExtra(EXTRA_HANG_ID) && intent.hasExtra(EXTRA_SANPHAM_ID)) {
             idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_ID);
-            switch (idHang) {
-                case 0:
-                    imageViewHangSp.setImageResource(R.drawable.logo_wmf);
-                    break;
-                case 1:
-                    imageViewHangSp.setImageResource(R.drawable.logo_silit);
-                    break;
-                case 2:
-                    imageViewHangSp.setImageResource(R.drawable.muller);
-                    break;
-                case 3:
-                    imageViewHangSp.setImageResource(R.drawable.logo_dm);
-                    break;
-                case 4:
-                    imageViewHangSp.setImageResource(R.drawable.logo_saturn);
-                    break;
-                case 5:
-                    imageViewHangSp.setImageResource(R.drawable.apotheke_logo);
-                    break;
-                case 6:
-                    imageViewHangSp.setImageResource(R.drawable.rossmann_logo);
-                    break;
-                case 7:
-                    imageViewHangSp.setImageResource(R.drawable.worldofsweet);
-                    break;
-                case 8:
-                    imageViewHangSp.setImageResource(R.drawable.mediamarkt_logo);
-                    break;
-            }
-        }
-        if (intent != null && intent.hasExtra(EXTRA_SANPHAM_ID)) {
-            mTaskId = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
-            factory = new DetailViewModelFactory(mDb, mTaskId);
-            viewModel = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
-            viewModel.getDetailSanPham().observe(this, new Observer<SanPhamEntry>() {
-                @Override
-                public void onChanged(SanPhamEntry sanPham) {
+            Picasso.get().load(anhhangsp.get(idHang)).into(imageViewHangSp);
+            idsanpham = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
+            getsanphamtheoid(idsanpham);
+
+/*
+            idsanpham = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
+            for (SanPham sanPham : sanPhams) {
+                if (sanPham.getId() == idsanpham) {
                     populateUI(sanPham);
+                    Toast.makeText(this, "KhoiLuong: " + sanPham.getKhoiLuong(), Toast.LENGTH_LONG).show();
+
                 }
-
-            });
-
+            }
+*/
         }
         super.onNewIntent(intent);
     }
+
 
 }
 

@@ -1,10 +1,7 @@
 package com.example.android.demoapp.activity;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
@@ -20,16 +17,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 import com.example.android.demoapp.R;
-import com.example.android.demoapp.ViewModel.MainViewModel;
+import com.example.android.demoapp.ViewModel.YeuThichViewModel;
 import com.example.android.demoapp.adapter.CategoryAdapter;
 import com.example.android.demoapp.adapter.NavigationViewAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
+import com.example.android.demoapp.database.SanPhamEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import android.view.WindowManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +44,14 @@ public class MainActivity extends AppCompatActivity {
     List<YeuThichEntry> yeuThichEntries;
     ViewPager2 viewPager2;
     TabLayout tabLayout;
-    MainViewModel mainViewModel;
+    YeuThichViewModel mainViewModel;
     AppDatabase mDb;
+
+    ArrayList<SanPhamEntry> mangSanpham;
+    int id = 0;
+    String tenloaisp = "";
+    String hinhanhloaisp = "";
+
     private BadgeDrawable badgeDrawableYeuthich;
     private BadgeDrawable badgeDrawableGioHang;
     private static final int REQUEST_OVERLAY_PERMISSION = 5469;
@@ -59,27 +63,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         init();
-        ArrayList<String> caNhan = new ArrayList<>();
 
-        caNhan.add(getString(R.string.hinh_thuc_thanh_toan));
-        caNhan.add(getString(R.string.giao_hang));
-        caNhan.add(getString(R.string.chinh_sach_doi_tra));
-        caNhan.add(getString(R.string.lien_he));
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mDrawerLayout.openDrawer(GravityCompat.END);
+            ArrayList<String> caNhan = new ArrayList<>();
+            caNhan.add(getString(R.string.hinh_thuc_thanh_toan));
+            caNhan.add(getString(R.string.giao_hang));
+            caNhan.add(getString(R.string.chinh_sach_doi_tra));
+            caNhan.add(getString(R.string.lien_he));
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mDrawerLayout.openDrawer(GravityCompat.END);
 
-            }
-        });
+                }
+            });
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        list.setLayoutManager(layoutManager);
-        recyclerAdapter = new NavigationViewAdapter(MainActivity.this, caNhan);
-        list.setAdapter(recyclerAdapter);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            list.setLayoutManager(layoutManager);
+            recyclerAdapter = new NavigationViewAdapter(MainActivity.this, caNhan);
+            list.setAdapter(recyclerAdapter);
+
 
     }
-
 
 
     @Override
@@ -136,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
             badgeDrawableYeuthich.setMaxCharacterCount(3);
 
             mDb = AppDatabase.getInstance(getApplicationContext());
-            mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+            mainViewModel = ViewModelProviders.of(this).get(YeuThichViewModel.class);
             mainViewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
                 @Override
                 public void onChanged(@Nullable List<GioHangEntry> gioHang) {

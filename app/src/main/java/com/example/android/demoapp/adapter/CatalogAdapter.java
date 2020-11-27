@@ -17,6 +17,13 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.activity.CatalogActivity;
@@ -24,24 +31,37 @@ import com.example.android.demoapp.activity.DetailActivity;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.SanPhamEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
+import com.example.android.demoapp.model.SanPham;
+import com.example.android.demoapp.utils.Server;
+import com.squareup.picasso.Picasso;
 
 import org.apache.commons.math3.util.Precision;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHolder> {
     private List<YeuThichEntry> mYeuThichEntries;
     private AppDatabase mDb;
     Context context;
-    private List<SanPhamEntry> sanPhams;
+    private ArrayList<SanPham> sanPhams;
     private int iD;
     private int idHang;
     private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
     private static final String EXTRA_HANG_ID = "extraHangId";
-    public CatalogAdapter(Context context) {
+    private static final String EXTRA_ANH_HANG = "extraAnhHang";
+
+    public CatalogAdapter(Context context, ArrayList<SanPham> sanPhams) {
         this.context = context;
+        this.sanPhams = sanPhams;
     }
+
 
     @NonNull
     @Override
@@ -52,7 +72,9 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
 
     @Override
     public void onBindViewHolder(final itemHolder holder, final int position) {
-        SanPhamEntry sanPham = sanPhams.get(position);
+
+
+        SanPham sanPham = sanPhams.get(position);
         holder.tvTensanpham.setText(sanPham.getTenSanPham());
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         double giasp = sanPham.getGiaSanPham();
@@ -60,7 +82,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
         //Rounding curency to make a easy reading
         giasp = Precision.round(giasp/1000, 0)*1000;
         holder.tvGiasanpham.setText(decimalFormat.format(giasp) + " Đ");
-        holder.imgHinhAnhSanpham.setImageResource(sanPham.getHinhAnh());
+        Picasso.get().load(sanPham.getHinhAnhSanPham()).into(holder.imgHinhAnhSanpham);
         final int idsanpham = sanPham.getId();
 
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) holder.cardViewCatalog.getLayoutParams();
@@ -123,10 +145,6 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
         holder.cardViewCatalog.setLayoutParams(layoutParams);
 
 
-
-
-
-
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -159,6 +177,8 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
         return sanPhams.size();
     }
 
+
+/*
     public List<SanPhamEntry> getSanPhams() {
         return sanPhams;
     }
@@ -168,9 +188,11 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
         notifyDataSetChanged();
     }
 
+*/
 
     public void setYeuThichs(List<YeuThichEntry> yeuThichEntries){
         this.mYeuThichEntries = yeuThichEntries;
+        notifyDataSetChanged();
 
     }
 
@@ -192,7 +214,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
             imgHinhAnhSanpham.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SanPhamEntry sanPham = sanPhams.get(getLayoutPosition());
+                    SanPham sanPham = sanPhams.get(getLayoutPosition());
                     iD = sanPham.getId();
                     idHang = sanPham.getIdHang();
                     Intent intent = new Intent(context, DetailActivity.class);
@@ -211,7 +233,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                         final int idsanpham = sanPhams.get(getLayoutPosition()).getId();
                         final String tensanpham = sanPhams.get(getLayoutPosition()).getTenSanPham();
                         final double giasanpham = sanPhams.get(getLayoutPosition()).getGiaSanPham();
-                        final int hinhanhsanpham = sanPhams.get(getLayoutPosition()).getHinhAnh();
+                        final String hinhanhsanpham = sanPhams.get(getLayoutPosition()).getHinhAnhSanPham();
                         final String khoiluongsanpham = sanPhams.get(getLayoutPosition()).getKhoiLuong();
                         imageViewTim.setImageResource(R.drawable.timdo24);
 

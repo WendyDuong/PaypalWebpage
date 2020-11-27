@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -15,17 +16,37 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.adapter.DatHangHoAdapter;
+import com.example.android.demoapp.model.HangSanPham;
+import com.example.android.demoapp.utils.CheckConnection;
+import com.example.android.demoapp.utils.Server;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatHangHoActivity extends AppCompatActivity {
+    int id = 0;
+    String tenhang = "";
+    String hinhanhhang = "";
+
     Context context;
 
+    ArrayList<HangSanPham> manghangsanpham;
+    DatHangHoAdapter datHangHoAdapter;
     RecyclerView recyclerDatHangHo;
+    public static final ArrayList<String> ImageList = new ArrayList<>();
 
+/*
     public static final List<Integer> ImageList = new ArrayList<Integer>() {{
         add(R.drawable.logo_adidas);
         add(R.drawable.logo_nike);
@@ -49,6 +70,7 @@ public class DatHangHoActivity extends AppCompatActivity {
         add(R.drawable.worldofsweet);
         add(R.drawable.mediamarkt_logo);
     }};
+*/
 
 
     @Override
@@ -56,11 +78,18 @@ public class DatHangHoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dat_hang_ho);
         recyclerDatHangHo = findViewById(R.id.recycler_view_dathangho);
+        manghangsanpham = new ArrayList<>();
+        if (CheckConnection.haveNetworkConnection(DatHangHoActivity.this)) {
+            gethangsanpham();
 
-        DatHangHoAdapter datHangHoAdapter = new DatHangHoAdapter(DatHangHoActivity.this, ImageList);
+        datHangHoAdapter = new DatHangHoAdapter(DatHangHoActivity.this, ImageList);
         recyclerDatHangHo.setHasFixedSize(true);
         recyclerDatHangHo.setLayoutManager(new GridLayoutManager(DatHangHoActivity.this,3));
         recyclerDatHangHo.setAdapter(datHangHoAdapter);
+
+        } else {
+            CheckConnection.showToast_Short(DatHangHoActivity.this, "Không có kết nối Internet!");
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar_tim_do);
         setSupportActionBar(toolbar);
@@ -77,8 +106,43 @@ public class DatHangHoActivity extends AppCompatActivity {
         TextView tv = findViewById(R.id.tv_dat_hang_ho_thong_tin);
         tv.setText(R.string.dat_hang_ho);
 
+    }
+    private void gethangsanpham() {
+        final RequestQueue requestQueue = Volley.newRequestQueue(DatHangHoActivity.this);
+        final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Server.duongdanhangsp, new Response.Listener<JSONArray>() {
 
+            @Override
+            public void onResponse(JSONArray response) {
+                if (response != null) {
 
+                    ImageList.clear();
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject object = response.getJSONObject(i);
+                            id = object.getInt("id");
+
+                            tenhang = object.getString("tenhang");
+                            hinhanhhang = object.getString("hinhanhhang");
+                            manghangsanpham.add(new HangSanPham(id, tenhang, hinhanhhang));
+
+                            ImageList.add(i, hinhanhhang);
+                            datHangHoAdapter.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    datHangHoAdapter.notifyDataSetChanged();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        requestQueue.add(jsonArrayRequest);
 
     }
+
 }

@@ -20,6 +20,8 @@ import com.google.android.material.tabs.TabLayout;
 
 public class TimKiemActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     Toolbar toolbar;
+    private static final String EXTRA_TEN_SAN_PHAM_TIM_KIEM = "tensanphamtimkiem";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +69,7 @@ public class TimKiemActivity extends AppCompatActivity implements SearchView.OnQ
     public boolean onQueryTextSubmit(final String query) {
         final String tensanpham = query.trim();
         Intent intentTimKiem = new Intent(TimKiemActivity.this, FindActivity.class);
-        intentTimKiem.putExtra("tensanphamtimkiem", tensanpham);
+        intentTimKiem.putExtra(EXTRA_TEN_SAN_PHAM_TIM_KIEM, tensanpham);
         startActivity(intentTimKiem);
         return false;
 
