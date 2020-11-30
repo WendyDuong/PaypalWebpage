@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.activity.CatalogActivity;
+import com.example.android.demoapp.model.HangSanPham;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -24,15 +25,16 @@ import java.util.List;
 
 public class MainAdapter extends  RecyclerView.Adapter<MainAdapter.viewHolderMain> {
     private Context mContext;
-    private List<String> anhhangsp;
+    //private List<String> anhhangsp;
+    private ArrayList<HangSanPham> manghangsanpham;
     private int iD;
     private String anhHang;
     private static final String EXTRA_HANG_ID = "extraHangId";
     private static final String EXTRA_ANH_HANG = "extraAnhHang";
 
-    public MainAdapter(Context context, ArrayList<String> anhhangsp) {
+    public MainAdapter(Context context, ArrayList<HangSanPham> manghangsanpham) {
         mContext = context;
-        this.anhhangsp = anhhangsp;
+        this.manghangsanpham = manghangsanpham;
     }
 
     @NonNull
@@ -45,7 +47,7 @@ public class MainAdapter extends  RecyclerView.Adapter<MainAdapter.viewHolderMai
 
     @Override
     public void onBindViewHolder(@NonNull final MainAdapter.viewHolderMain holder, int position) {
-        Picasso.get().load(anhhangsp.get(position)).error(R.drawable.error).into(holder.imageView);
+        Picasso.get().load(manghangsanpham.get(position).getAnhHang()).error(R.drawable.error).into(holder.imageView);
 
         final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) holder.cardView.getLayoutParams();
         int left = dptoPx(24);
@@ -96,7 +98,7 @@ public class MainAdapter extends  RecyclerView.Adapter<MainAdapter.viewHolderMai
 
     @Override
     public int getItemCount() {
-        return anhhangsp.size();
+        return manghangsanpham.size();
     }
 
     class viewHolderMain extends RecyclerView.ViewHolder {
@@ -111,7 +113,7 @@ public class MainAdapter extends  RecyclerView.Adapter<MainAdapter.viewHolderMai
                 @Override
                 public void onClick(View view) {
                     iD = getLayoutPosition();
-                    anhHang = anhhangsp.get(iD);
+                    anhHang = manghangsanpham.get(iD).getAnhHang();
                     Intent intent = new Intent(mContext, CatalogActivity.class);
                     intent.putExtra(EXTRA_HANG_ID, iD);
                     intent.putExtra(EXTRA_ANH_HANG, anhHang);

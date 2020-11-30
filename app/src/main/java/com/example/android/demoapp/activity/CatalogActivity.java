@@ -1,19 +1,28 @@
 package com.example.android.demoapp.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -28,6 +37,8 @@ import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
 import com.example.android.demoapp.fragment.MainFragment;
 import com.example.android.demoapp.model.SanPham;
+import com.example.android.demoapp.utils.CheckConnection;
+import com.example.android.demoapp.utils.EndlessRecyclerViewScrollListener;
 import com.example.android.demoapp.utils.Server;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.tabs.TabLayout;
@@ -38,9 +49,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CatalogActivity extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -48,6 +57,13 @@ public class CatalogActivity extends AppCompatActivity {
     private AppDatabase mDb;
     private int idHang;
     private String anhHang;
+    ProgressBar mProgressBar;
+    private boolean loading = false;
+    private boolean limitData = false;
+    mHandler mHandler;
+    private int page = 1;
+    View footerview;
+    private int visibleItemCount, totalItemCount, pastVisiblesItems;
     private static final String TAG = CatalogActivity.class.getSimpleName();
     public static final String EXTRA_HANG_ID = "extraHangId";
     private static final String EXTRA_ANH_HANG = "extraAnhHang";
@@ -62,13 +78,133 @@ public class CatalogActivity extends AppCompatActivity {
     List<YeuThichEntry> yeuThichEntries;
     public static BadgeDrawable badgeDrawableYeuthich;
     public static BadgeDrawable badgeDrawableGioHang;
+    GridLayoutManager gridLayoutManager;
 
+    private EndlessRecyclerViewScrollListener scrollListener;
+
+    @SuppressLint("ResourceType")
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        sanPhams = new ArrayList<SanPham>();
         setContentView(R.layout.catalog_activity);
+        populateUI();
+        actionToolbar();
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
+            idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_HANG_ID);
+            anhHang = MainFragment.manghangsanpham.get(idHang).getAnhHang();
+            Picasso.get().load(anhHang).error(R.drawable.error).into(imageViewNhaCungCap);
+
+            //Load data from server in sanphams array
+            if (CheckConnection.haveNetworkConnection(CatalogActivity.this)) {
+                loadMoreData();
+
+/*
+                scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+                    @Override
+                    public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                        getData(page);
+                    }
+                };
+*/
+                catalogAdapter = new CatalogAdapter(CatalogActivity.this, sanPhams);
+                recyclerView.addOnScrollListener(scrollListener);
+                recyclerView.setAdapter(catalogAdapter);
+                recyclerView.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.GONE);
+/*
+                recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                        if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                            isScrolling = true;
+                            mProgressBar.setVisibility(View.GONE);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        if (dy > 0) {
+                            currentItems = gridLayoutManager.getChildCount();
+                            totalItems = gridLayoutManager.getItemCount();
+                            scrollOutItems = gridLayoutManager.findFirstVisibleItemPosition();
+
+                            if (isScrolling && (currentItems + scrollOutItems == totalItems)) {
+                                isScrolling = false;
+                                if (getItemsByLabelCalled) {
+                                    for (int i = 1; i < 7; i++) {
+                                        if (navigationView.getMenu().getItem(i).isChecked()) {
+                                            getItemsByLabel(navigationView.getMenu().getItem(i).getTitle().toString());
+                                        }
+                                    }
+                                } else {
+                                    getData();
+                                }
+                            }
+                        }
+                    }
+                });
+*/
+            } else {
+                CheckConnection.showToast_Short(CatalogActivity.this, "Không có kết nối Internet!");
+                CatalogActivity.this.finish();
+
+            }
+        }
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void loadMoreData() {
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
+                    // Do something
+                } else if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    // Do something
+                } else {
+                    // Do something
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    //Scrolling down
+                    visibleItemCount = gridLayoutManager.getChildCount();
+                    totalItemCount = gridLayoutManager.getItemCount();
+                    pastVisiblesItems = gridLayoutManager.findFirstVisibleItemPosition();
+
+                    if (loading) {
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount && totalItemCount != 0 && loading == false && limitData== false) {
+                            loading = true ;
+                            ThreadData threadData = new ThreadData();
+                            threadData.start();
+
+
+                        }
+
+
+                    } else {
+                        //Scrolling up
+                    }
+                }
+
+            }
+        });
+    }
+
+
+    private void actionToolbar() {
         tabLayout = (TabLayout) findViewById(R.id.tab_layout2);
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.iconhome));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.kinh_lup_icon));
@@ -78,82 +214,6 @@ public class CatalogActivity extends AppCompatActivity {
 
         tabYeuThich = tabLayout.getTabAt(2);
         tabGioHang = tabLayout.getTabAt(3);
-
-
-        assert tabGioHang != null;
-        badgeDrawableGioHang = tabGioHang.getOrCreateBadge();
-        assert tabYeuThich != null;
-        badgeDrawableYeuthich = tabYeuThich.getOrCreateBadge();
-        badgeDrawableGioHang.setMaxCharacterCount(3);
-        badgeDrawableYeuthich.setMaxCharacterCount(3);
-        mDb = AppDatabase.getInstance(getApplicationContext());
-
-
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
-
-            idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_HANG_ID);
-            anhHang = MainFragment.ImageList.get(idHang);
-            Picasso.get().load(anhHang).error(R.drawable.error).into(imageViewNhaCungCap);
-
-            //Load data from server in sanphams array
-            getData();
-            catalogAdapter = new CatalogAdapter(CatalogActivity.this, sanPhams);
-
-
-            final YeuThichViewModel viewModel1
-                    = ViewModelProviders.of(this).get(YeuThichViewModel.class);
-
-            viewModel1.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
-                @Override
-                public void onChanged(@Nullable List<GioHangEntry> gioHang) {
-                    gioHangEntries = gioHang;
-                    int sosanphammua = 0;
-                    assert gioHangEntries != null;
-                    if (gioHangEntries.size() > 0){
-                        for (int i = 0; i < gioHangEntries.size(); i++) {
-                            sosanphammua += gioHangEntries.get(i).getSoLuong();
-                        }
-                        badgeDrawableGioHang.setVisible(true);
-                        badgeDrawableGioHang.setNumber(sosanphammua);
-                    }
-                    else
-                        badgeDrawableGioHang.setVisible(false);
-                }
-            });
-
-            viewModel1.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
-                @Override
-                public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
-                    yeuThichEntries = yeuThich;
-                    catalogAdapter.setYeuThichs(yeuThich);
-                    assert yeuThichEntries != null;
-                    if (yeuThichEntries.size()>0){
-                        badgeDrawableYeuthich.setVisible(true);
-                        badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
-
-                    }
-                    else
-                        badgeDrawableYeuthich.setVisible(false);
-                }
-            });
-        }
-
-
-        recyclerView = findViewById(R.id.recycler_view_catalog);
-        recyclerView.setHasFixedSize(true);
-
-        Configuration config = getResources().getConfiguration();
-        if (config.smallestScreenWidthDp >= 720)
-        {
-            recyclerView.setLayoutManager(new GridLayoutManager(CatalogActivity.this, 3));
-        }
-        else
-        {
-            recyclerView.setLayoutManager(new GridLayoutManager(CatalogActivity.this, 2));
-        }
-        recyclerView.setAdapter(catalogAdapter);
-
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -215,58 +275,131 @@ public class CatalogActivity extends AppCompatActivity {
             }
         });
 
+        assert tabGioHang != null;
+        badgeDrawableGioHang = tabGioHang.getOrCreateBadge();
+        assert tabYeuThich != null;
+        badgeDrawableYeuthich = tabYeuThich.getOrCreateBadge();
+        badgeDrawableGioHang.setMaxCharacterCount(3);
+        badgeDrawableYeuthich.setMaxCharacterCount(3);
+
+
+        final YeuThichViewModel viewModel1
+                = ViewModelProviders.of(this).get(YeuThichViewModel.class);
+
+        viewModel1.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<GioHangEntry> gioHang) {
+                gioHangEntries = gioHang;
+                int sosanphammua = 0;
+                assert gioHangEntries != null;
+                if (gioHangEntries.size() > 0){
+                    for (int i = 0; i < gioHangEntries.size(); i++) {
+                        sosanphammua += gioHangEntries.get(i).getSoLuong();
+                    }
+                    badgeDrawableGioHang.setVisible(true);
+                    badgeDrawableGioHang.setNumber(sosanphammua);
+                }
+                else
+                    badgeDrawableGioHang.setVisible(false);
+            }
+        });
+
+        viewModel1.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
+                yeuThichEntries = yeuThich;
+                catalogAdapter.setYeuThichs(yeuThich);
+                assert yeuThichEntries != null;
+                if (yeuThichEntries.size()>0){
+                    badgeDrawableYeuthich.setVisible(true);
+                    badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
+
+                }
+                else
+                    badgeDrawableYeuthich.setVisible(false);
+            }
+        });
+
+    }
+
+    private void populateUI() {
+        sanPhams = new ArrayList<SanPham>();
+        mDb = AppDatabase.getInstance(getApplicationContext());
+        mProgressBar = findViewById(R.id.progress_bar);
+        recyclerView = findViewById(R.id.recycler_view_catalog);
+        recyclerView.setHasFixedSize(true);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        footerview = inflater.inflate(R.layout.progressbar, null);
+        Configuration config = getResources().getConfiguration();
+        if (config.smallestScreenWidthDp >= 720)
+        {
+            gridLayoutManager = new GridLayoutManager(CatalogActivity.this, 3);
+            recyclerView.setLayoutManager(gridLayoutManager);
+        }
+        else
+        {
+            gridLayoutManager = new GridLayoutManager(CatalogActivity.this, 2);
+            recyclerView.setLayoutManager(gridLayoutManager);
+        }
+
+
+        mHandler = new mHandler();
 
     }
 
 
-    private void getData() {
+    private void getData(int page) {
         RequestQueue requestQueue= Volley.newRequestQueue(CatalogActivity.this);
         String duongdan;
         switch (idHang){
             case 0:
-                duongdan = Server.duongdansanphamhang0;
+                duongdan = Server.duongdansanphamhang0+page;
                 break;
             case 1:
-                duongdan = Server.duongdansanphamhang1;
+                duongdan = Server.duongdansanphamhang1+page;
                 break;
             case 2:
-                duongdan = Server.duongdansanphamhang2;
+                duongdan = Server.duongdansanphamhang2+page;
                 break;
             case 3:
-                duongdan = Server.duongdansanphamhang3;
+                duongdan = Server.duongdansanphamhang3+page;
                 break;
             case 4:
-                duongdan = Server.duongdansanphamhang4;
+                duongdan = Server.duongdansanphamhang4+page;
                 break;
             case 5:
-                duongdan = Server.duongdansanphamhang5;
+                duongdan = Server.duongdansanphamhang5+page;
                 break;
             case 6:
-                duongdan = Server.duongdansanphamhang6;
+                duongdan = Server.duongdansanphamhang6+page;
                 break;
             case 7:
-                duongdan = Server.duongdansanphamhang7;
+                duongdan = Server.duongdansanphamhang7+page;
                 break;
             default:
-                duongdan = Server.duongdansanphamhang8;
+                duongdan = Server.duongdansanphamhang8+page;
                 break;
         }
         StringRequest str = new StringRequest(Request.Method.POST, duongdan, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if(response!=null){
+                if(response!=null && response.length()>0){
+                    // TODO  recyclerView.removeFooterView(footerview)
                     try {
                         JSONArray json=new JSONArray(response);
-                        int dodai = json.length();
                         for(int i = 0; i < json.length(); i++){
                             JSONObject object=json.getJSONObject(i);
                             sanPhams.add(new SanPham(object.getInt("id"),object.getInt("idHang"),object.getString("tenSanPham"),object.getDouble("giaSanPham"),object.getString("hinhAnhSanPham"),object.getString("khoiLuong"),object.getString("moTa"),object.getString("thuongHieu"),object.getString("xuatXu")));
-
                             catalogAdapter.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
+                }else {
+                    limitData = true;
+                    // TODO  recyclerView.removeFooterView(footerview)
+                    CheckConnection.showToast_Short(getApplicationContext(),"Đã hết dữ liệu");
 
                 }
             }
@@ -276,17 +409,43 @@ public class CatalogActivity extends AppCompatActivity {
 
             }
         })
-        {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> param=new HashMap<String, String>();
-                param.put(EXTRA_HANG_ID, String.valueOf(idHang));
-                return param;
-            }
-        }
+
                 ;
         requestQueue.add(str);
     }
+
+public class mHandler extends Handler{
+    @Override
+    public void handleMessage(@NonNull Message msg) {
+        switch (msg.what){
+            case 0:
+                // TODO  recyclerView.addFooterView(footerview)
+                break;
+            case 1:
+                getData(++page);
+                loading = false;
+                break;
+
+        }
+        super.handleMessage(msg);
+    }
+}
+public class ThreadData extends Thread{
+    @Override
+    public void run() {
+        mHandler.sendEmptyMessage(0);
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Message message = mHandler.obtainMessage(1);
+            mHandler.sendMessage(message);
+
+        super.run();
+    }
+}
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -296,7 +455,7 @@ public class CatalogActivity extends AppCompatActivity {
             intent = getIntent();
             if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
                 idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_HANG_ID);
-                anhHang = MainFragment.ImageList.get(idHang);
+                anhHang = MainFragment.manghangsanpham.get(idHang).getAnhHang();
                 Picasso.get().load(anhHang).error(R.drawable.error).into(imageViewNhaCungCap);
 
 

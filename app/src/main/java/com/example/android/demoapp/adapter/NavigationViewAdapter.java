@@ -12,11 +12,13 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.demoapp.activity.CatalogActivity;
 import com.example.android.demoapp.activity.GiaoHang;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.activity.DatHangHoActivity;
 import com.example.android.demoapp.activity.LienHe;
 import com.example.android.demoapp.activity.ThanhToan;
+import com.example.android.demoapp.utils.CheckConnection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +67,9 @@ public class NavigationViewAdapter extends RecyclerView.Adapter<NavigationViewAd
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int pos = getLayoutPosition();
+                    if (CheckConnection.haveNetworkConnection(context)){
+
+                        int pos = getLayoutPosition();
                     switch (pos) {
                         case 0:
                             Intent intentThanhToan = new Intent(context, ThanhToan.class);
@@ -84,7 +88,12 @@ public class NavigationViewAdapter extends RecyclerView.Adapter<NavigationViewAd
                             context.startActivity(intentLienHe);
                             break;
                     }
+
                 }
+                    else {
+                        CheckConnection.showToast_Short(context, "Không có kết nối Internet!");
+
+                    }                }
             });
         }
     }

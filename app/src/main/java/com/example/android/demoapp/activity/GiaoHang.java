@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.android.demoapp.R;
+import com.example.android.demoapp.fragment.MainFragment;
 
 public class GiaoHang extends AppCompatActivity {
     @Override
@@ -19,7 +20,7 @@ public class GiaoHang extends AppCompatActivity {
         setContentView(R.layout.activity_giao_hang);
         Toolbar toolbar = findViewById(R.id.toolbar_tim_do);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Hình thức giao hàng");
+        getSupportActionBar().setTitle(MainFragment.mangchinhsach.get(1).getTenbanner());
 
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -30,7 +31,8 @@ public class GiaoHang extends AppCompatActivity {
             }
         });
         TextView tv = findViewById(R.id.tv_giao_hang);
-        tv.setText(R.string.thong_tin_giao_hang);
+
+        tv.setText(MainFragment.mangchinhsach.get(1).getAnhbanner());
     }
 
 }

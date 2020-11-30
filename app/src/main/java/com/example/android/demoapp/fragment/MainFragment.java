@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -21,9 +22,11 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.adapter.MainAdapter;
+import com.example.android.demoapp.model.Banner;
 import com.example.android.demoapp.model.HangSanPham;
 import com.example.android.demoapp.utils.CheckConnection;
 import com.example.android.demoapp.utils.Server;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,15 +37,16 @@ import java.util.List;
 
 public class MainFragment extends Fragment {
 
-    int id = 0;
-    String tenhang = "";
-    String hinhanhhang = "";
+    int id, idchinhsach = 0;
+    String tenhang, tenchinhsach = "";
+    String hinhanhhang, noidungchinhsach = "";
     MainAdapter mainAdapter;
-    ArrayList<HangSanPham> manghangsanpham;
+    public static ArrayList<HangSanPham> manghangsanpham;
+    ArrayList<Banner> manganhbanner;
+    public static ArrayList<Banner> mangchinhsach;
     ViewFlipper viewFlipper;
     RecyclerView recyclerViewMain;
-    public static final ArrayList<String> ImageList = new ArrayList<>();
-
+    ProgressBar mProgressBar;
     public MainFragment() {
         // Required empty public constructor
     }
@@ -55,24 +59,61 @@ public class MainFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.main_fragment, container, false);
         viewFlipper = rootView.findViewById(R.id.viewflipper);
         recyclerViewMain = rootView.findViewById(R.id.recycler_view_main);
-
         manghangsanpham = new ArrayList<>();
+        manganhbanner = new ArrayList<>();
+        mangchinhsach = new ArrayList<>();
+
         if (CheckConnection.haveNetworkConnection(getActivity())) {
+            mProgressBar = rootView.findViewById(R.id.progress_bar);
 
             gethangsanpham();
             actionViewFlipper();
-            mainAdapter = new MainAdapter(getActivity(), ImageList);
+            getchinhsach();
+            mainAdapter = new MainAdapter(getActivity(), manghangsanpham);
             recyclerViewMain.setHasFixedSize(true);
             recyclerViewMain.setLayoutManager(new GridLayoutManager(getActivity(), 3));
             recyclerViewMain.setAdapter(mainAdapter);
+            recyclerViewMain.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.GONE);
 
 
         } else {
             CheckConnection.showToast_Short(getActivity(), "Không có kết nối Internet!");
-            getActivity().finish();
         }
 
         return rootView;
+
+    }
+
+    private void getchinhsach() {
+        final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Server.duongdanchinhsach, new Response.Listener<JSONArray>() {
+
+            @Override
+            public void onResponse(JSONArray response) {
+                if (response != null) {
+
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject object = response.getJSONObject(i);
+                            idchinhsach = object.getInt("id");
+                            tenchinhsach = object.getString("tenchinhsach");
+                            noidungchinhsach = object.getString("noidung");
+                            mangchinhsach.add(new Banner(idchinhsach, tenchinhsach, noidungchinhsach));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        requestQueue.add(jsonArrayRequest);
+
 
     }
 
@@ -83,8 +124,6 @@ public class MainFragment extends Fragment {
             @Override
             public void onResponse(JSONArray response) {
                 if (response != null) {
-
-                    ImageList.clear();
                     for (int i = 0; i < 9; i++) {
                         try {
                             JSONObject object = response.getJSONObject(i);
@@ -94,7 +133,6 @@ public class MainFragment extends Fragment {
                             hinhanhhang = object.getString("hinhanhhang");
                             manghangsanpham.add(new HangSanPham(id, tenhang, hinhanhhang));
 
-                            ImageList.add(i, hinhanhhang);
                             mainAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -114,23 +152,44 @@ public class MainFragment extends Fragment {
     }
 
     private void actionViewFlipper() {
-        ArrayList<Integer> mangquangcao = new ArrayList<>();
-        mangquangcao.add(R.drawable.banner01);
-        mangquangcao.add(R.drawable.banner04);
 
-        for (int i = 0; i < mangquangcao.size(); i++) {
-            ImageView imageView = new ImageView(getContext());
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            imageView.setImageResource(mangquangcao.get(i));
-            viewFlipper.addView(imageView);
-        }
-        viewFlipper.setFlipInterval(10000);
-        viewFlipper.setAutoStart(true);
-        Animation animationSlideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_right);
-        Animation animationSlideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_right);
-        viewFlipper.setInAnimation(animationSlideIn);
-        viewFlipper.setOutAnimation(animationSlideOut);
+        final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Server.duongdananhbanner, new Response.Listener<JSONArray>() {
 
+            @Override
+            public void onResponse(JSONArray response) {
+                if (response != null) {
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject object = response.getJSONObject(i);
+                            id = object.getInt("id");
+
+                            tenhang = object.getString("tenbanner");
+                            hinhanhhang = object.getString("anhbanner");
+                            manganhbanner.add(new Banner(id, tenhang, hinhanhhang));
+                            ImageView imageView = new ImageView(getContext());
+                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                            Picasso.get().load(hinhanhhang).into(imageView);
+                            viewFlipper.addView(imageView);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    viewFlipper.setFlipInterval(10000);
+                    viewFlipper.setAutoStart(true);
+                    Animation animationSlideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_right);
+                    Animation animationSlideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_right);
+                    viewFlipper.setInAnimation(animationSlideIn);
+                    viewFlipper.setOutAnimation(animationSlideOut);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        requestQueue.add(jsonArrayRequest);
 
     }
 

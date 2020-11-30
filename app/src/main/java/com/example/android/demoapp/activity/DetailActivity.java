@@ -2,10 +2,12 @@ package com.example.android.demoapp.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -26,11 +29,13 @@ import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.YeuThichViewModel;
+import com.example.android.demoapp.adapter.CatalogAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
 import com.example.android.demoapp.fragment.MainFragment;
 import com.example.android.demoapp.model.SanPham;
+import com.example.android.demoapp.utils.CheckConnection;
 import com.example.android.demoapp.utils.Server;
 import com.github.chrisbanes.photoview.PhotoView;
 
@@ -78,7 +83,7 @@ public class DetailActivity extends AppCompatActivity {
     BadgeDrawable badgeDrawableGioHang;
     List<GioHangEntry> gioHangEntries;
     List<YeuThichEntry> yeuThichEntries;
-    ArrayList<String> anhhangsp;
+    ProgressBar mProgressBar;
 
 
     @Override
@@ -106,17 +111,16 @@ public class DetailActivity extends AppCompatActivity {
         devider2 = findViewById(R.id.devider2);
         cardViewSpinner = findViewById(R.id.card_view_spinner);
         imgChiTiet.setClipToOutline(true);
+        mProgressBar= findViewById(R.id.progress_bar);
 
 
         eventSpinner();
         yeuthichEvent();
 
         Intent intent = getIntent();
-
-        anhhangsp = MainFragment.ImageList;
         if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
             idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_ID);
-            Picasso.get().load(anhhangsp.get(idHang)).into(imageViewHangSp);
+            Picasso.get().load(MainFragment.manghangsanpham.get(idHang).getAnhHang()).into(imageViewHangSp);
 
         }
         imageViewHangSp.setOnClickListener(new View.OnClickListener() {
@@ -194,10 +198,19 @@ public class DetailActivity extends AppCompatActivity {
         badgeDrawableGioHang.setMaxCharacterCount(3);
         badgeDrawableYeuthich.setMaxCharacterCount(3);
 
-        if (intent != null && intent.hasExtra(EXTRA_SANPHAM_ID)) {
 
+        if (intent != null && intent.hasExtra(EXTRA_SANPHAM_ID)) {
             idsanpham = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
-            getsanphamtheoid(idsanpham);
+
+            if (CheckConnection.haveNetworkConnection(DetailActivity.this)) {
+                getsanphamtheoid(idsanpham);
+
+            } else {
+                CheckConnection.showToast_Short(DetailActivity.this, "Không có kết nối Internet!");
+                DetailActivity.this.finish();
+
+            }
+
 
             YeuThichViewModel viewModel = ViewModelProviders.of(this).get(YeuThichViewModel.class);
             viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
@@ -249,6 +262,8 @@ public class DetailActivity extends AppCompatActivity {
                         JSONArray json = new JSONArray(response);
                             JSONObject object = json.getJSONObject(0);
                             populateUI(new SanPham(object.getInt("id"), object.getInt("idHang"), object.getString("tenSanPham"), object.getDouble("giaSanPham"), object.getString("hinhAnhSanPham"), object.getString("khoiLuong"), object.getString("moTa"), object.getString("thuongHieu"), object.getString("xuatXu")));
+                            mProgressBar.setVisibility(View.GONE);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -458,20 +473,18 @@ public class DetailActivity extends AppCompatActivity {
         intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_HANG_ID) && intent.hasExtra(EXTRA_SANPHAM_ID)) {
             idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_ID);
-            Picasso.get().load(anhhangsp.get(idHang)).into(imageViewHangSp);
+            Picasso.get().load(MainFragment.manghangsanpham.get(idHang).getAnhHang()).into(imageViewHangSp);
             idsanpham = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
-            getsanphamtheoid(idsanpham);
+            mProgressBar.setVisibility(View.VISIBLE);
+            if (CheckConnection.haveNetworkConnection(DetailActivity.this)) {
+                getsanphamtheoid(idsanpham);
 
-/*
-            idsanpham = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
-            for (SanPham sanPham : sanPhams) {
-                if (sanPham.getId() == idsanpham) {
-                    populateUI(sanPham);
-                    Toast.makeText(this, "KhoiLuong: " + sanPham.getKhoiLuong(), Toast.LENGTH_LONG).show();
+            } else {
+                CheckConnection.showToast_Short(DetailActivity.this, "Không có kết nối Internet!");
+                DetailActivity.this.finish();
 
-                }
             }
-*/
+
         }
         super.onNewIntent(intent);
     }

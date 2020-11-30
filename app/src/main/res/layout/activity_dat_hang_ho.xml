@@ -1,65 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_tim_do"
-        android:layout_width="match_parent"
-        app:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
-        app:titleMarginStart="40dp"
-        app:titleTextColor="#FFFFFF"
-        android:layout_height="@dimen/action_barsize"
-        android:background="@drawable/gradient_toolbar"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp"/>
 
-<!--    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="16dp"
-        android:textColorHighlight="@color/colorAccent"
-        android:textStyle="bold"
-        android:padding="10dp"
-        android:textSize="@dimen/tilte_size"
-        android:gravity="center_horizontal"
-        android:text="Đặt hàng theo yêu cầu"/>-->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_tim_do"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/action_barsize"
+            android:background="@drawable/gradient_toolbar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleMarginStart="40dp"
+            app:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
+            app:titleTextColor="#FFFFFF"
+            tools:layout_editor_absoluteX="0dp" />
 
-    <TextView
-        android:layout_marginTop="24dp"
+        <!--    <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:textColorHighlight="@color/colorAccent"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:textSize="@dimen/tilte_size"
+                android:gravity="center_horizontal"
+                android:text="Đặt hàng theo yêu cầu"/>-->
 
-        android:id="@+id/tv_dat_hang_ho_thong_tin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-        android:text="Thông tin"
-        android:textSize="@dimen/description"
-  />
+        <TextView
+            android:id="@+id/tv_dat_hang_ho_thong_tin"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center_vertical"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+            android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+            android:text="Thông tin"
+            android:textSize="@dimen/description" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:visibility="invisible"
+            android:id="@+id/recycler_view_dathangho"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:minHeight="450dp"
+            android:numColumns="3"
+            android:paddingTop="10dp" />
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:paddingTop="10dp"
-        android:id="@+id/recycler_view_dathangho"
-        android:layout_width="match_parent"
-        android:minHeight="450dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:numColumns="3"
-        />
-
-
-</LinearLayout>
+    </LinearLayout>
 </ScrollView>

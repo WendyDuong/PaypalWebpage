@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.android.demoapp.R;
+import com.example.android.demoapp.fragment.MainFragment;
 
 public class ThanhToan extends AppCompatActivity {
     @Override
@@ -18,7 +19,7 @@ public class ThanhToan extends AppCompatActivity {
         setContentView(R.layout.activity_thanh_toan);
         Toolbar toolbar = findViewById(R.id.toolbar_tim_do);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Hình thức thanh toán");
+        getSupportActionBar().setTitle(MainFragment.mangchinhsach.get(0).getTenbanner());
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,7 +29,7 @@ public class ThanhToan extends AppCompatActivity {
             }
         });
         TextView tv = findViewById(R.id.tv_thanh_toan);
-        tv.setText(R.string.thong_tin_thanh_toan);
+        tv.setText(MainFragment.mangchinhsach.get(0).getAnhbanner());
 
     }
 }

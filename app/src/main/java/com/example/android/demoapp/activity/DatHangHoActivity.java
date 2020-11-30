@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.adapter.DatHangHoAdapter;
+import com.example.android.demoapp.fragment.MainFragment;
 import com.example.android.demoapp.model.HangSanPham;
 import com.example.android.demoapp.utils.CheckConnection;
 import com.example.android.demoapp.utils.Server;
@@ -38,6 +40,7 @@ public class DatHangHoActivity extends AppCompatActivity {
     int id = 0;
     String tenhang = "";
     String hinhanhhang = "";
+    ProgressBar progressBar;
 
     Context context;
 
@@ -46,55 +49,16 @@ public class DatHangHoActivity extends AppCompatActivity {
     RecyclerView recyclerDatHangHo;
     public static final ArrayList<String> ImageList = new ArrayList<>();
 
-/*
-    public static final List<Integer> ImageList = new ArrayList<Integer>() {{
-        add(R.drawable.logo_adidas);
-        add(R.drawable.logo_nike);
-        add(R.drawable.logo_amazon);
-        add(R.drawable.logo_bershka);
-        add(R.drawable.logo_ca);
-        add(R.drawable.logo_esprit);
-        add(R.drawable.logo_hm);
-        add(R.drawable.logo_mango);
-        add(R.drawable.logo_massimodutti);
-        add(R.drawable.logo_zara);
-        add(R.drawable.logo_pb);
-        add(R.drawable.logo_douglas);
-        add(R.drawable.logo_wmf);
-        add(R.drawable.logo_silit);
-        add(R.drawable.muller);
-        add(R.drawable.logo_dm);
-        add(R.drawable.logo_saturn);
-        add(R.drawable.apotheke_logo);
-        add(R.drawable.rossmann_logo);
-        add(R.drawable.worldofsweet);
-        add(R.drawable.mediamarkt_logo);
-    }};
-*/
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dat_hang_ho);
-        recyclerDatHangHo = findViewById(R.id.recycler_view_dathangho);
-        manghangsanpham = new ArrayList<>();
-        if (CheckConnection.haveNetworkConnection(DatHangHoActivity.this)) {
-            gethangsanpham();
-
-        datHangHoAdapter = new DatHangHoAdapter(DatHangHoActivity.this, ImageList);
-        recyclerDatHangHo.setHasFixedSize(true);
-        recyclerDatHangHo.setLayoutManager(new GridLayoutManager(DatHangHoActivity.this,3));
-        recyclerDatHangHo.setAdapter(datHangHoAdapter);
-
-        } else {
-            CheckConnection.showToast_Short(DatHangHoActivity.this, "Không có kết nối Internet!");
-        }
-
         Toolbar toolbar = findViewById(R.id.toolbar_tim_do);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle("Đặt hàng theo yêu cầu");
+        getSupportActionBar().setTitle(MainFragment.mangchinhsach.get(2).getTenbanner());
+
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +68,31 @@ public class DatHangHoActivity extends AppCompatActivity {
             }
         });
         TextView tv = findViewById(R.id.tv_dat_hang_ho_thong_tin);
-        tv.setText(R.string.dat_hang_ho);
+
+
+        recyclerDatHangHo = findViewById(R.id.recycler_view_dathangho);
+        manghangsanpham = new ArrayList<>();
+        if (CheckConnection.haveNetworkConnection(DatHangHoActivity.this)) {
+
+            progressBar = findViewById(R.id.progress_bar);
+            tv.setText(MainFragment.mangchinhsach.get(2).getAnhbanner());
+            gethangsanpham();
+
+
+        datHangHoAdapter = new DatHangHoAdapter(DatHangHoActivity.this, ImageList);
+        recyclerDatHangHo.setHasFixedSize(true);
+        recyclerDatHangHo.setLayoutManager(new GridLayoutManager(DatHangHoActivity.this,3));
+        recyclerDatHangHo.setAdapter(datHangHoAdapter);
+        recyclerDatHangHo.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+
+        } else {
+            CheckConnection.showToast_Short(DatHangHoActivity.this, "Không có kết nối Internet!");
+            DatHangHoActivity.this.finish();
+        }
+
+
+
 
     }
     private void gethangsanpham() {

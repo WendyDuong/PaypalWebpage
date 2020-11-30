@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,10 +25,12 @@ import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.YeuThichViewModel;
 import com.example.android.demoapp.adapter.CatalogAdapter;
+import com.example.android.demoapp.adapter.DatHangHoAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
 import com.example.android.demoapp.model.SanPham;
+import com.example.android.demoapp.utils.CheckConnection;
 import com.example.android.demoapp.utils.Server;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.tabs.TabLayout;
@@ -59,6 +61,8 @@ public class FindActivity extends AppCompatActivity {
     List<GioHangEntry> gioHangEntries;
     List<YeuThichEntry> yeuThichEntries;
     ArrayList<SanPham> sanPhams;
+
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,13 +147,35 @@ public class FindActivity extends AppCompatActivity {
             mTenSanPham = intent.getStringExtra(EXTRA_TEN_SAN_PHAM_TIM_KIEM);
             String BarTitle;
             assert mTenSanPham != null;
-            if (mTenSanPham.length() > 8) {
-                BarTitle = mTenSanPham.substring(0, 9) + "...";
+            if (mTenSanPham.length() > 7) {
+                BarTitle = mTenSanPham.substring(0, 8) + "...";
             } else {
                 BarTitle = mTenSanPham;
             }
             Objects.requireNonNull(getSupportActionBar()).setTitle(BarTitle);
-            getsanphamtheoten(mTenSanPham);
+            if (CheckConnection.haveNetworkConnection(FindActivity.this)) {
+                getsanphamtheoten(mTenSanPham);
+                timKiemAdapter = new CatalogAdapter(FindActivity.this, sanPhams);
+                progressBar = findViewById(R.id.progress_bar);
+
+                recyclerView = (RecyclerView) findViewById(R.id.recycler_view_tim_do);
+                recyclerView.setHasFixedSize(true);
+                Configuration config = getResources().getConfiguration();
+                if (config.smallestScreenWidthDp >= 720) {
+                    recyclerView.setLayoutManager(new GridLayoutManager(FindActivity.this, 3));
+                } else {
+                    recyclerView.setLayoutManager(new GridLayoutManager(FindActivity.this, 2));
+                }
+                recyclerView.setAdapter(timKiemAdapter);
+                recyclerView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+
+
+            } else {
+                CheckConnection.showToast_Short(FindActivity.this, "Không có kết nối Internet!");
+                FindActivity.this.finish();
+
+            }
 
 
             final YeuThichViewModel viewModel
@@ -190,33 +216,22 @@ public class FindActivity extends AppCompatActivity {
 
         }
 
-        timKiemAdapter = new CatalogAdapter(FindActivity.this, sanPhams);
-
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_tim_do);
-        recyclerView.setHasFixedSize(true);
-        Configuration config = getResources().getConfiguration();
-        if (config.smallestScreenWidthDp >= 720) {
-            recyclerView.setLayoutManager(new GridLayoutManager(FindActivity.this, 3));
-        } else {
-            recyclerView.setLayoutManager(new GridLayoutManager(FindActivity.this, 2));
-        }
-        recyclerView.setAdapter(timKiemAdapter);
 
     }
 
     private void getsanphamtheoten(String tenSanPham) {
-        RequestQueue requestQueue= Volley.newRequestQueue(FindActivity.this);
-        final String duongdan = Server.duongdansanphamtheoten+tenSanPham;
+        RequestQueue requestQueue = Volley.newRequestQueue(FindActivity.this);
+        final String duongdan = Server.duongdansanphamtheoten + tenSanPham;
         StringRequest str = new StringRequest(Request.Method.POST, duongdan, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if(response!=null){
+                if (response != null) {
                     try {
-                        JSONArray json=new JSONArray(response);
+                        JSONArray json = new JSONArray(response);
                         int dodai = json.length();
-                        for(int i = 0; i < json.length(); i++){
-                            JSONObject object=json.getJSONObject(i);
-                            sanPhams.add(new SanPham(object.getInt("id"),object.getInt("idHang"),object.getString("tenSanPham"),object.getDouble("giaSanPham"),object.getString("hinhAnhSanPham"),object.getString("khoiLuong"),object.getString("moTa"),object.getString("thuongHieu"),object.getString("xuatXu")));
+                        for (int i = 0; i < json.length(); i++) {
+                            JSONObject object = json.getJSONObject(i);
+                            sanPhams.add(new SanPham(object.getInt("id"), object.getInt("idHang"), object.getString("tenSanPham"), object.getDouble("giaSanPham"), object.getString("hinhAnhSanPham"), object.getString("khoiLuong"), object.getString("moTa"), object.getString("thuongHieu"), object.getString("xuatXu")));
                             timKiemAdapter.notifyDataSetChanged();
                         }
 
@@ -225,7 +240,6 @@ public class FindActivity extends AppCompatActivity {
                     }
 
                 }
-                Toast.makeText(FindActivity.this, "sanphamSize: "+sanPhams.size(),Toast.LENGTH_SHORT).show();
 
                 if (sanPhams.size() > 0)
                     emptyTv.setVisibility(View.INVISIBLE);
@@ -238,16 +252,14 @@ public class FindActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
 
             }
-        })
-        {
+        }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> param=new HashMap<String, String>();
+                HashMap<String, String> param = new HashMap<String, String>();
                 param.put(EXTRA_TEN_SAN_PHAM_TIM_KIEM, EXTRA_TEN_SAN_PHAM_TIM_KIEM);
                 return param;
             }
-        }
-                ;
+        };
         requestQueue.add(str);
 
     }
