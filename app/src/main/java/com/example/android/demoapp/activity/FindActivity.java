@@ -3,10 +3,15 @@ package com.example.android.demoapp.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -24,6 +29,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.YeuThichViewModel;
+import com.example.android.demoapp.adapter.CatalogAdapter;
 import com.example.android.demoapp.adapter.FindAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
@@ -53,7 +59,7 @@ public class FindActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private TabLayout.Tab tabGioHang;
     private TabLayout.Tab tabYeuThich;
-    FindAdapter timKiemAdapter;
+    CatalogAdapter timKiemAdapter;
     RecyclerView recyclerView;
     public static BadgeDrawable badgeDrawableGioHang;
     public static BadgeDrawable badgeDrawableYeuthich;
@@ -61,13 +67,81 @@ public class FindActivity extends AppCompatActivity {
     List<YeuThichEntry> yeuThichEntries;
     ArrayList<SanPham> sanPhams;
 
-    ProgressBar progressBar;
+    ProgressBar mProgressBar;
+    private boolean loading = false;
+    private boolean limitData = false;
+    mHandler mHandler;
+    private int page = 1;
+    private int visibleItemCount, totalItemCount, pastVisiblesItems;
+    GridLayoutManager gridLayoutManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find);
-        emptyTv = findViewById(R.id.find_empty_tv);
+        populateUI();
+        actionToolbar();
+
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(EXTRA_TEN_SAN_PHAM_TIM_KIEM)) {
+
+            mTenSanPham = intent.getStringExtra(EXTRA_TEN_SAN_PHAM_TIM_KIEM);
+            String BarTitle;
+            assert mTenSanPham != null;
+            if (mTenSanPham.length() > 7) {
+                BarTitle = mTenSanPham.substring(0, 8) + "...";
+            } else {
+                BarTitle = mTenSanPham;
+            }
+            Objects.requireNonNull(getSupportActionBar()).setTitle(BarTitle);
+            if (CheckConnection.haveNetworkConnection(FindActivity.this)) {
+                getsanphamtheoten(mTenSanPham, page);
+                loadMoreData();
+                recyclerView.setAdapter(timKiemAdapter);
+                recyclerView.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.GONE);
+
+
+            } else {
+                CheckConnection.showToast_Short(FindActivity.this, "Không có kết nối Internet!");
+                FindActivity.this.finish();
+
+            }
+        }
+
+
+    }
+    private void loadMoreData() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    //Scrolling down
+                    visibleItemCount = gridLayoutManager.getChildCount();
+                    totalItemCount = gridLayoutManager.getItemCount();
+                    pastVisiblesItems = gridLayoutManager.findFirstVisibleItemPosition();
+
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount && totalItemCount != 0 && loading == false && limitData== false) {
+
+                        loading = true;
+                        FindActivity.ThreadData threadData = new FindActivity.ThreadData();
+                        threadData.start();
+                    }
+                }
+            }
+        });
+    }
+
+
+    private void actionToolbar() {
         toolbar = findViewById(R.id.toolbar_tim_do);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back);
@@ -136,95 +210,75 @@ public class FindActivity extends AppCompatActivity {
             }
 
         });
+    }
 
+    private void populateUI() {
+        emptyTv = findViewById(R.id.find_empty_tv);
         sanPhams = new ArrayList<>();
         mDb = AppDatabase.getInstance(getApplicationContext());
 
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(EXTRA_TEN_SAN_PHAM_TIM_KIEM)) {
+        timKiemAdapter = new CatalogAdapter(FindActivity.this, sanPhams);
+        mProgressBar = findViewById(R.id.progress_bar);
 
-            mTenSanPham = intent.getStringExtra(EXTRA_TEN_SAN_PHAM_TIM_KIEM);
-            String BarTitle;
-            assert mTenSanPham != null;
-            if (mTenSanPham.length() > 7) {
-                BarTitle = mTenSanPham.substring(0, 8) + "...";
-            } else {
-                BarTitle = mTenSanPham;
-            }
-            Objects.requireNonNull(getSupportActionBar()).setTitle(BarTitle);
-            if (CheckConnection.haveNetworkConnection(FindActivity.this)) {
-                getsanphamtheoten(mTenSanPham);
-                timKiemAdapter = new FindAdapter(FindActivity.this, sanPhams);
-                progressBar = findViewById(R.id.progress_bar);
-
-                recyclerView = (RecyclerView) findViewById(R.id.recycler_view_tim_do);
-                recyclerView.setHasFixedSize(true);
-                Configuration config = getResources().getConfiguration();
-                if (config.smallestScreenWidthDp >= 720) {
-                    recyclerView.setLayoutManager(new GridLayoutManager(FindActivity.this, 3));
-                } else {
-                    recyclerView.setLayoutManager(new GridLayoutManager(FindActivity.this, 2));
-                }
-                recyclerView.setAdapter(timKiemAdapter);
-                recyclerView.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
-
-
-            } else {
-                CheckConnection.showToast_Short(FindActivity.this, "Không có kết nối Internet!");
-                FindActivity.this.finish();
-
-            }
-
-
-            final YeuThichViewModel viewModel
-                    = ViewModelProviders.of(this).get(YeuThichViewModel.class);
-
-
-            viewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
-                @Override
-                public void onChanged(@Nullable List<GioHangEntry> gioHang) {
-                    gioHangEntries = gioHang;
-                    int sosanphammua = 0;
-                    assert gioHangEntries != null;
-                    if (gioHangEntries.size() > 0) {
-                        for (int i = 0; i < gioHangEntries.size(); i++) {
-                            sosanphammua += gioHangEntries.get(i).getSoLuong();
-                        }
-                        badgeDrawableGioHang.setVisible(true);
-
-                        badgeDrawableGioHang.setNumber(sosanphammua);
-                    } else
-                        badgeDrawableGioHang.setVisible(false);
-                }
-            });
-
-            viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
-                @Override
-                public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
-                    yeuThichEntries = yeuThich;
-                    timKiemAdapter.setYeuThichs(yeuThich);
-                    assert yeuThichEntries != null;
-                    if (yeuThichEntries.size() > 0) {
-                        badgeDrawableYeuthich.setVisible(true);
-                        badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
-                    } else
-                        badgeDrawableYeuthich.setVisible(false);
-                }
-            });
-
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_tim_do);
+        recyclerView.setHasFixedSize(true);
+        Configuration config = getResources().getConfiguration();
+        if (config.smallestScreenWidthDp >= 720) {
+            gridLayoutManager = new GridLayoutManager(FindActivity.this, 3);
+            recyclerView.setLayoutManager(gridLayoutManager);
+        } else {
+            gridLayoutManager = new GridLayoutManager(FindActivity.this, 2);
+            recyclerView.setLayoutManager(gridLayoutManager);
         }
+
+        //ViewModel
+        final YeuThichViewModel viewModel
+                = ViewModelProviders.of(this).get(YeuThichViewModel.class);
+        viewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<GioHangEntry> gioHang) {
+                gioHangEntries = gioHang;
+                int sosanphammua = 0;
+                assert gioHangEntries != null;
+                if (gioHangEntries.size() > 0) {
+                    for (int i = 0; i < gioHangEntries.size(); i++) {
+                        sosanphammua += gioHangEntries.get(i).getSoLuong();
+                    }
+                    badgeDrawableGioHang.setVisible(true);
+
+                    badgeDrawableGioHang.setNumber(sosanphammua);
+                } else
+                    badgeDrawableGioHang.setVisible(false);
+            }
+        });
+
+        viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
+                yeuThichEntries = yeuThich;
+                timKiemAdapter.setYeuThichs(yeuThich);
+                assert yeuThichEntries != null;
+                if (yeuThichEntries.size() > 0) {
+                    badgeDrawableYeuthich.setVisible(true);
+                    badgeDrawableYeuthich.setNumber(yeuThichEntries.size());
+                } else
+                    badgeDrawableYeuthich.setVisible(false);
+            }
+        });
+        //End of ViewModel
+        mHandler = new FindActivity.mHandler();
 
 
     }
 
-    private void getsanphamtheoten(String tenSanPham) {
+    private void getsanphamtheoten(String tenSanPham, final int page) {
         RequestQueue requestQueue = Volley.newRequestQueue(FindActivity.this);
-        final String duongdan = Server.duongdansanphamtheoten + tenSanPham;
+        final String duongdan = Server.duongdansanphamtheoten + tenSanPham +"&page=" + page;
         StringRequest str = new StringRequest(Request.Method.POST, duongdan, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if (response != null) {
+                if (response != null && response.length()!=2) {
+                    mProgressBar.setVisibility(View.GONE);
                     try {
                         JSONArray json = new JSONArray(response);
                         int dodai = json.length();
@@ -237,14 +291,17 @@ public class FindActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    if (sanPhams.size() > 0){
+                        emptyTv.setVisibility(View.INVISIBLE);
+                    }
+                    else{
+                        emptyTv.setVisibility(View.VISIBLE);}
+                }else{
+                    limitData = true;
+                    mProgressBar.setVisibility(View.GONE);
+                    CheckConnection.showToast_Short(getApplicationContext(),"Đã hết dữ liệu");
 
                 }
-
-                if (sanPhams.size() > 0)
-                    emptyTv.setVisibility(View.INVISIBLE);
-                else
-                    emptyTv.setVisibility(View.VISIBLE);
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -261,6 +318,40 @@ public class FindActivity extends AppCompatActivity {
         };
         requestQueue.add(str);
 
+    }
+
+    public class mHandler extends Handler {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what){
+                case 0:
+                    // TODO  recyclerView.addFooterView(footerview)
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    break;
+                case 1:
+                    getsanphamtheoten(mTenSanPham,++page);
+                    loading = false;
+                    break;
+
+            }
+            super.handleMessage(msg);
+        }
+    }
+    public class ThreadData extends Thread{
+        @Override
+        public void run() {
+            mHandler.sendEmptyMessage(0);
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Message message = mHandler.obtainMessage(1);
+            mHandler.sendMessage(message);
+
+            super.run();
+        }
     }
 
     @Override
