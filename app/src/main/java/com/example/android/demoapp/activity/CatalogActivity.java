@@ -6,13 +6,14 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +24,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ILoadMore;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -50,15 +52,19 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 
 public class CatalogActivity extends AppCompatActivity {
+
+
     RecyclerView recyclerView;
     CatalogAdapter catalogAdapter;
     private AppDatabase mDb;
     private int idHang;
     private String anhHang;
     ProgressBar mProgressBar;
-    private boolean loading = false;
+    private boolean isLoading = false;
     private boolean limitData = false;
     mHandler mHandler;
     private int page = 1;
@@ -88,6 +94,7 @@ public class CatalogActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.catalog_activity);
+
         populateUI();
         actionToolbar();
         Intent intent = getIntent();
@@ -98,8 +105,10 @@ public class CatalogActivity extends AppCompatActivity {
 
             //Load data from server in sanphams array
             if (CheckConnection.haveNetworkConnection(CatalogActivity.this)) {
-                loadMoreData();
 
+
+
+                getData(page);
 /*
                 scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
                     @Override
@@ -108,48 +117,42 @@ public class CatalogActivity extends AppCompatActivity {
                     }
                 };
 */
-                catalogAdapter = new CatalogAdapter(CatalogActivity.this, sanPhams);
-                recyclerView.addOnScrollListener(scrollListener);
+                catalogAdapter = new CatalogAdapter(recyclerView,CatalogActivity.this, sanPhams);
                 recyclerView.setAdapter(catalogAdapter);
                 recyclerView.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.GONE);
-/*
-                recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                catalogAdapter.setLoadMore(new ILoadMore() {
                     @Override
-                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                        super.onScrollStateChanged(recyclerView, newState);
-                        if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                            isScrolling = true;
-                            mProgressBar.setVisibility(View.GONE);
+                    public void onLoadMore() {
+                        if(sanPhams.size() <= 50) // Change max size
+                        {
 
-                        }
+                            //notify Adapter that null element like loading VIew
+                            sanPhams.add(null);
+                            catalogAdapter.notifyItemInserted(sanPhams.size()-1);
 
-                    }
+                            /*ThreadData threadData = new ThreadData();
+                            threadData.start();
+                            sanPhams.remove(sanPhams.size()-1);
+                            catalogAdapter.notifyItemRemoved(sanPhams.size());
+                            isLoading = true ;*/
 
-                    @Override
-                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
-                        if (dy > 0) {
-                            currentItems = gridLayoutManager.getChildCount();
-                            totalItems = gridLayoutManager.getItemCount();
-                            scrollOutItems = gridLayoutManager.findFirstVisibleItemPosition();
+                            new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    sanPhams.remove(sanPhams.size()-1);
+                                    catalogAdapter.notifyItemRemoved(sanPhams.size());
+                                    getData(++page);
 
-                            if (isScrolling && (currentItems + scrollOutItems == totalItems)) {
-                                isScrolling = false;
-                                if (getItemsByLabelCalled) {
-                                    for (int i = 1; i < 7; i++) {
-                                        if (navigationView.getMenu().getItem(i).isChecked()) {
-                                            getItemsByLabel(navigationView.getMenu().getItem(i).getTitle().toString());
-                                        }
-                                    }
-                                } else {
-                                    getData();
+                                    catalogAdapter.notifyDataSetChanged();
+                                    catalogAdapter.setLoaded();
                                 }
-                            }
+                            },3000); // Time to load
+                        }else{
+                            Toast.makeText(CatalogActivity.this, "Đã tải hết sản phẩm!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-*/
             } else {
                 CheckConnection.showToast_Short(CatalogActivity.this, "Không có kết nối Internet!");
                 CatalogActivity.this.finish();
@@ -159,6 +162,7 @@ public class CatalogActivity extends AppCompatActivity {
 
     }
 
+/*
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void loadMoreData() {
 
@@ -184,11 +188,14 @@ public class CatalogActivity extends AppCompatActivity {
                     totalItemCount = gridLayoutManager.getItemCount();
                     pastVisiblesItems = gridLayoutManager.findFirstVisibleItemPosition();
 
-                    if (loading) {
-                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount && totalItemCount != 0 && loading == false && limitData== false) {
-                            loading = true ;
+                    if (isLoading) {
+                        //if ((visibleItemCount + pastVisiblesItems) >= totalItemCount && totalItemCount != 0 && loading == false && limitData== false) {
+                        if (!isLoading && totalItemCount <= (pastVisiblesItems + CatalogAdapter.visibleThreshold)){
+                            if(loadMore != null)
+                                loadmore.onLoad
                             ThreadData threadData = new ThreadData();
                             threadData.start();
+                            isLoading = true ;
 
 
                         }
@@ -202,9 +209,12 @@ public class CatalogActivity extends AppCompatActivity {
             }
         });
     }
+*/
 
 
     private void actionToolbar() {
+        //Toast.makeText(this,"actionToolbar",Toast.LENGTH_SHORT).show();
+
         tabLayout = (TabLayout) findViewById(R.id.tab_layout2);
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.iconhome));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.kinh_lup_icon));
@@ -323,10 +333,13 @@ public class CatalogActivity extends AppCompatActivity {
     }
 
     private void populateUI() {
+        //Toast.makeText(this,"populateUI",Toast.LENGTH_SHORT).show();
         sanPhams = new ArrayList<SanPham>();
         mDb = AppDatabase.getInstance(getApplicationContext());
         mProgressBar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.recycler_view_catalog);
+        //Toast.makeText(this,"created recyclerView",Toast.LENGTH_SHORT).show();
+
         recyclerView.setHasFixedSize(true);
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         footerview = inflater.inflate(R.layout.progressbar, null);
@@ -349,6 +362,8 @@ public class CatalogActivity extends AppCompatActivity {
 
 
     private void getData(int page) {
+        Toast.makeText(this,"getData page: "+page,Toast.LENGTH_SHORT).show();
+
         RequestQueue requestQueue= Volley.newRequestQueue(CatalogActivity.this);
         String duongdan;
         switch (idHang){
@@ -423,7 +438,7 @@ public class mHandler extends Handler{
                 break;
             case 1:
                 getData(++page);
-                loading = false;
+                //isLoading = false;
                 break;
 
         }

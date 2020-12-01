@@ -24,8 +24,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.YeuThichViewModel;
-import com.example.android.demoapp.adapter.CatalogAdapter;
-import com.example.android.demoapp.adapter.DatHangHoAdapter;
+import com.example.android.demoapp.adapter.FindAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
@@ -54,7 +53,7 @@ public class FindActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private TabLayout.Tab tabGioHang;
     private TabLayout.Tab tabYeuThich;
-    CatalogAdapter timKiemAdapter;
+    FindAdapter timKiemAdapter;
     RecyclerView recyclerView;
     public static BadgeDrawable badgeDrawableGioHang;
     public static BadgeDrawable badgeDrawableYeuthich;
@@ -155,7 +154,7 @@ public class FindActivity extends AppCompatActivity {
             Objects.requireNonNull(getSupportActionBar()).setTitle(BarTitle);
             if (CheckConnection.haveNetworkConnection(FindActivity.this)) {
                 getsanphamtheoten(mTenSanPham);
-                timKiemAdapter = new CatalogAdapter(FindActivity.this, sanPhams);
+                timKiemAdapter = new FindAdapter(FindActivity.this, sanPhams);
                 progressBar = findViewById(R.id.progress_bar);
 
                 recyclerView = (RecyclerView) findViewById(R.id.recycler_view_tim_do);
