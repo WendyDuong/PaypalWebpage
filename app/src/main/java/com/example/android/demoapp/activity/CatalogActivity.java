@@ -132,6 +132,8 @@ public class CatalogActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
                 yeuThichEntries = yeuThich;
+                Toast.makeText(CatalogActivity.this, "Viewmodel 1: ",Toast.LENGTH_SHORT).show();
+
                 catalogAdapter.setYeuThichs(yeuThich);
                 assert yeuThichEntries != null;
                 if (yeuThichEntries.size() > 0) {
@@ -357,13 +359,13 @@ public class CatalogActivity extends AppCompatActivity {
             getData(page);
             loadMoreData();
 
-           /* final YeuThichViewModel viewModel1
+          /*  final YeuThichViewModel viewModel1
                     = ViewModelProviders.of(this).get(YeuThichViewModel.class);
 
             viewModel1.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
                 @Override
                 public void onChanged(List<YeuThichEntry> yeuThichEntries) {
-                    Toast.makeText(CatalogActivity.this, "onChange: ",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CatalogActivity.this, "Viewmodel: ",Toast.LENGTH_SHORT).show();
 
                     catalogAdapter.setYeuThichs(yeuThichEntries);
                 }

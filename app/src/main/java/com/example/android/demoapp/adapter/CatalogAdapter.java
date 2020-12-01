@@ -53,6 +53,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
     private ArrayList<SanPham> sanPhams;
     private int iD;
     private int idHang;
+    public static int timDoList;
     private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
     private static final String EXTRA_HANG_ID = "extraHangId";
     private static final String EXTRA_ANH_HANG = "extraAnhHang";
@@ -180,8 +181,6 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
     public void setYeuThichs(List<YeuThichEntry> yeuThichEntries){
         this.mYeuThichEntries = yeuThichEntries;
         notifyDataSetChanged();
-
-
     }
 
 

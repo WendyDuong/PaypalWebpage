@@ -442,7 +442,6 @@ public class DetailActivity extends AppCompatActivity {
             for (int vitritim = 0; vitritim < yeuThichEntries.size(); vitritim++) {
                 if (yeuThichEntries.get(vitritim).getIdSanPham() == idsanpham) {
                     timImageView.setImageResource(R.drawable.timdo24);
-
                     exit = true;
                 }
             }
