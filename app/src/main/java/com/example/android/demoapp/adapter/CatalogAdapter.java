@@ -180,7 +180,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
 
     public void setYeuThichs(List<YeuThichEntry> yeuThichEntries){
         this.mYeuThichEntries = yeuThichEntries;
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
 

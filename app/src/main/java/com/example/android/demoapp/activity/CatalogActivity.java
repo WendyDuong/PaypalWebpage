@@ -132,8 +132,6 @@ public class CatalogActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<YeuThichEntry> yeuThich) {
                 yeuThichEntries = yeuThich;
-                Toast.makeText(CatalogActivity.this, "Viewmodel 1: ",Toast.LENGTH_SHORT).show();
-
                 catalogAdapter.setYeuThichs(yeuThich);
                 assert yeuThichEntries != null;
                 if (yeuThichEntries.size() > 0) {
@@ -355,21 +353,10 @@ public class CatalogActivity extends AppCompatActivity {
             idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_HANG_ID);
             anhHang = MainFragment.manghangsanpham.get(idHang).getAnhHang();
             Picasso.get().load(anhHang).error(R.drawable.error).into(imageViewNhaCungCap);
-            Toast.makeText(CatalogActivity.this, "idHang: " + idHang, Toast.LENGTH_SHORT).show();
             getData(page);
             loadMoreData();
 
-          /*  final YeuThichViewModel viewModel1
-                    = ViewModelProviders.of(this).get(YeuThichViewModel.class);
 
-            viewModel1.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
-                @Override
-                public void onChanged(List<YeuThichEntry> yeuThichEntries) {
-                    Toast.makeText(CatalogActivity.this, "Viewmodel: ",Toast.LENGTH_SHORT).show();
-
-                    catalogAdapter.setYeuThichs(yeuThichEntries);
-                }
-            });*/
         }
 
 
@@ -379,6 +366,22 @@ public class CatalogActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         getViewModelStore().clear();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        final YeuThichViewModel viewModel1
+                = ViewModelProviders.of(this).get(YeuThichViewModel.class);
+
+        viewModel1.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
+            @Override
+            public void onChanged(List<YeuThichEntry> yeuThichEntries) {
+                viewModel1.getYeuThich().removeObserver(this);
+                catalogAdapter.setYeuThichs(yeuThichEntries);
+                catalogAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     public class mHandler extends Handler {

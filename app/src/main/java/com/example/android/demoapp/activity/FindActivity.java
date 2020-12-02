@@ -355,8 +355,24 @@ public class FindActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        getViewModelStore().clear();
+    }
+
+    @Override
     protected void onRestart() {
-        timKiemAdapter.notifyDataSetChanged();
         super.onRestart();
+        final YeuThichViewModel viewModel1
+                = ViewModelProviders.of(this).get(YeuThichViewModel.class);
+
+        viewModel1.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
+            @Override
+            public void onChanged(List<YeuThichEntry> yeuThichEntries) {
+                viewModel1.getYeuThich().removeObserver(this);
+                timKiemAdapter.setYeuThichs(yeuThichEntries);
+                timKiemAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }
