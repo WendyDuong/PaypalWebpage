@@ -3,7 +3,9 @@ package com.example.android.demoapp.model;
 
 import androidx.room.Ignore;
 
-public class SanPham {
+import java.io.Serializable;
+
+public class SanPham implements Serializable {
     private  int id;
     private  int idHang;
     private String tenSanPham;

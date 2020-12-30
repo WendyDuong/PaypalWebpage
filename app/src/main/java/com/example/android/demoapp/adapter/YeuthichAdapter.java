@@ -108,6 +108,8 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                     Intent intentChiTiet = new Intent(mcontext, DetailActivity.class);
                     intentChiTiet.putExtra(EXTRA_HANG_ID, idhang);
                     intentChiTiet.putExtra(EXTRA_SANPHAM_ID, idintent);
+                    intentChiTiet.putExtra("chitietsanpham",yeuThichs.get(getLayoutPosition()));
+
                     intentChiTiet.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mcontext.startActivity(intentChiTiet);
                 }
@@ -151,6 +153,9 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                     final double giasanpham = yeuThichs.get(getLayoutPosition()).getGiaSanPham();
                     final String hinhanhsanpham = yeuThichs.get(getLayoutPosition()).getHinhAnhSanPham();
                     final int idHang = yeuThichs.get(getLayoutPosition()).getIdHang();
+                    final String moTa = yeuThichs.get(getLayoutPosition()).getMoTa();
+                    final String thuongHieu = yeuThichs.get(getLayoutPosition()).getThuongHieu();
+                    final String xuatXu = yeuThichs.get(getLayoutPosition()).getXuatXu();
 
                     if (mgioHangEntries.size() > 0) {
                         boolean exit = false;
@@ -164,7 +169,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham / 1000, 0) * 1000, hinhanhsanpham, khoiluongsanpham, 1, idHang));
+                                    mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham / 1000, 0) * 1000, hinhanhsanpham, khoiluongsanpham, 1, idHang, moTa, thuongHieu, xuatXu));
 
                                 }
                             });
@@ -174,7 +179,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham / 1000, 0) * 1000, hinhanhsanpham, khoiluongsanpham, 1, idHang));
+                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham / 1000, 0) * 1000, hinhanhsanpham, khoiluongsanpham, 1, idHang, moTa, thuongHieu, xuatXu));
                             }
                         });
                         Toast.makeText(mcontext, "Đã thêm " + tensanpham + " vào giỏ hàng", Toast.LENGTH_SHORT).show();

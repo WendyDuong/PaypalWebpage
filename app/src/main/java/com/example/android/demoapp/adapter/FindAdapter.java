@@ -215,12 +215,16 @@ public class FindAdapter extends RecyclerView.Adapter<FindAdapter.itemHolder> {
                         final double giasanpham = sanPhams.get(getLayoutPosition()).getGiaSanPham();
                         final String hinhanhsanpham = sanPhams.get(getLayoutPosition()).getHinhAnhSanPham();
                         final String khoiluongsanpham = sanPhams.get(getLayoutPosition()).getKhoiLuong();
+                        final String moTa = sanPhams.get(getLayoutPosition()).getMoTa();
+                        final String thuongHieu = sanPhams.get(getLayoutPosition()).getThuongHieu();
+                        final String xuatXu = sanPhams.get(getLayoutPosition()).getXuatXu();
+
                         imageViewTim.setImageResource(R.drawable.timdo24);
 
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham, hinhanhsanpham, khoiluongsanpham,idhang ));
+                                mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham, hinhanhsanpham, khoiluongsanpham,idhang, moTa, thuongHieu, xuatXu));
                             }
                         });
                     }

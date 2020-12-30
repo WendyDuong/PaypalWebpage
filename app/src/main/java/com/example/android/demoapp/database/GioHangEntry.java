@@ -5,8 +5,10 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "giohang")
-public class GioHangEntry {
+public class GioHangEntry implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -17,9 +19,13 @@ public class GioHangEntry {
     private String khoiLuong;
     private int soLuong;
     private int idHang;
+    private  String moTa;
+    private String thuongHieu;
+    private  String xuatXu;
+
 
     @Ignore
-    public GioHangEntry(int idSanPham, String tenSanPham, double giaSanPham, String hinhAnhSanPham, String khoiLuong, int soLuong, int idHang) {
+    public GioHangEntry(int idSanPham, String tenSanPham, double giaSanPham, String hinhAnhSanPham, String khoiLuong, int soLuong, int idHang, String moTa, String thuongHieu, String xuatXu) {
         this.idSanPham = idSanPham;
         this.tenSanPham = tenSanPham;
         this.giaSanPham = giaSanPham;
@@ -27,9 +33,12 @@ public class GioHangEntry {
         this.khoiLuong = khoiLuong;
         this.soLuong = soLuong;
         this.idHang = idHang;
+        this.moTa = moTa;
+        this.thuongHieu = thuongHieu;
+        this.xuatXu = xuatXu;
     }
 
-    public GioHangEntry(int id, int idSanPham, String tenSanPham, double giaSanPham, String hinhAnhSanPham, String khoiLuong, int soLuong, int idHang) {
+    public GioHangEntry(int id, int idSanPham, String tenSanPham, double giaSanPham, String hinhAnhSanPham, String khoiLuong, int soLuong, int idHang, String moTa, String thuongHieu, String xuatXu) {
         this.id = id;
         this.idSanPham = idSanPham;
         this.tenSanPham = tenSanPham;
@@ -38,6 +47,9 @@ public class GioHangEntry {
         this.khoiLuong = khoiLuong;
         this.soLuong = soLuong;
         this.idHang = idHang;
+        this.moTa = moTa;
+        this.thuongHieu = thuongHieu;
+        this.xuatXu = xuatXu;
     }
 
     public int getIdHang() {
@@ -102,5 +114,29 @@ public class GioHangEntry {
 
     public void setSoLuong(int soLuong) {
         this.soLuong = soLuong;
+    }
+
+    public String getMoTa() {
+        return moTa;
+    }
+
+    public void setMoTa(String moTa) {
+        this.moTa = moTa;
+    }
+
+    public String getThuongHieu() {
+        return thuongHieu;
+    }
+
+    public void setThuongHieu(String thuongHieu) {
+        this.thuongHieu = thuongHieu;
+    }
+
+    public String getXuatXu() {
+        return xuatXu;
+    }
+
+    public void setXuatXu(String xuatXu) {
+        this.xuatXu = xuatXu;
     }
 }

@@ -99,6 +99,8 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                     Intent intentChiTiet = new Intent(context, DetailActivity.class);
                     intentChiTiet.putExtra(EXTRA_SANPHAM_ID, idintent);
                     intentChiTiet.putExtra(EXTRA_HANG_ID, idHang);
+                    intentChiTiet.putExtra("chitietsanpham",gioHangs.get(getLayoutPosition()));
+
                     context.startActivity(intentChiTiet);
                 }
             });
@@ -145,13 +147,16 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                     final String khoiluongsanpham = gioHangs.get(getLayoutPosition()).getKhoiLuong();
                     final int idhang = gioHangs.get(getLayoutPosition()).getIdHang();
                     final int soluongsanphamcu= Integer.parseInt(textViewSoLuongItem.getText().toString());
+                    final String moTa = gioHangs.get(getLayoutPosition()).getMoTa();
+                    final String thuongHieu = gioHangs.get(getLayoutPosition()).getThuongHieu();
+                    final String xuatXu = gioHangs.get(getLayoutPosition()).getXuatXu();
                     final int soluongsanphammoi;
                     soluongsanphammoi = soluongsanphamcu + 1;
                     textViewSoLuongItem.setText(soluongsanphammoi+"");
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb.gioHangDao().updateGioHang(new GioHangEntry(id , idsanpham,tensanpham, giasanpham * soluongsanphammoi /soluongsanphamcu,  hinhanhsanpham,khoiluongsanpham,soluongsanphammoi,idhang ));
+                            mDb.gioHangDao().updateGioHang(new GioHangEntry(id , idsanpham,tensanpham, giasanpham * soluongsanphammoi /soluongsanphamcu,  hinhanhsanpham,khoiluongsanpham,soluongsanphammoi,idhang, moTa, thuongHieu, xuatXu));
 
                         }
                     });
@@ -178,13 +183,16 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                     final String khoiluongsanpham = gioHangs.get(getLayoutPosition()).getKhoiLuong();
                     final int soluongsanphamcu = Integer.parseInt(textViewSoLuongItem.getText().toString());
                     final int idhang = gioHangs.get(getLayoutPosition()).getIdHang();
+                    final String moTa = gioHangs.get(getLayoutPosition()).getMoTa();
+                    final String thuongHieu = gioHangs.get(getLayoutPosition()).getThuongHieu();
+                    final String xuatXu = gioHangs.get(getLayoutPosition()).getXuatXu();
                     final int soluongsanphammoi;
                     soluongsanphammoi = soluongsanphamcu - 1;
                     textViewSoLuongItem.setText(soluongsanphammoi + "");
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensanpham, giasanpham * soluongsanphammoi / soluongsanphamcu, hinhanhsanpham, khoiluongsanpham, soluongsanphammoi, idhang));
+                            mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensanpham, giasanpham * soluongsanphammoi / soluongsanphamcu, hinhanhsanpham, khoiluongsanpham, soluongsanphammoi, idhang, moTa, thuongHieu, xuatXu));
                         }
                     });
                     if (soluongsanphammoi < 2) {

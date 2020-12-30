@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     YeuThichViewModel mainViewModel;
     AppDatabase mDb;
 
-    ArrayList<SanPhamEntry> mangSanpham;
     int id = 0;
     String tenloaisp = "";
     String hinhanhloaisp = "";

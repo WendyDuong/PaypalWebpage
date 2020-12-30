@@ -2,7 +2,6 @@ package com.example.android.demoapp.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -17,9 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -29,7 +26,6 @@ import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.YeuThichViewModel;
-import com.example.android.demoapp.adapter.CatalogAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
@@ -51,9 +47,7 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class DetailActivity extends AppCompatActivity {
@@ -73,7 +67,7 @@ public class DetailActivity extends AppCompatActivity {
     ExtendedFloatingActionButton btnDatMua;
     String hinhanhsp;
     double giasp;
-    String tensp, khoiluongsp, thuongHieu, xuatXu;
+    String tensp, khoiluongsp, moTa, thuongHieu, xuatXu;
     private int idsanpham = DEFAULT_ID;
     Spinner spinner;
     TabLayout tabLayout;
@@ -201,17 +195,6 @@ public class DetailActivity extends AppCompatActivity {
 
         if (intent != null && intent.hasExtra(EXTRA_SANPHAM_ID)) {
             idsanpham = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
-
-            if (CheckConnection.haveNetworkConnection(DetailActivity.this)) {
-                getsanphamtheoid(idsanpham);
-
-            } else {
-                CheckConnection.showToast_Short(DetailActivity.this, "Không có kết nối Internet!");
-                DetailActivity.this.finish();
-
-            }
-
-
             YeuThichViewModel viewModel = ViewModelProviders.of(this).get(YeuThichViewModel.class);
             viewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
                 @Override
@@ -251,32 +234,9 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getsanphamtheoid(int idsanpham) {
-        RequestQueue requestQueue = Volley.newRequestQueue(DetailActivity.this);
-        final String duongdan = Server.duongdansanphamidsanpham + idsanpham;
-        StringRequest str = new StringRequest(Request.Method.POST, duongdan, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
 
-                if (response != null) {
-                    try {
-                        JSONArray json = new JSONArray(response);
-                            JSONObject object = json.getJSONObject(0);
-                            populateUI(new SanPham(object.getInt("id"), object.getInt("idHang"), object.getString("tenSanPham"), object.getDouble("giaSanPham"), object.getString("hinhAnhSanPham"), object.getString("khoiLuong"), object.getString("moTa"), object.getString("thuongHieu"), object.getString("xuatXu")));
-                            mProgressBar.setVisibility(View.GONE);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-        requestQueue.add(str);
-
+        SanPham sanPham= (SanPham) getIntent().getSerializableExtra("chitietsanpham");
+        populateUI(sanPham);
 
     }
 
@@ -290,7 +250,7 @@ public class DetailActivity extends AppCompatActivity {
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensp, giasp, hinhanhsp, khoiluongsp, idHang));
+                            mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensp, giasp, hinhanhsp, khoiluongsp, idHang, moTa, thuongHieu, xuatXu));
 
                         }
                     });
@@ -320,13 +280,12 @@ public class DetailActivity extends AppCompatActivity {
         khoiluongsp = sanPham.getKhoiLuong();
         thuongHieu = sanPham.getThuongHieu();
         xuatXu = sanPham.getXuatXu();
-
+        moTa = sanPham.getMoTa();
         //Rounding currency to make a easy reading
         giasp = sanPham.getGiaSanPham();
         giasp = Precision.round(giasp / 1000, 0) * 1000;
-
         tvTen.setText(tensp);
-        tvMoTa.setText(sanPham.getMoTa());
+        tvMoTa.setText(moTa);
         tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
         tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
         tvXuatXu.setText("Xuất xứ: " + xuatXu);
@@ -353,7 +312,7 @@ public class DetailActivity extends AppCompatActivity {
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * soluongmoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluongmoi, idHang));
+                                    mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * soluongmoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluongmoi, idHang, moTa, thuongHieu, xuatXu));
 
 
                                 }
@@ -366,7 +325,7 @@ public class DetailActivity extends AppCompatActivity {
                                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * 20) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, 50, idHang));
+                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * 20) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, 50, idHang, moTa, thuongHieu, xuatXu));
 
 
                                     }
@@ -391,7 +350,7 @@ public class DetailActivity extends AppCompatActivity {
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, Precision.round((giamoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluong, idHang));
+                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, Precision.round((giamoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluong, idHang, moTa, thuongHieu, xuatXu));
 
 
                             }
@@ -409,7 +368,7 @@ public class DetailActivity extends AppCompatActivity {
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, Precision.round((giamoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluong, idHang));
+                            mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, Precision.round((giamoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluong, idHang, moTa, thuongHieu, xuatXu));
 
 
                         }

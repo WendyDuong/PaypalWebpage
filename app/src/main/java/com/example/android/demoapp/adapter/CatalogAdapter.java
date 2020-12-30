@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,37 +13,21 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
-import com.example.android.demoapp.activity.CatalogActivity;
 import com.example.android.demoapp.activity.DetailActivity;
 import com.example.android.demoapp.database.AppDatabase;
-import com.example.android.demoapp.database.SanPhamEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
 import com.example.android.demoapp.model.SanPham;
-import com.example.android.demoapp.utils.Server;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.math3.util.Precision;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHolder> {
     private List<YeuThichEntry> mYeuThichEntries;
@@ -207,6 +190,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra(EXTRA_SANPHAM_ID, iD);
                     intent.putExtra(EXTRA_HANG_ID, idHang);
+                    intent.putExtra("chitietsanpham",sanPhams.get(getLayoutPosition()));
                     context.startActivity(intent);
                 }
             });
@@ -222,12 +206,16 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                         final double giasanpham = sanPhams.get(getLayoutPosition()).getGiaSanPham();
                         final String hinhanhsanpham = sanPhams.get(getLayoutPosition()).getHinhAnhSanPham();
                         final String khoiluongsanpham = sanPhams.get(getLayoutPosition()).getKhoiLuong();
+                        final String moTa = sanPhams.get(getLayoutPosition()).getMoTa();
+                        final String thuongHieu = sanPhams.get(getLayoutPosition()).getThuongHieu();
+                        final String xuatXu = sanPhams.get(getLayoutPosition()).getXuatXu();
+
                         imageViewTim.setImageResource(R.drawable.timdo24);
 
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham, hinhanhsanpham, khoiluongsanpham,idhang ));
+                                mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham, hinhanhsanpham, khoiluongsanpham,idhang, moTa, thuongHieu, xuatXu));
                             }
                         });
                     }
