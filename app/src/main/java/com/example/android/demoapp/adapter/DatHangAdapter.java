@@ -108,7 +108,9 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
                     Intent intentChiTiet = new Intent(mcontext, DetailActivity.class);
                     intentChiTiet.putExtra(EXTRA_SANPHAM_ID, idintent);
                     intentChiTiet.putExtra(EXTRA_HANG_ID,idHang );
-                    intentChiTiet.putExtra("chitietsanpham",gioHangs.get(getLayoutPosition()));
+                    intentChiTiet.putExtra("GioHangAdapter", "GioHangAdapter" );
+
+                    intentChiTiet.putExtra("GioHangAdapter",gioHangs.get(getLayoutPosition()));
 
                     intentChiTiet.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mcontext.startActivity(intentChiTiet);

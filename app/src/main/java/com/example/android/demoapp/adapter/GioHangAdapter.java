@@ -99,7 +99,9 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                     Intent intentChiTiet = new Intent(context, DetailActivity.class);
                     intentChiTiet.putExtra(EXTRA_SANPHAM_ID, idintent);
                     intentChiTiet.putExtra(EXTRA_HANG_ID, idHang);
-                    intentChiTiet.putExtra("chitietsanpham",gioHangs.get(getLayoutPosition()));
+                    intentChiTiet.putExtra("GioHangAdapter", "GioHangAdapter" );
+
+                    intentChiTiet.putExtra("GioHangAdapter",gioHangs.get(getLayoutPosition()));
 
                     context.startActivity(intentChiTiet);
                 }

@@ -190,7 +190,8 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra(EXTRA_SANPHAM_ID, iD);
                     intent.putExtra(EXTRA_HANG_ID, idHang);
-                    intent.putExtra("chitietsanpham",sanPhams.get(getLayoutPosition()));
+                    intent.putExtra("CatalogAdapter", "CatalogAdapter" );
+                    intent.putExtra("CatalogAdapter",sanPhams.get(getLayoutPosition()));
                     context.startActivity(intent);
                 }
             });

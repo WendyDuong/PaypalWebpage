@@ -17,22 +17,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.YeuThichViewModel;
 import com.example.android.demoapp.database.AppDatabase;
+import com.example.android.demoapp.database.GioHangDao;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
 import com.example.android.demoapp.fragment.MainFragment;
 import com.example.android.demoapp.model.SanPham;
 import com.example.android.demoapp.utils.CheckConnection;
-import com.example.android.demoapp.utils.Server;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import com.google.android.material.badge.BadgeDrawable;
@@ -41,9 +35,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.math3.util.Precision;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -77,9 +68,7 @@ public class DetailActivity extends AppCompatActivity {
     BadgeDrawable badgeDrawableGioHang;
     List<GioHangEntry> gioHangEntries;
     List<YeuThichEntry> yeuThichEntries;
-    ProgressBar mProgressBar;
-
-
+    Intent intent;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,13 +94,13 @@ public class DetailActivity extends AppCompatActivity {
         devider2 = findViewById(R.id.devider2);
         cardViewSpinner = findViewById(R.id.card_view_spinner);
         imgChiTiet.setClipToOutline(true);
-        mProgressBar= findViewById(R.id.progress_bar);
 
 
         eventSpinner();
         yeuthichEvent();
+        intent = getIntent();
+        getsanpham();
 
-        Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
             idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_ID);
             Picasso.get().load(MainFragment.manghangsanpham.get(idHang).getAnhHang()).into(imageViewHangSp);
@@ -233,10 +222,74 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    private void getsanphamtheoid(int idsanpham) {
+    private void getsanpham() {
+        Toast.makeText(DetailActivity.this, "getSP: ", Toast.LENGTH_SHORT).show();
+        if (intent.hasExtra("CatalogAdapter")) {
+            SanPham sanPham = (SanPham) getIntent().getSerializableExtra("CatalogAdapter");
+            idsanpham = sanPham.getId();
+            tensp = sanPham.getTenSanPham();
+            Toast.makeText(DetailActivity.this, "TenSP: " + tensp, Toast.LENGTH_SHORT).show();
+            hinhanhsp = sanPham.getHinhAnhSanPham();
+            khoiluongsp = sanPham.getKhoiLuong();
+            thuongHieu = sanPham.getThuongHieu();
+            xuatXu = sanPham.getXuatXu();
+            moTa = sanPham.getMoTa();
+            //Rounding currency to make a easy reading
+            giasp = sanPham.getGiaSanPham();
+            giasp = Precision.round(giasp / 1000, 0) * 1000;
+            tvTen.setText(tensp);
+            tvMoTa.setText(moTa);
+            tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
+            tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
+            tvXuatXu.setText("Xuất xứ: " + xuatXu);
+            DecimalFormat deci = new DecimalFormat("###,###,###");
+            tvGia.setText(deci.format(giasp) + " Đ");
+            Picasso.get().load(hinhanhsp).into(imgChiTiet);
+        } else if (intent.hasExtra("GioHangAdapter")) {
+            GioHangEntry gioHang = (GioHangEntry) getIntent().getSerializableExtra("GioHangAdapter");
+            idsanpham = gioHang.getIdSanPham();
+            tensp = gioHang.getTenSanPham();
+            Toast.makeText(DetailActivity.this, "TenSP: " + tensp, Toast.LENGTH_SHORT).show();
+            hinhanhsp = gioHang.getHinhAnhSanPham();
+            khoiluongsp = gioHang.getKhoiLuong();
+            thuongHieu = gioHang.getThuongHieu();
+            xuatXu = gioHang.getXuatXu();
+            moTa = gioHang.getMoTa();
+            //Rounding currency to make a easy reading
+            giasp = gioHang.getGiaSanPham();
+            giasp = Precision.round(giasp / 1000, 0) * 1000;
+            tvTen.setText(tensp);
+            tvMoTa.setText(moTa);
+            tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
+            tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
+            tvXuatXu.setText("Xuất xứ: " + xuatXu);
+            DecimalFormat deci = new DecimalFormat("###,###,###");
+            tvGia.setText(deci.format(giasp) + " Đ");
+            Picasso.get().load(hinhanhsp).into(imgChiTiet);
+        } else if (intent.hasExtra("YeuThichAdapter")) {
+            YeuThichEntry yeuThich = (YeuThichEntry) getIntent().getSerializableExtra("YeuThichAdapter");
+            idsanpham = yeuThich.getIdSanPham();
+            tensp = yeuThich.getTenSanPham();
+            Toast.makeText(DetailActivity.this, "TenSP: " + tensp, Toast.LENGTH_SHORT).show();
+            hinhanhsp = yeuThich.getHinhAnhSanPham();
+            khoiluongsp = yeuThich.getKhoiLuong();
+            thuongHieu = yeuThich.getThuongHieu();
+            xuatXu = yeuThich.getXuatXu();
+            moTa = yeuThich.getMoTa();
+            //Rounding currency to make a easy reading
+            giasp = yeuThich.getGiaSanPham();
+            giasp = Precision.round(giasp / 1000, 0) * 1000;
+            tvTen.setText(tensp);
+            tvMoTa.setText(moTa);
+            tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
+            tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
+            tvXuatXu.setText("Xuất xứ: " + xuatXu);
+            DecimalFormat deci = new DecimalFormat("###,###,###");
+            tvGia.setText(deci.format(giasp) + " Đ");
+            Picasso.get().load(hinhanhsp).into(imgChiTiet);
+        }else
+            Toast.makeText(DetailActivity.this, "TenSP: " + tensp, Toast.LENGTH_SHORT).show();
 
-        SanPham sanPham= (SanPham) getIntent().getSerializableExtra("chitietsanpham");
-        populateUI(sanPham);
 
     }
 
@@ -271,30 +324,6 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
-
-
-    private void populateUI(SanPham sanPham) {
-        idsanpham = sanPham.getId();
-        tensp = sanPham.getTenSanPham();
-        hinhanhsp = sanPham.getHinhAnhSanPham();
-        khoiluongsp = sanPham.getKhoiLuong();
-        thuongHieu = sanPham.getThuongHieu();
-        xuatXu = sanPham.getXuatXu();
-        moTa = sanPham.getMoTa();
-        //Rounding currency to make a easy reading
-        giasp = sanPham.getGiaSanPham();
-        giasp = Precision.round(giasp / 1000, 0) * 1000;
-        tvTen.setText(tensp);
-        tvMoTa.setText(moTa);
-        tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
-        tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
-        tvXuatXu.setText("Xuất xứ: " + xuatXu);
-        DecimalFormat deci = new DecimalFormat("###,###,###");
-        tvGia.setText(deci.format(giasp) + " Đ");
-        Picasso.get().load(hinhanhsp).into(imgChiTiet);
-
-    }
-
     private void addEvent() {
         btnDatMua.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -433,16 +462,7 @@ public class DetailActivity extends AppCompatActivity {
             idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_ID);
             Picasso.get().load(MainFragment.manghangsanpham.get(idHang).getAnhHang()).into(imageViewHangSp);
             idsanpham = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
-            mProgressBar.setVisibility(View.VISIBLE);
-            if (CheckConnection.haveNetworkConnection(DetailActivity.this)) {
-                getsanphamtheoid(idsanpham);
-
-            } else {
-                CheckConnection.showToast_Short(DetailActivity.this, "Không có kết nối Internet!");
-                DetailActivity.this.finish();
-
-            }
-
+            getsanpham();
         }
         super.onNewIntent(intent);
     }

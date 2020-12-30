@@ -108,7 +108,9 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                     Intent intentChiTiet = new Intent(mcontext, DetailActivity.class);
                     intentChiTiet.putExtra(EXTRA_HANG_ID, idhang);
                     intentChiTiet.putExtra(EXTRA_SANPHAM_ID, idintent);
-                    intentChiTiet.putExtra("chitietsanpham",yeuThichs.get(getLayoutPosition()));
+                    intentChiTiet.putExtra("YeuThichAdapter", "YeuThichAdapter" );
+
+                    intentChiTiet.putExtra("YeuThichAdapter",yeuThichs.get(getLayoutPosition()));
 
                     intentChiTiet.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mcontext.startActivity(intentChiTiet);
