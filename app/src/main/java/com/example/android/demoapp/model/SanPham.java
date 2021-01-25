@@ -1,8 +1,6 @@
 package com.example.android.demoapp.model;
 
 
-import androidx.room.Ignore;
-
 import java.io.Serializable;
 
 public class SanPham implements Serializable {
@@ -10,6 +8,8 @@ public class SanPham implements Serializable {
     private  int idHang;
     private String tenSanPham;
     private double giaSanPham;
+    //TODO SALE
+    private double giaKhuyenMai;
     private String hinhAnhSanPham;
     private String khoiLuong;
     private  String moTa;
@@ -35,6 +35,20 @@ public class SanPham implements Serializable {
         this.idHang = idHang;
         this.tenSanPham = tenSanPham;
         this.giaSanPham = giaSanPham;
+        this.hinhAnhSanPham = hinhAnhSanPham;
+        this.khoiLuong = khoiLuong;
+        this.moTa = moTa;
+        this.thuongHieu = thuongHieu;
+        this.xuatXu = xuatXu;
+    }
+
+    public SanPham(int id, int idHang, String tenSanPham, double giaSanPham,
+                   double giaKhuyenMai, String hinhAnhSanPham, String khoiLuong, String moTa, String thuongHieu, String xuatXu) {
+        this.id = id;
+        this.idHang = idHang;
+        this.tenSanPham = tenSanPham;
+        this.giaSanPham = giaSanPham;
+        this.giaKhuyenMai = giaKhuyenMai;
         this.hinhAnhSanPham = hinhAnhSanPham;
         this.khoiLuong = khoiLuong;
         this.moTa = moTa;
@@ -116,4 +130,11 @@ public class SanPham implements Serializable {
         this.xuatXu = xuatXu;
     }
 
+    public double getGiaKhuyenMai() {
+        return giaKhuyenMai;
+    }
+
+    public void setGiaKhuyenMai(double giaKhuyenMai) {
+        this.giaKhuyenMai = giaKhuyenMai;
+    }
 }

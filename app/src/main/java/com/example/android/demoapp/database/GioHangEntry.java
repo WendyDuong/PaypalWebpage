@@ -15,6 +15,7 @@ public class GioHangEntry implements Serializable {
     private int idSanPham;
     private  String tenSanPham;
     private double giaSanPham;
+    private double giaKhuyenMai;
     private String hinhAnhSanPham;
     private String khoiLuong;
     private int soLuong;
@@ -38,11 +39,41 @@ public class GioHangEntry implements Serializable {
         this.xuatXu = xuatXu;
     }
 
+    @Ignore
+    public GioHangEntry(int idSanPham, String tenSanPham, double giaSanPham, double giaKhuyenMai, String hinhAnhSanPham, String khoiLuong, int soLuong, int idHang, String moTa, String thuongHieu, String xuatXu) {
+        this.idSanPham = idSanPham;
+        this.tenSanPham = tenSanPham;
+        this.giaSanPham = giaSanPham;
+        this.giaKhuyenMai = giaKhuyenMai;
+        this.hinhAnhSanPham = hinhAnhSanPham;
+        this.khoiLuong = khoiLuong;
+        this.soLuong = soLuong;
+        this.idHang = idHang;
+        this.moTa = moTa;
+        this.thuongHieu = thuongHieu;
+        this.xuatXu = xuatXu;
+    }
+
+    @Ignore
     public GioHangEntry(int id, int idSanPham, String tenSanPham, double giaSanPham, String hinhAnhSanPham, String khoiLuong, int soLuong, int idHang, String moTa, String thuongHieu, String xuatXu) {
         this.id = id;
         this.idSanPham = idSanPham;
         this.tenSanPham = tenSanPham;
         this.giaSanPham = giaSanPham;
+        this.hinhAnhSanPham = hinhAnhSanPham;
+        this.khoiLuong = khoiLuong;
+        this.soLuong = soLuong;
+        this.idHang = idHang;
+        this.moTa = moTa;
+        this.thuongHieu = thuongHieu;
+        this.xuatXu = xuatXu;
+    }
+    public GioHangEntry(int id, int idSanPham, String tenSanPham, double giaSanPham, double giaKhuyenMai, String hinhAnhSanPham, String khoiLuong, int soLuong, int idHang, String moTa, String thuongHieu, String xuatXu) {
+        this.id = id;
+        this.idSanPham = idSanPham;
+        this.tenSanPham = tenSanPham;
+        this.giaSanPham = giaSanPham;
+        this.giaKhuyenMai = giaKhuyenMai;
         this.hinhAnhSanPham = hinhAnhSanPham;
         this.khoiLuong = khoiLuong;
         this.soLuong = soLuong;
@@ -138,5 +169,13 @@ public class GioHangEntry implements Serializable {
 
     public void setXuatXu(String xuatXu) {
         this.xuatXu = xuatXu;
+    }
+
+    public double getGiaKhuyenMai() {
+        return giaKhuyenMai;
+    }
+
+    public void setGiaKhuyenMai(double giaKhuyenMai) {
+        this.giaKhuyenMai = giaKhuyenMai;
     }
 }

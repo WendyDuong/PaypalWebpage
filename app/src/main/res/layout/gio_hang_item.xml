@@ -27,10 +27,10 @@
         android:id="@+id/ten_item_gio_hang"
         style="@style/text_ellipsise"
         android:layout_width="0dp"
-        android:minWidth="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="25dp"
+        android:minWidth="100dp"
         android:paddingEnd="4dp"
         android:text="Bánh Sisi Mix Brand Sisi Mix Brand"
         android:textSize="16sp"
@@ -67,7 +67,6 @@
         android:text="50.000"
         android:layout_marginTop="5dp"
         android:layout_marginStart="10dp"
-        android:textColor="#fa3223"
         app:layout_constraintStart_toEndOf="@id/anh_item_gio_hang"
         app:layout_constraintTop_toBottomOf="@id/khoi_luong_item_gio_hang" />
 
@@ -120,6 +119,20 @@
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <!--  //TODO SALE-->
+    <TextView
+        android:id="@+id/giakhuyenmai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
+        android:text="40.000"
+        android:visibility="invisible"
+        android:textColor="#fa3223"
+        app:layout_constraintStart_toEndOf="@+id/gia_item_gio_hang"
+        app:layout_constraintTop_toBottomOf="@+id/khoi_luong_item_gio_hang" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -2,24 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.android.demoapp">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="false"
         android:icon="@drawable/appicon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        >
-
-
+        android:usesCleartextTraffic="true">
+        <activity android:name=".activity.PaymentDetails"></activity>
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleTask"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:showOnLockScreen="true">
             <intent-filter>
@@ -28,93 +27,73 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.CatalogActivity"
-            android:launchMode="singleTask"
-            android:showOnLockScreen="true"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-
-            />
+            android:showOnLockScreen="true" />
         <activity
             android:name=".activity.DetailActivity"
-            android:launchMode="singleTask"
-            android:showOnLockScreen="true"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-
-            />
+            android:showOnLockScreen="true" />
         <activity
             android:name=".activity.GioHangActivity"
-            android:launchMode="singleTask"
-            android:showOnLockScreen="true"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            />
+            android:showOnLockScreen="true" />
         <activity
             android:name=".activity.DatHangActivity"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            android:showOnLockScreen="true"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            />
+            android:showOnLockScreen="true"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".activity.TimKiemActivity"
-            android:launchMode="singleTask"
-            android:showOnLockScreen="true"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            />
+            android:showOnLockScreen="true" />
         <activity
             android:name=".activity.YeuthichActivity"
-            android:launchMode="singleTask"
-            android:showOnLockScreen="true"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".activity.FindActivity"
             android:launchMode="singleTask"
-            android:showOnLockScreen="true"
-            android:configChanges="orientation"
             android:screenOrientation="portrait"
-            />
-
+            android:showOnLockScreen="true" />
+        <activity
+            android:name=".activity.FindActivity"
+            android:configChanges="orientation"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:showOnLockScreen="true" />
         <activity
             android:name=".activity.DatHangHoActivity"
-            android:launchMode="singleTask"
-            android:showOnLockScreen="true"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-
-            />
-
+            android:showOnLockScreen="true" />
         <activity
             android:name=".activity.ThanhToan"
-            android:launchMode="singleTask"
-            android:showOnLockScreen="true"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            />
-
+            android:showOnLockScreen="true" />
         <activity
             android:name=".activity.LienHe"
-            android:launchMode="singleTask"
-            android:showOnLockScreen="true"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            />
-
+            android:showOnLockScreen="true" />
         <activity
             android:name=".activity.GiaoHang"
-            android:launchMode="singleTask"
-            android:showOnLockScreen="true"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            />
-
-
+            android:showOnLockScreen="true" />
     </application>
 
 </manifest>

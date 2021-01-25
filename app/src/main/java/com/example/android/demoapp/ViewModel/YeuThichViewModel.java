@@ -16,18 +16,18 @@ public class YeuThichViewModel extends AndroidViewModel {
 
     private static final String TAG = YeuThichViewModel.class.getSimpleName();
 
-    private LiveData<List<YeuThichEntry>> sanPhams;
+    private LiveData<List<YeuThichEntry>> yeuThichs;
     private LiveData<List<GioHangEntry>> gioHang;
 
     public YeuThichViewModel(@NonNull Application application) {
         super(application);
         AppDatabase database = AppDatabase.getInstance(this.getApplication());
-        sanPhams = database.yeuThichDao().loadAllYeuThich();
+        yeuThichs = database.yeuThichDao().loadAllYeuThich();
         gioHang = database.gioHangDao().loadAllGioHang();
     }
 
     public LiveData<List<YeuThichEntry>> getYeuThich() {
-        return sanPhams;
+        return yeuThichs;
     }
     public LiveData<List<GioHangEntry>> getGioHang() {
         return gioHang;

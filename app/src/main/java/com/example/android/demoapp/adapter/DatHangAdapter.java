@@ -2,6 +2,7 @@ package com.example.android.demoapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,16 +51,35 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
         String khoiluongsanpham = gioHangEntry.getKhoiLuong();
 
         double giasanpham = gioHangEntry.getGiaSanPham();
+        double giakhuyenmai = gioHangEntry.getGiaKhuyenMai();
         String hinhanhsanpham = gioHangEntry.getHinhAnhSanPham();
         int soluongsanpham = gioHangEntry.getSoLuong();
         double giaDonViSanPham = giasanpham/soluongsanpham;
+        double giaDonViKhuyenMai = giakhuyenmai/soluongsanpham;
         int idsanpham = gioHangEntry.getIdSanPham();
 
         holder.textViewTenItem.setText(tensanpham);
         holder.textViewKhoiLuongItem.setText(khoiluongsanpham);
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        holder.textViewGiaItem.setText(decimalFormat.format(giasanpham) + " Đ");
-        holder.textViewDonGia.setText(decimalFormat.format(giaDonViSanPham) + " Đ");
+        //TODO SALE
+
+        if (giakhuyenmai!= 0){
+            //TODO SALE
+            holder.textViewDonGia.setText(decimalFormat.format(giaDonViSanPham) + " Đ");
+            holder.textViewDonGia.setPaintFlags(holder.textViewDonGia.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.textViewDonGiaKhuyenMai.setText(decimalFormat.format(giaDonViKhuyenMai) + " Đ");
+            holder.textViewDonGiaKhuyenMai.setVisibility(View.VISIBLE);
+            holder.textViewGiaItem.setText(decimalFormat.format(giakhuyenmai) + " Đ");
+
+        }
+        else{
+            holder.textViewDonGiaKhuyenMai.setVisibility(View.INVISIBLE);
+            holder.textViewDonGia.setText(decimalFormat.format(giaDonViSanPham) + " Đ");
+            holder.textViewDonGia.setPaintFlags(holder.textViewDonGia.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.textViewGiaItem.setText(decimalFormat.format(giasanpham) + " Đ");
+
+        }
+
         Picasso.get().load(hinhanhsanpham).into(holder.imageViewITem);
         holder.textViewSoLuongItem.setText(soluongsanpham + "x");
         holder.itemView.setTag(idsanpham);
@@ -88,12 +108,14 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
 
     public class viewHolderDatHang extends RecyclerView.ViewHolder {
 
-        TextView textViewTenItem, textViewGiaItem, textViewKhoiLuongItem, textViewSoLuongItem, textViewDonGia;
+        TextView textViewTenItem, textViewGiaItem, textViewKhoiLuongItem, textViewSoLuongItem, textViewDonGia, textViewDonGiaKhuyenMai;
         ImageView imageViewITem;
 
         public viewHolderDatHang(View view) {
             super(view);
             textViewDonGia = view.findViewById(R.id.text_view_don_gia);
+            //TODO SALE
+            textViewDonGiaKhuyenMai = view.findViewById(R.id.giakhuyenmai);
             textViewTenItem = view.findViewById(R.id.ten_item_dat);
             textViewGiaItem = view.findViewById(R.id.gia_item_dat);
             textViewKhoiLuongItem = view.findViewById(R.id.khoiluong_item_dat);

@@ -3,6 +3,8 @@ package com.example.android.demoapp.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,13 +60,27 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
         String khoiluongsanpham = yeuThichEntry.getKhoiLuong();
         String hinhanhsanpham = yeuThichEntry.getHinhAnhSanPham();
         double giasanpham = yeuThichEntry.getGiaSanPham();
+        double giakhuyenmai = yeuThichEntry.getGiaKhuyenMai();
         giasanpham = Precision.round(giasanpham / 1000, 0) * 1000;
 
         holder.tvTen.setText(tensanpham);
         holder.tvKhoiluong.setText(khoiluongsanpham);
-        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        holder.tvGia.setText(decimalFormat.format(giasanpham) + " Đ");
         Picasso.get().load(hinhanhsanpham).into(holder.imgSanPham);
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+
+        if (giakhuyenmai != 0){
+            //TODO SALE
+            holder.tvGia.setText(decimalFormat.format(giasanpham) + " Đ");
+            holder.tvGia.setPaintFlags(holder.tvGia.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.tvGiaKhuyenMai.setText(decimalFormat.format(giakhuyenmai) + " Đ");
+            holder.tvGiaKhuyenMai.setVisibility(View.VISIBLE);
+        }
+        else{
+            holder.tvGiaKhuyenMai.setVisibility(View.INVISIBLE);
+            holder.tvGia.setText(decimalFormat.format(giasanpham) + " Đ");
+            holder.tvGia.setPaintFlags(holder.tvGia.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
+
 
     }
 
@@ -78,7 +94,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
 
 
     public class viewHolderYeuthich extends RecyclerView.ViewHolder {
-        TextView tvTen, tvKhoiluong, tvGia;
+        TextView tvTen, tvKhoiluong, tvGia,tvGiaKhuyenMai;
         ImageView imgSanPham;
         Button buttonThem;
         ImageButton buttonXoa;
@@ -88,6 +104,8 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
             tvTen = viewTong.findViewById(R.id.ten_item_yeu_thich);
             tvKhoiluong = viewTong.findViewById(R.id.khoi_luong_item_yeu_thich);
             tvGia = viewTong.findViewById(R.id.gia_item_yeu_thich);
+            //TODO SALE
+            tvGiaKhuyenMai = viewTong.findViewById(R.id.giakhuyenmai);
             imgSanPham = viewTong.findViewById(R.id.anh_item_yeu_thich);
             buttonThem = viewTong.findViewById(R.id.button_them);
             buttonXoa = viewTong.findViewById(R.id.button_xoa_yeu_thich);
@@ -153,6 +171,11 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                     final String tensanpham = yeuThichs.get(getLayoutPosition()).getTenSanPham();
                     final String khoiluongsanpham = yeuThichs.get(getLayoutPosition()).getKhoiLuong();
                     final double giasanpham = yeuThichs.get(getLayoutPosition()).getGiaSanPham();
+                    //TODO SALE
+                    final double giakhuyenmai = yeuThichs.get(getLayoutPosition()).getGiaKhuyenMai();
+                    Toast.makeText(mcontext, "gia goc: " + giasanpham, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mcontext, "gia khuyen mai: " + giakhuyenmai, Toast.LENGTH_SHORT).show();
+
                     final String hinhanhsanpham = yeuThichs.get(getLayoutPosition()).getHinhAnhSanPham();
                     final int idHang = yeuThichs.get(getLayoutPosition()).getIdHang();
                     final String moTa = yeuThichs.get(getLayoutPosition()).getMoTa();
@@ -168,10 +191,11 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                             }
                         }
                         if (!exit) {
+                            //TODO SALE
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham / 1000, 0) * 1000, hinhanhsanpham, khoiluongsanpham, 1, idHang, moTa, thuongHieu, xuatXu));
+                                    mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham / 1000, 0) * 1000, Precision.round(giakhuyenmai / 1000, 0) * 1000, hinhanhsanpham, khoiluongsanpham, 1, idHang, moTa, thuongHieu, xuatXu));
 
                                 }
                             });
@@ -181,10 +205,11 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham / 1000, 0) * 1000, hinhanhsanpham, khoiluongsanpham, 1, idHang, moTa, thuongHieu, xuatXu));
+                                //TODO SALE
+                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham / 1000, 0) * 1000, Precision.round(giakhuyenmai / 1000, 0) * 1000, hinhanhsanpham, khoiluongsanpham, 1, idHang, moTa, thuongHieu, xuatXu));
                             }
                         });
-                        Toast.makeText(mcontext, "Đã thêm " + tensanpham + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mcontext,  "Đã thêm " + tensanpham + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
                     }
 
 

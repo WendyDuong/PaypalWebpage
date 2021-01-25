@@ -284,7 +284,8 @@ public class FindActivity extends AppCompatActivity {
                         int dodai = json.length();
                         for (int i = 0; i < json.length(); i++) {
                             JSONObject object = json.getJSONObject(i);
-                            sanPhams.add(new SanPham(object.getInt("id"), object.getInt("idHang"), object.getString("tenSanPham"), object.getDouble("giaSanPham"), object.getString("hinhAnhSanPham"), object.getString("khoiLuong"), object.getString("moTa"), object.getString("thuongHieu"), object.getString("xuatXu")));
+                            //TODO SALE
+                            sanPhams.add(new SanPham(object.getInt("id"), object.getInt("idHang"), object.getString("tenSanPham"), object.getDouble("giaSanPham"),object.getDouble("giaKhuyenMai"), object.getString("hinhAnhSanPham"), object.getString("khoiLuong"), object.getString("moTa"), object.getString("thuongHieu"), object.getString("xuatXu")));
                             timKiemAdapter.notifyDataSetChanged();
                         }
 

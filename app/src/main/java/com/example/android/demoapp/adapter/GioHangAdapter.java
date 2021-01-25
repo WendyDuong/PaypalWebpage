@@ -3,6 +3,7 @@ package com.example.android.demoapp.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,14 +51,28 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
         int soluongsanpham = gioHangEntry.getSoLuong();
         int idsanpham = gioHangEntry.getIdSanPham();
         double giasanpham = gioHangEntry.getGiaSanPham();
+        double giakhuyenmai = gioHangEntry.getGiaKhuyenMai();
 
         holder.textViewTenItem.setText(tensanpham);
         holder.textViewKhoiLuongItem.setText(khoiluongsanpham);
-        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        holder.textViewGiaItem.setText(decimalFormat.format(giasanpham) + " Đ");
         Picasso.get().load(hinhanhsanpham).into(holder.imageViewITem);
         holder.textViewSoLuongItem.setText(soluongsanpham + "");
         holder.itemView.setTag(idsanpham);
+
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        if (giakhuyenmai != 0){
+            //TODO SALE
+            holder.textViewGiaItem.setText(decimalFormat.format(giasanpham) + " Đ");
+            holder.textViewGiaItem.setPaintFlags(holder.textViewGiaItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.tvGiaKhuyenMai.setText(decimalFormat.format(giakhuyenmai) + " Đ");
+            holder.tvGiaKhuyenMai.setVisibility(View.VISIBLE);
+        }
+        else{
+            holder.tvGiaKhuyenMai.setVisibility(View.INVISIBLE);
+            holder.textViewGiaItem.setText(decimalFormat.format(giasanpham) + " Đ");
+            holder.textViewGiaItem.setPaintFlags(holder.textViewGiaItem.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
+
 
         if (soluongsanpham < 2) {
             holder.buttonGiam.setVisibility(View.INVISIBLE);
@@ -74,7 +89,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
 
 
     class viewHolderGioHang extends RecyclerView.ViewHolder {
-        TextView textViewTenItem, textViewGiaItem, textViewKhoiLuongItem, textViewSoLuongItem;
+        TextView textViewTenItem, textViewGiaItem, tvGiaKhuyenMai,textViewKhoiLuongItem, textViewSoLuongItem;
         ImageView imageViewITem;
         ImageButton buttonGiam, buttonTang;
         ImageButton imageButton;
@@ -83,6 +98,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
             super(view);
             textViewTenItem = view.findViewById(R.id.ten_item_gio_hang);
             textViewGiaItem = view.findViewById(R.id.gia_item_gio_hang);
+            tvGiaKhuyenMai = view.findViewById(R.id.giakhuyenmai);
             textViewKhoiLuongItem = view.findViewById(R.id.khoi_luong_item_gio_hang);
             textViewSoLuongItem = view.findViewById(R.id.so_luong_item);
             imageViewITem = view.findViewById(R.id.anh_item_gio_hang);
@@ -145,6 +161,8 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                     final int  idsanpham =   gioHangs.get(getLayoutPosition()).getIdSanPham();
                     final String tensanpham = gioHangs.get(getLayoutPosition()).getTenSanPham();
                     final double giasanpham = gioHangs.get(getLayoutPosition()).getGiaSanPham();
+                    //TODO SALE
+                    final double giakhuyenmai = gioHangs.get(getLayoutPosition()).getGiaKhuyenMai();
                     final String  hinhanhsanpham = gioHangs.get(getLayoutPosition()).getHinhAnhSanPham();
                     final String khoiluongsanpham = gioHangs.get(getLayoutPosition()).getKhoiLuong();
                     final int idhang = gioHangs.get(getLayoutPosition()).getIdHang();
@@ -158,20 +176,19 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb.gioHangDao().updateGioHang(new GioHangEntry(id , idsanpham,tensanpham, giasanpham * soluongsanphammoi /soluongsanphamcu,  hinhanhsanpham,khoiluongsanpham,soluongsanphammoi,idhang, moTa, thuongHieu, xuatXu));
+                            //TODO SALE
+                            mDb.gioHangDao().updateGioHang(new GioHangEntry(id , idsanpham,tensanpham, giasanpham * soluongsanphammoi /soluongsanphamcu, giakhuyenmai * soluongsanphammoi /soluongsanphamcu,  hinhanhsanpham,khoiluongsanpham,soluongsanphammoi,idhang, moTa, thuongHieu, xuatXu));
 
                         }
                     });
                     if(soluongsanphammoi>49){
                         buttonTang.setVisibility(View.INVISIBLE);
-                        buttonGiam.setVisibility(View.VISIBLE);
-                        textViewSoLuongItem.setText(soluongsanphammoi+"");
                     }
                     else{
                         buttonTang.setVisibility(View.VISIBLE);
-                        buttonGiam.setVisibility(View.VISIBLE);
-                        textViewSoLuongItem.setText(soluongsanphammoi+"");
                     }
+                    buttonGiam.setVisibility(View.VISIBLE);
+                    textViewSoLuongItem.setText(soluongsanphammoi+"");
                 }
             });
             buttonGiam.setOnClickListener(new View.OnClickListener() {
@@ -181,6 +198,8 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                     final int idsanpham = gioHangs.get(getLayoutPosition()).getIdSanPham();
                     final String tensanpham = gioHangs.get(getLayoutPosition()).getTenSanPham();
                     final double giasanpham = gioHangs.get(getLayoutPosition()).getGiaSanPham();
+                    //TODO SALE
+                    final double giakhuyenmai = gioHangs.get(getLayoutPosition()).getGiaKhuyenMai();
                     final String hinhanhsanpham = gioHangs.get(getLayoutPosition()).getHinhAnhSanPham();
                     final String khoiluongsanpham = gioHangs.get(getLayoutPosition()).getKhoiLuong();
                     final int soluongsanphamcu = Integer.parseInt(textViewSoLuongItem.getText().toString());
@@ -194,7 +213,8 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensanpham, giasanpham * soluongsanphammoi / soluongsanphamcu, hinhanhsanpham, khoiluongsanpham, soluongsanphammoi, idhang, moTa, thuongHieu, xuatXu));
+                            //TODO SALE
+                            mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensanpham, giasanpham * soluongsanphammoi / soluongsanphamcu, giakhuyenmai * soluongsanphammoi /soluongsanphamcu, hinhanhsanpham, khoiluongsanpham, soluongsanphammoi, idhang, moTa, thuongHieu, xuatXu));
                         }
                     });
                     if (soluongsanphammoi < 2) {

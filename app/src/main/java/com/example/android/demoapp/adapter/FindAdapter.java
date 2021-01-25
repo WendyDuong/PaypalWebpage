@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,9 +62,26 @@ public class FindAdapter extends RecyclerView.Adapter<FindAdapter.itemHolder> {
         holder.tvTensanpham.setText(sanPham.getTenSanPham());
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         double giasp = sanPham.getGiaSanPham();
+        double giakhuyenmai = sanPham.getGiaKhuyenMai();
 
         //Rounding curency to make a easy reading
         giasp = Precision.round(giasp/1000, 0)*1000;
+        giakhuyenmai = Precision.round(giakhuyenmai/1000, 0)*1000;
+
+        if (sanPham.getGiaKhuyenMai() != 0){
+            //TODO SALE
+            holder.tvGiasanpham.setText(decimalFormat.format(giasp) + " Đ");
+            holder.tvGiasanpham.setPaintFlags(holder.tvGiasanpham.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.tvGiakhuyenmai.setText(sanPham.getGiaKhuyenMai()+ " Đ");
+            holder.tvGiakhuyenmai.setVisibility(View.VISIBLE);
+        }
+        else{
+            holder.tvGiakhuyenmai.setVisibility(View.INVISIBLE);
+            holder.tvGiasanpham.setText(decimalFormat.format(giasp) + " Đ");
+            holder.tvGiasanpham.setPaintFlags(holder.tvGiasanpham.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
+
+
         holder.tvGiasanpham.setText(decimalFormat.format(giasp) + " Đ");
         Picasso.get().load(sanPham.getHinhAnhSanPham()).into(holder.imgHinhAnhSanpham);
         final int idsanpham = sanPham.getId();
@@ -160,17 +178,6 @@ public class FindAdapter extends RecyclerView.Adapter<FindAdapter.itemHolder> {
         return sanPhams.size();
     }
 
-
-/*
-    public List<SanPhamEntry> getSanPhams() {
-        return sanPhams;
-    }
-    public void setSanPhams(List<SanPhamEntry> sanPhams) {
-        this.sanPhams = sanPhams;
-        notifyDataSetChanged();
-    }
-*/
-
     public void setYeuThichs(List<YeuThichEntry> yeuThichEntries){
         this.mYeuThichEntries = yeuThichEntries;
 
@@ -180,13 +187,13 @@ public class FindAdapter extends RecyclerView.Adapter<FindAdapter.itemHolder> {
     public class itemHolder extends RecyclerView.ViewHolder {
         CardView cardViewCatalog;
         public ImageView imgHinhAnhSanpham, imageViewTim;
-        public TextView tvTensanpham;
-        public TextView tvGiasanpham;
+        public TextView tvTensanpham,tvGiasanpham,tvGiakhuyenmai;
         public itemHolder(View itemView) {
             super(itemView);
             imgHinhAnhSanpham = itemView.findViewById(R.id.anhsanpham);
             tvTensanpham = itemView.findViewById(R.id.tensanpham);
             tvGiasanpham = itemView.findViewById(R.id.giasanpham);
+            tvGiakhuyenmai = itemView.findViewById(R.id.giakhuyenmai);
             cardViewCatalog = itemView.findViewById(R.id.card_view_catalog);
             imageViewTim = itemView.findViewById(R.id.image_view_tim);
             mDb = AppDatabase.getInstance(context);
@@ -213,6 +220,7 @@ public class FindAdapter extends RecyclerView.Adapter<FindAdapter.itemHolder> {
                         final int idsanpham = sanPhams.get(getLayoutPosition()).getId();
                         final String tensanpham = sanPhams.get(getLayoutPosition()).getTenSanPham();
                         final double giasanpham = sanPhams.get(getLayoutPosition()).getGiaSanPham();
+                        final double giakhuyenmai = sanPhams.get(getLayoutPosition()).getGiaKhuyenMai();
                         final String hinhanhsanpham = sanPhams.get(getLayoutPosition()).getHinhAnhSanPham();
                         final String khoiluongsanpham = sanPhams.get(getLayoutPosition()).getKhoiLuong();
                         final String moTa = sanPhams.get(getLayoutPosition()).getMoTa();
@@ -224,7 +232,7 @@ public class FindAdapter extends RecyclerView.Adapter<FindAdapter.itemHolder> {
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham, hinhanhsanpham, khoiluongsanpham,idhang, moTa, thuongHieu, xuatXu));
+                                mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham,giakhuyenmai, hinhanhsanpham, khoiluongsanpham,idhang, moTa, thuongHieu, xuatXu));
                             }
                         });
                     }

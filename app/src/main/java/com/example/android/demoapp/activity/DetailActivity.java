@@ -2,6 +2,7 @@ package com.example.android.demoapp.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -54,10 +55,10 @@ public class DetailActivity extends AppCompatActivity {
     View cardViewSpinner;
     PhotoView imgChiTiet;
     private AppDatabase mDb;
-    TextView tvTen, tvGia, tvMoTa, tvKhoiluong, tvThuongHieu, tvXuatXu;
+    TextView tvTen, tvGia, tvGiaKhuyenMai, tvMoTa, tvKhoiluong, tvThuongHieu, tvXuatXu;
     ExtendedFloatingActionButton btnDatMua;
     String hinhanhsp;
-    double giasp;
+    double giasp, giakhuyenmai;
     String tensp, khoiluongsp, moTa, thuongHieu, xuatXu;
     private int idsanpham = DEFAULT_ID;
     Spinner spinner;
@@ -69,6 +70,7 @@ public class DetailActivity extends AppCompatActivity {
     List<GioHangEntry> gioHangEntries;
     List<YeuThichEntry> yeuThichEntries;
     Intent intent;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +81,7 @@ public class DetailActivity extends AppCompatActivity {
         tvTen = findViewById(R.id.ten_san_pham);
         tvKhoiluong = findViewById(R.id.khoi_luong_san_pham);
         tvGia = findViewById(R.id.gia_san_pham);
+        tvGiaKhuyenMai = findViewById(R.id.giakhuyenmai);
         tvMoTa = findViewById(R.id.mo_ta_san_pham);
         tvThuongHieu = findViewById(R.id.san_pham_thuong_hieu);
         tvXuatXu = findViewById(R.id.san_pham_xuat_xu);
@@ -223,12 +226,11 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getsanpham() {
-        Toast.makeText(DetailActivity.this, "getSP: ", Toast.LENGTH_SHORT).show();
         if (intent.hasExtra("CatalogAdapter")) {
             SanPham sanPham = (SanPham) getIntent().getSerializableExtra("CatalogAdapter");
+            assert sanPham != null;
             idsanpham = sanPham.getId();
             tensp = sanPham.getTenSanPham();
-            Toast.makeText(DetailActivity.this, "TenSP: " + tensp, Toast.LENGTH_SHORT).show();
             hinhanhsp = sanPham.getHinhAnhSanPham();
             khoiluongsp = sanPham.getKhoiLuong();
             thuongHieu = sanPham.getThuongHieu();
@@ -237,57 +239,96 @@ public class DetailActivity extends AppCompatActivity {
             //Rounding currency to make a easy reading
             giasp = sanPham.getGiaSanPham();
             giasp = Precision.round(giasp / 1000, 0) * 1000;
+            giakhuyenmai = sanPham.getGiaKhuyenMai();
+            giakhuyenmai = Precision.round(giakhuyenmai / 1000, 0) * 1000;
+            DecimalFormat deci = new DecimalFormat("###,###,###");
+
+            //TODO SALE
+            if (sanPham.getGiaKhuyenMai() != 0) {
+                tvGia.setText(deci.format(giasp) + " Đ");
+                tvGia.setPaintFlags(tvGia.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                tvGiaKhuyenMai.setText(deci.format(giakhuyenmai) + " Đ");
+                tvGiaKhuyenMai.setVisibility(View.VISIBLE);
+            } else {
+                tvGiaKhuyenMai.setVisibility(View.INVISIBLE);
+                tvGia.setText(deci.format(giasp) + " Đ");
+                tvGia.setPaintFlags(tvGia.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            }
+
             tvTen.setText(tensp);
             tvMoTa.setText(moTa);
             tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
             tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
             tvXuatXu.setText("Xuất xứ: " + xuatXu);
-            DecimalFormat deci = new DecimalFormat("###,###,###");
-            tvGia.setText(deci.format(giasp) + " Đ");
             Picasso.get().load(hinhanhsp).into(imgChiTiet);
         } else if (intent.hasExtra("GioHangAdapter")) {
             GioHangEntry gioHang = (GioHangEntry) getIntent().getSerializableExtra("GioHangAdapter");
+            assert gioHang != null;
             idsanpham = gioHang.getIdSanPham();
             tensp = gioHang.getTenSanPham();
-            Toast.makeText(DetailActivity.this, "TenSP: " + tensp, Toast.LENGTH_SHORT).show();
             hinhanhsp = gioHang.getHinhAnhSanPham();
             khoiluongsp = gioHang.getKhoiLuong();
             thuongHieu = gioHang.getThuongHieu();
             xuatXu = gioHang.getXuatXu();
             moTa = gioHang.getMoTa();
             //Rounding currency to make a easy reading
-            giasp = gioHang.getGiaSanPham();
+            giasp = gioHang.getGiaSanPham()/gioHang.getSoLuong();
             giasp = Precision.round(giasp / 1000, 0) * 1000;
+            giakhuyenmai = gioHang.getGiaKhuyenMai()/gioHang.getSoLuong();
+            giakhuyenmai = Precision.round(giakhuyenmai / 1000, 0) * 1000;
+
             tvTen.setText(tensp);
             tvMoTa.setText(moTa);
             tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
             tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
             tvXuatXu.setText("Xuất xứ: " + xuatXu);
             DecimalFormat deci = new DecimalFormat("###,###,###");
-            tvGia.setText(deci.format(giasp) + " Đ");
+
+            //TODO SALE
+            if (giakhuyenmai!= 0) {
+                tvGia.setText(deci.format(giasp) + " Đ");
+                tvGia.setPaintFlags(tvGia.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                tvGiaKhuyenMai.setText(deci.format(giakhuyenmai) + " Đ");
+                tvGiaKhuyenMai.setVisibility(View.VISIBLE);
+            } else {
+                tvGiaKhuyenMai.setVisibility(View.INVISIBLE);
+                tvGia.setText(deci.format(giasp) + " Đ");
+                tvGia.setPaintFlags(tvGia.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            }
             Picasso.get().load(hinhanhsp).into(imgChiTiet);
         } else if (intent.hasExtra("YeuThichAdapter")) {
             YeuThichEntry yeuThich = (YeuThichEntry) getIntent().getSerializableExtra("YeuThichAdapter");
+            assert yeuThich != null;
             idsanpham = yeuThich.getIdSanPham();
             tensp = yeuThich.getTenSanPham();
-            Toast.makeText(DetailActivity.this, "TenSP: " + tensp, Toast.LENGTH_SHORT).show();
             hinhanhsp = yeuThich.getHinhAnhSanPham();
             khoiluongsp = yeuThich.getKhoiLuong();
             thuongHieu = yeuThich.getThuongHieu();
             xuatXu = yeuThich.getXuatXu();
             moTa = yeuThich.getMoTa();
             //Rounding currency to make a easy reading
-            giasp = yeuThich.getGiaSanPham();
-            giasp = Precision.round(giasp / 1000, 0) * 1000;
+            giasp = Precision.round(yeuThich.getGiaSanPham() / 1000, 0) * 1000;
+            giakhuyenmai = Precision.round(yeuThich.getGiaKhuyenMai() / 1000, 0) * 1000;
             tvTen.setText(tensp);
             tvMoTa.setText(moTa);
             tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
             tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
             tvXuatXu.setText("Xuất xứ: " + xuatXu);
             DecimalFormat deci = new DecimalFormat("###,###,###");
-            tvGia.setText(deci.format(giasp) + " Đ");
+
+            //TODO SALE
+            if (giakhuyenmai!= 0) {
+                tvGia.setText(deci.format(giasp) + " Đ");
+                tvGia.setPaintFlags(tvGia.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                tvGiaKhuyenMai.setText(deci.format(giakhuyenmai) + " Đ");
+                tvGiaKhuyenMai.setVisibility(View.VISIBLE);
+            } else {
+                tvGiaKhuyenMai.setVisibility(View.INVISIBLE);
+                tvGia.setText(deci.format(giasp) + " Đ");
+                tvGia.setPaintFlags(tvGia.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            }
             Picasso.get().load(hinhanhsp).into(imgChiTiet);
-        }else
+        } else
             Toast.makeText(DetailActivity.this, "TenSP: " + tensp, Toast.LENGTH_SHORT).show();
 
 
@@ -324,6 +365,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
+
     private void addEvent() {
         btnDatMua.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -341,7 +383,7 @@ public class DetailActivity extends AppCompatActivity {
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * soluongmoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluongmoi, idHang, moTa, thuongHieu, xuatXu));
+                                    mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * soluongmoi) / 1000, 0) * 1000,Precision.round((giakhuyenmai * soluongmoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluongmoi, idHang, moTa, thuongHieu, xuatXu));
 
 
                                 }
@@ -354,7 +396,7 @@ public class DetailActivity extends AppCompatActivity {
                                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * 20) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, 50, idHang, moTa, thuongHieu, xuatXu));
+                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * 20) / 1000, 0) * 1000,Precision.round((giakhuyenmai * soluongmoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, 50, idHang, moTa, thuongHieu, xuatXu));
 
 
                                     }
@@ -374,12 +416,13 @@ public class DetailActivity extends AppCompatActivity {
                     }
                     if (!exsist) {
                         final int soluong = Integer.parseInt(spinner.getSelectedItem().toString());
-                        final double giamoi = soluong * giasp;
+                        final double giaspmoi = soluong * giasp;
+                        final double giakhuyenmaimoi = soluong * giakhuyenmai;
 
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, Precision.round((giamoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluong, idHang, moTa, thuongHieu, xuatXu));
+                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, Precision.round((giaspmoi) / 1000, 0) * 1000, Precision.round((giakhuyenmaimoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluong, idHang, moTa, thuongHieu, xuatXu));
 
 
                             }
@@ -391,13 +434,14 @@ public class DetailActivity extends AppCompatActivity {
                     }
                 } else {
                     final int soluong = Integer.parseInt(spinner.getSelectedItem().toString());
-                    final double giamoi = soluong * giasp;
+                    final double giaspmoi = soluong * giasp;
+                    final double giakhuyenmaimoi = soluong * giakhuyenmai;
 
 
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, Precision.round((giamoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluong, idHang, moTa, thuongHieu, xuatXu));
+                            mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, Precision.round((giaspmoi) / 1000, 0) * 1000,Precision.round((giakhuyenmaimoi) / 1000, 0) * 1000,  hinhanhsp, khoiluongsp, soluong, idHang, moTa, thuongHieu, xuatXu));
 
 
                         }

@@ -98,8 +98,19 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         android:text="50.000Đ"
-        android:textColor="#fa3223"
         app:layout_constraintStart_toEndOf="@+id/image_view_item_dat"
+        app:layout_constraintTop_toBottomOf="@+id/khoiluong_item_dat" />
+
+    <TextView
+        android:id="@+id/giakhuyenmai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
+        android:text="40000"
+        android:textColor="#fa3223"
+        android:visibility="invisible"
+        app:layout_constraintStart_toEndOf="@+id/text_view_don_gia"
         app:layout_constraintTop_toBottomOf="@+id/khoiluong_item_dat" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

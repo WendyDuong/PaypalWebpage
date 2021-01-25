@@ -1,5 +1,6 @@
 package com.example.android.demoapp.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -30,6 +31,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.AppExecutors;
+import com.example.android.demoapp.Config.Config;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.DatHangViewModel;
 import com.example.android.demoapp.adapter.DatHangAdapter;
@@ -37,12 +39,18 @@ import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.utils.CheckConnection;
 import com.example.android.demoapp.utils.Server;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,15 +67,33 @@ public class DatHangActivity extends AppCompatActivity {
     Button buttonDatHang, buttonMuaTiep;
     private double tongTienDonHang = 0;
     private AppDatabase mDb;
+    private static final int PAYPAL_REQUEST_CODE = 9797;
+
+    private static PayPalConfiguration config = new PayPalConfiguration()
+            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+            .clientId(Config.PAYPAL_CLIENT_ID);
 
     public static boolean isValidEmail(String email) {
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
     @Override
+    protected void onDestroy() {
+        stopService(new Intent(this, PayPalService.class));
+        super.onDestroy();
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dat_hang_activity);
+
+
+        Intent intent = new Intent(this, PayPalService.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        startService(intent);
+
+
         mDb = AppDatabase.getInstance(this);
 
         datHangRecyclerView = findViewById(R.id.recycler_view_dat_hang);
@@ -95,8 +121,14 @@ public class DatHangActivity extends AppCompatActivity {
             public void onChanged(@Nullable List<GioHangEntry> datHangs) {
                 mDatHangs = datHangs;
                 assert mDatHangs != null;
+
+                //TODO SALE
                 for (int i = 0; i < mDatHangs.size(); i++) {
-                    tongtien = mDatHangs.get(i).getGiaSanPham();
+                    if (mDatHangs.get(i).getGiaKhuyenMai() != 0){
+                        tongtien = mDatHangs.get(i).getGiaKhuyenMai();
+                    }else {
+                        tongtien = mDatHangs.get(i).getGiaSanPham();
+                    }
                     tongTienDonHang += tongtien;
                 }
 
@@ -122,6 +154,7 @@ public class DatHangActivity extends AppCompatActivity {
                 final String sdt = editTextSoDt.getText().toString().trim();
                 final String email = editTextEmail.getText().toString().trim();
                 final String diachi = editTextDiaChi.getText().toString().trim();
+                processPayment();
 
                 if (CheckConnection.haveNetworkConnection(DatHangActivity.this)) {
 
@@ -149,7 +182,7 @@ public class DatHangActivity extends AppCompatActivity {
                                                     });
                                                 }
                                                 Toast.makeText(DatHangActivity.this, "Bạn đã đặt hàng thành công, Shopping Square sẽ liên lạc để hoàn tất thanh toán!", Toast.LENGTH_LONG).show();
-                                                startActivity(new Intent(DatHangActivity.this, MainActivity.class));
+                                                //startActivity(new Intent(DatHangActivity.this, MainActivity.class));
                                                 Toast.makeText(DatHangActivity.this, "Mời bạn tiếp tục mua hàng", Toast.LENGTH_SHORT).show();
                                             } else {
                                                 Toast.makeText(DatHangActivity.this, "Lỗi không tiến hành đặt hàng được!", Toast.LENGTH_SHORT).show();
@@ -170,6 +203,8 @@ public class DatHangActivity extends AppCompatActivity {
                                                     jsonObject.put("masanpham", mDatHangs.get(i).getId());
                                                     jsonObject.put("tensanpham", mDatHangs.get(i).getTenSanPham());
                                                     jsonObject.put("giasanpham", mDatHangs.get(i).getGiaSanPham());
+                                                    //TODO SALE
+                                                    jsonObject.put("giakhuyenmai", mDatHangs.get(i).getGiaKhuyenMai());
                                                     jsonObject.put("soluongsanpham", mDatHangs.get(i).getSoLuong());
                                                 } catch (JSONException e) {
                                                     e.printStackTrace();
@@ -205,124 +240,52 @@ public class DatHangActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(DatHangActivity.this, "Thông tin cá nhân còn thiếu hoặc địa chỉ email chưa đúng", Toast.LENGTH_SHORT).show();
                     }
+
+
                 }else {
                     Toast.makeText(DatHangActivity.this, "Kiểm tra kết nối internet!", Toast.LENGTH_SHORT).show();
-
                 }
-
-/*
-                if (ten.length() > 0 && sdt.length() > 0 && email.length() > 0 && diachi.length() > 0 && isValidEmail(email)) {
-                    final RequestQueue requestQueue = Volley.newRequestQueue(DatHangActivity.this);
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.duongdandonhang, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(final String madonhang) {
-                            Toast.makeText(DatHangActivity.this, "madonhang"+madonhang, Toast.LENGTH_SHORT).show();
-
-                            if (Integer.parseInt(madonhang) > 0) {
-                                Toast.makeText(DatHangActivity.this, "madonhang > 0", Toast.LENGTH_SHORT).show();
-
-                                RequestQueue requestQueue1 = Volley.newRequestQueue(DatHangActivity.this);
-                                Toast.makeText(DatHangActivity.this, " make new chitietdonhang request", Toast.LENGTH_SHORT).show();
-
-                                StringRequest stringRequest1 = new StringRequest(Request.Method.POST, Server.duongdanchitietdonhang, new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String response) {
-                                        Toast.makeText(DatHangActivity.this, "response"+response, Toast.LENGTH_SHORT).show();
-                                        Toast.makeText(DatHangActivity.this, "response chitietdh"+response, Toast.LENGTH_SHORT).show();
-
-
-                                        if (response.equals("1")) {
-                                            Toast.makeText(DatHangActivity.this, "response sucess", Toast.LENGTH_SHORT).show();
-
-                                            for (int i = 0; i < mDatHangs.size(); i++) {
-
-                                                final int finalI = i;
-                                                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-
-                                                        mDb.gioHangDao().deleteGioHang(mDatHangs.get(finalI));
-                                                        Toast.makeText(DatHangActivity.this, "xoa gio hang"+finalI, Toast.LENGTH_SHORT).show();
-
-                                                    }
-
-                                                });
-                                            }
-                                            Toast.makeText(DatHangActivity.this, "Bạn đã thêm giỏ hàng thành công", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(DatHangActivity.this, MainActivity.class));
-                                            Toast.makeText(DatHangActivity.this, "Mời bạn tiếp tục mua hàng", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(DatHangActivity.this, "Lỗi không tiến hành đặt hàng được, mời kiểm tra kết nối internet!", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        Toast.makeText(DatHangActivity.this, "ko có response chitietdh", Toast.LENGTH_SHORT).show();
-
-
-                                    }
-                                }) {
-                                    @Override
-                                    protected Map<String, String> getParams() throws AuthFailureError {
-                                        Toast.makeText(DatHangActivity.this, " get param", Toast.LENGTH_SHORT).show();
-
-                                        JSONArray jsonArray = new JSONArray();
-                                        for (int i = 0; i < mDatHangs.size(); i++) {
-                                            JSONObject jsonObject = new JSONObject();
-                                            try {
-                                                jsonObject.put("madonhang", madonhang);
-                                                jsonObject.put("masanpham", mDatHangs.get(i).getId());
-                                                jsonObject.put("tensanpham", mDatHangs.get(i).getTenSanPham());
-                                                jsonObject.put("giasanpham", mDatHangs.get(i).getGiaSanPham());
-                                                jsonObject.put("soluongsanpham", mDatHangs.get(i).getSoLuong());
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                            jsonArray.put(jsonObject);
-                                        }
-                                        HashMap<String, String> hashMap = new HashMap<>();
-                                        hashMap.put("json", jsonArray.toString());
-                                        return hashMap;
-                                    }
-                                };
-                                requestQueue1.add(stringRequest1);
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(DatHangActivity.this, "ko có response don hang", Toast.LENGTH_SHORT).show();
-
-
-                        }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            Toast.makeText(DatHangActivity.this, "put don hang", Toast.LENGTH_SHORT).show();
-
-                            HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("tenkhachhang", ten);
-                            hashMap.put("sodienthoai", sdt);
-                            hashMap.put("email", email);
-                            hashMap.put("diachi", diachi);
-
-                            return hashMap;
-                        }
-                    };
-                    requestQueue.add(stringRequest);
-                } else {
-                    Toast.makeText(DatHangActivity.this, "Thông tin còn thiếu hoặc địa chỉ email chưa đúng", Toast.LENGTH_SHORT).show();
-                }
-*/
-
-
             }
         });
+    }
 
+    private void processPayment() {
+        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(tongTienDonHang)),"EUR", "Tong tien", PayPalPayment.PAYMENT_INTENT_SALE );
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
+        startActivityForResult(intent, PAYPAL_REQUEST_CODE);
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == PAYPAL_REQUEST_CODE){
+            if (resultCode == RESULT_OK) {
+                PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+                if (confirmation != null){
+                    try {
+                        String paymentDetails = confirmation.toJSONObject().toString(4);
+
+                        startActivity(new Intent(this, PaymentDetails.class)
+                                .putExtra("PaymentDetails", paymentDetails)
+                                .putExtra("PaymentAmount", String.valueOf(tongTienDonHang))
+                        );
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else if (resultCode == Activity.RESULT_CANCELED)
+                Toast.makeText(DatHangActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+
+        }else if (requestCode == PaymentActivity.RESULT_EXTRAS_INVALID){
+            Toast.makeText(DatHangActivity.this, "Invalid", Toast.LENGTH_SHORT).show();
+
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
 
 

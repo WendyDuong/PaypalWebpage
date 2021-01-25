@@ -13,6 +13,7 @@ public class SanPhamEntry {
     private  int idHang;
     private String tenSanPham;
     private double giaSanPham;
+    private double giaKhuyenMai;
     private int hinhAnh;
     private String khoiLuong;
     private  String moTa;
@@ -26,6 +27,20 @@ public class SanPhamEntry {
         this.idHang = idHang;
         this.tenSanPham = tenSanPham;
         this.giaSanPham = giaSanPham;
+        this.hinhAnh = hinhAnh;
+        this.khoiLuong = khoiLuong;
+        this.moTa = moTa;
+        this.thuongHieu = thuongHieu;
+        this.xuatXu = xuatXu;
+    }
+
+    @Ignore
+    public SanPhamEntry(int idHang, String tenSanPham, double giaSanPham, double giaKhuyenMai, int hinhAnh,
+                        String khoiLuong, String moTa, String thuongHieu, String xuatXu) {
+        this.idHang = idHang;
+        this.tenSanPham = tenSanPham;
+        this.giaSanPham = giaSanPham;
+        this.giaKhuyenMai = giaKhuyenMai;
         this.hinhAnh = hinhAnh;
         this.khoiLuong = khoiLuong;
         this.moTa = moTa;
@@ -118,5 +133,13 @@ public class SanPhamEntry {
 
     public void setXuatXu(String xuatXu) {
         this.xuatXu = xuatXu;
+    }
+
+    public double getGiaKhuyenMai() {
+        return giaKhuyenMai;
+    }
+
+    public void setGiaKhuyenMai(double giaKhuyenMai) {
+        this.giaKhuyenMai = giaKhuyenMai;
     }
 }

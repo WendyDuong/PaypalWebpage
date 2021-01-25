@@ -5,6 +5,7 @@ package com.example.android.demoapp.utils;
  */
 
 public class Server {
+    //TODO SALE
 
     //public static String localhost ="http://192.168.0.51:8080/";
     public static String localhost ="https://germanyshoppingsquare.000webhostapp.com/";

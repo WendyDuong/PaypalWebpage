@@ -317,7 +317,10 @@ public class CatalogActivity extends AppCompatActivity {
                         JSONArray json = new JSONArray(response);
                         for (int i = 0; i < json.length(); i++) {
                             JSONObject object = json.getJSONObject(i);
-                            sanPhams.add(new SanPham(object.getInt("id"), object.getInt("idHang"), object.getString("tenSanPham"), object.getDouble("giaSanPham"), object.getString("hinhAnhSanPham"), object.getString("khoiLuong"), object.getString("moTa"), object.getString("thuongHieu"), object.getString("xuatXu")));
+                            final double giakhuyenmai = object.getDouble("giaKhuyenMai");
+                            Log.d("sale", "In ra thoi");
+
+                            sanPhams.add(new SanPham(object.getInt("id"), object.getInt("idHang"), object.getString("tenSanPham"), object.getDouble("giaSanPham"), giakhuyenmai, object.getString("hinhAnhSanPham"), object.getString("khoiLuong"), object.getString("moTa"), object.getString("thuongHieu"), object.getString("xuatXu")));
                             catalogAdapter.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {

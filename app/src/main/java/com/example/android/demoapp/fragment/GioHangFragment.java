@@ -80,7 +80,6 @@ public class GioHangFragment extends Fragment {
             public void onChanged(@Nullable List<GioHangEntry> gioHangEntries) {
                 tvTongtien = rootView.findViewById(R.id.tong_tien);
                 mGiohangs = gioHangEntries;
-
                 assert mGiohangs != null;
                 if (mGiohangs.size() == 0) {
                     tvTongtien.setVisibility(View.INVISIBLE);
@@ -89,8 +88,14 @@ public class GioHangFragment extends Fragment {
                 }else {
                     tvTongtien.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.INVISIBLE);
+
+                    //TODO SALE
                     for (int i = 0; i < mGiohangs.size(); i++) {
-                        tongtien = mGiohangs.get(i).getGiaSanPham();
+                        if (mGiohangs.get(i).getGiaKhuyenMai() != 0){
+                            tongtien = mGiohangs.get(i).getGiaKhuyenMai();
+                        }else {
+                            tongtien = mGiohangs.get(i).getGiaSanPham();
+                        }
                         tongTienDonHang += tongtien;
                     }
 

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +65,20 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
 
         //Rounding curency to make a easy reading
         giasp = Precision.round(giasp/1000, 0)*1000;
-        holder.tvGiasanpham.setText(decimalFormat.format(giasp) + " Đ");
+
+        if (sanPham.getGiaKhuyenMai() != 0){
+            //TODO SALE
+            holder.tvGiasanpham.setText(decimalFormat.format(giasp) + " Đ");
+            holder.tvGiasanpham.setPaintFlags(holder.tvGiasanpham.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.tvGiakhuyenmai.setText(sanPham.getGiaKhuyenMai()+ " Đ");
+            holder.tvGiakhuyenmai.setVisibility(View.VISIBLE);
+        }
+        else{
+            holder.tvGiakhuyenmai.setVisibility(View.INVISIBLE);
+            holder.tvGiasanpham.setText(decimalFormat.format(giasp) + " Đ");
+            holder.tvGiasanpham.setPaintFlags(holder.tvGiasanpham.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
+
         Picasso.get().load(sanPham.getHinhAnhSanPham()).into(holder.imgHinhAnhSanpham);
         final int idsanpham = sanPham.getId();
 
@@ -172,11 +186,13 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
         public ImageView imgHinhAnhSanpham, imageViewTim;
         public TextView tvTensanpham;
         public TextView tvGiasanpham;
+        public TextView tvGiakhuyenmai;
         public itemHolder(View itemView) {
             super(itemView);
             imgHinhAnhSanpham = itemView.findViewById(R.id.anhsanpham);
             tvTensanpham = itemView.findViewById(R.id.tensanpham);
             tvGiasanpham = itemView.findViewById(R.id.giasanpham);
+            tvGiakhuyenmai = itemView.findViewById(R.id.giakhuyenmai);
             cardViewCatalog = itemView.findViewById(R.id.card_view_catalog);
             imageViewTim = itemView.findViewById(R.id.image_view_tim);
             mDb = AppDatabase.getInstance(context);
@@ -205,6 +221,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                         final int idsanpham = sanPhams.get(getLayoutPosition()).getId();
                         final String tensanpham = sanPhams.get(getLayoutPosition()).getTenSanPham();
                         final double giasanpham = sanPhams.get(getLayoutPosition()).getGiaSanPham();
+                        final double giakhuyemai = sanPhams.get(getLayoutPosition()).getGiaKhuyenMai();
                         final String hinhanhsanpham = sanPhams.get(getLayoutPosition()).getHinhAnhSanPham();
                         final String khoiluongsanpham = sanPhams.get(getLayoutPosition()).getKhoiLuong();
                         final String moTa = sanPhams.get(getLayoutPosition()).getMoTa();
@@ -213,10 +230,11 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
 
                         imageViewTim.setImageResource(R.drawable.timdo24);
 
+                        //TODO SALE
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham, hinhanhsanpham, khoiluongsanpham,idhang, moTa, thuongHieu, xuatXu));
+                                mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham, giakhuyemai, hinhanhsanpham, khoiluongsanpham,idhang, moTa, thuongHieu, xuatXu));
                             }
                         });
                     }
