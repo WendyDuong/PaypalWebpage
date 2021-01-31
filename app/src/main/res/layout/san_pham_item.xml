@@ -25,10 +25,12 @@
 
         <ImageView
             android:id="@+id/anhsanpham"
+            android:visibility="invisible"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_margin="4dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,6 +63,7 @@
 
         <ImageView
             android:id="@+id/image_view_tim"
+            android:visibility="invisible"
             android:layout_width="@dimen/heart_size"
             android:layout_height="@dimen/heart_size"
             android:layout_marginTop="4dp"
@@ -86,6 +89,29 @@
             app:layout_constraintEnd_toEndOf="@+id/tensanpham"
             app:layout_constraintTop_toBottomOf="@+id/tensanpham" />
 
+        <ProgressBar
+            android:id="@+id/progressBarAnhSP"
+            android:visibility="visible"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/anhsanpham"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/anhsanpham"
+            app:layout_constraintVertical_bias="0.509" />
+
+        <ProgressBar
+            android:id="@+id/progressBarTim"
+            android:visibility="visible"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="@dimen/heart_size"
+            android:layout_height="@dimen/heart_size"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/image_view_tim"
+            app:layout_constraintTop_toBottomOf="@+id/giasanpham"
+            app:layout_constraintVertical_bias="1.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

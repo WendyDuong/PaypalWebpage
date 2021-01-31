@@ -121,12 +121,11 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
             imgSanPham.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int idintent = yeuThichs.get(getLayoutPosition()).getIdSanPham();
-                    int idhang = yeuThichs.get(getLayoutPosition()).getIdHang();
+                    int idSanPham = yeuThichs.get(getLayoutPosition()).getIdSanPham();
+                    int idHang = yeuThichs.get(getLayoutPosition()).getIdHang();
                     Intent intentChiTiet = new Intent(mcontext, DetailActivity.class);
-                    intentChiTiet.putExtra(EXTRA_HANG_ID, idhang);
-                    intentChiTiet.putExtra(EXTRA_SANPHAM_ID, idintent);
-                    intentChiTiet.putExtra("YeuThichAdapter", "YeuThichAdapter" );
+                    intentChiTiet.putExtra(EXTRA_HANG_ID, idHang);
+                    intentChiTiet.putExtra(EXTRA_SANPHAM_ID, idSanPham);
 
                     intentChiTiet.putExtra("YeuThichAdapter",yeuThichs.get(getLayoutPosition()));
 

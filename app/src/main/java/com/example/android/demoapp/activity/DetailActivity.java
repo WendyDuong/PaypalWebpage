@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -102,7 +103,7 @@ public class DetailActivity extends AppCompatActivity {
         eventSpinner();
         yeuthichEvent();
         intent = getIntent();
-        getsanpham();
+        getsanpham(intent);
 
         if (intent != null && intent.hasExtra(EXTRA_HANG_ID)) {
             idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_ID);
@@ -225,8 +226,9 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    private void getsanpham() {
+    private void getsanpham(Intent intent) {
         if (intent.hasExtra("CatalogAdapter")) {
+            Log.i("LogData", "CatalogAdapter");
             SanPham sanPham = (SanPham) getIntent().getSerializableExtra("CatalogAdapter");
             assert sanPham != null;
             idsanpham = sanPham.getId();
@@ -262,6 +264,8 @@ public class DetailActivity extends AppCompatActivity {
             tvXuatXu.setText("Xuất xứ: " + xuatXu);
             Picasso.get().load(hinhanhsp).into(imgChiTiet);
         } else if (intent.hasExtra("GioHangAdapter")) {
+            Log.i("LogData", "GioHangAdapter");
+
             GioHangEntry gioHang = (GioHangEntry) getIntent().getSerializableExtra("GioHangAdapter");
             assert gioHang != null;
             idsanpham = gioHang.getIdSanPham();
@@ -297,6 +301,8 @@ public class DetailActivity extends AppCompatActivity {
             }
             Picasso.get().load(hinhanhsp).into(imgChiTiet);
         } else if (intent.hasExtra("YeuThichAdapter")) {
+            Log.i("LogData", "YeuThichAdapter");
+
             YeuThichEntry yeuThich = (YeuThichEntry) getIntent().getSerializableExtra("YeuThichAdapter");
             assert yeuThich != null;
             idsanpham = yeuThich.getIdSanPham();
@@ -329,7 +335,7 @@ public class DetailActivity extends AppCompatActivity {
             }
             Picasso.get().load(hinhanhsp).into(imgChiTiet);
         } else
-            Toast.makeText(DetailActivity.this, "TenSP: " + tensp, Toast.LENGTH_SHORT).show();
+            Toast.makeText(DetailActivity.this, "Error!", Toast.LENGTH_SHORT).show();
 
 
     }
@@ -344,7 +350,8 @@ public class DetailActivity extends AppCompatActivity {
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensp, giasp, hinhanhsp, khoiluongsp, idHang, moTa, thuongHieu, xuatXu));
+                            //TODO SALE
+                            mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensp, giasp,giakhuyenmai, hinhanhsp, khoiluongsp, idHang, moTa, thuongHieu, xuatXu));
 
                         }
                     });
@@ -500,13 +507,23 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        setIntent(intent);
+        Log.i("Intent", "OnNewIntent");
+
+        this.setIntent(intent);
         intent = getIntent();
+        getsanpham(intent);
+        Log.i("Intent", "Reload getsanpham()");
+
+
+/*
         if (intent != null && intent.hasExtra(EXTRA_HANG_ID) && intent.hasExtra(EXTRA_SANPHAM_ID)) {
+*/
+        if (intent != null) {
+
             idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_ID);
             Picasso.get().load(MainFragment.manghangsanpham.get(idHang).getAnhHang()).into(imageViewHangSp);
             idsanpham = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
-            getsanpham();
+
         }
         super.onNewIntent(intent);
     }

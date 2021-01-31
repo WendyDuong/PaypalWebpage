@@ -110,12 +110,11 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
             imageViewITem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int idintent = gioHangs.get(getLayoutPosition()).getIdSanPham();
+                    int idIntent = gioHangs.get(getLayoutPosition()).getIdSanPham();
                     int idHang = gioHangs.get(getLayoutPosition()).getIdHang();
                     Intent intentChiTiet = new Intent(context, DetailActivity.class);
-                    intentChiTiet.putExtra(EXTRA_SANPHAM_ID, idintent);
+                    intentChiTiet.putExtra(EXTRA_SANPHAM_ID, idIntent);
                     intentChiTiet.putExtra(EXTRA_HANG_ID, idHang);
-                    intentChiTiet.putExtra("GioHangAdapter", "GioHangAdapter" );
 
                     intentChiTiet.putExtra("GioHangAdapter",gioHangs.get(getLayoutPosition()));
 

@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -22,6 +24,7 @@ import com.example.android.demoapp.activity.DetailActivity;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.YeuThichEntry;
 import com.example.android.demoapp.model.SanPham;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.math3.util.Precision;
@@ -57,29 +60,50 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
 
     @Override
     public void onBindViewHolder(final itemHolder holder, final int position) {
-
         SanPham sanPham = sanPhams.get(position);
         holder.tvTensanpham.setText(sanPham.getTenSanPham());
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         double giasp = sanPham.getGiaSanPham();
 
         //Rounding curency to make a easy reading
-        giasp = Precision.round(giasp/1000, 0)*1000;
+        giasp = Precision.round(giasp / 1000, 0) * 1000;
 
-        if (sanPham.getGiaKhuyenMai() != 0){
+        if (sanPham.getGiaKhuyenMai() != 0) {
             //TODO SALE
             holder.tvGiasanpham.setText(decimalFormat.format(giasp) + " Đ");
             holder.tvGiasanpham.setPaintFlags(holder.tvGiasanpham.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.tvGiakhuyenmai.setText(sanPham.getGiaKhuyenMai()+ " Đ");
+            holder.tvGiakhuyenmai.setText(sanPham.getGiaKhuyenMai() + " Đ");
             holder.tvGiakhuyenmai.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             holder.tvGiakhuyenmai.setVisibility(View.INVISIBLE);
             holder.tvGiasanpham.setText(decimalFormat.format(giasp) + " Đ");
             holder.tvGiasanpham.setPaintFlags(holder.tvGiasanpham.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
-        Picasso.get().load(sanPham.getHinhAnhSanPham()).into(holder.imgHinhAnhSanpham);
+/*
+        Picasso.get().load(sanPham.getHinhAnhSanPham()).placeholder(R.drawable.error).fit().into(holder.imgHinhAnhSanpham);
+*/
+        Picasso.get().load(sanPham.getHinhAnhSanPham()).fit().into(holder.imgHinhAnhSanpham, new Callback() {
+            @Override
+            public void onSuccess() {
+                if (holder.progressBarAnhSP != null && holder.progressBarTim != null) {
+                    holder.progressBarAnhSP.setVisibility(View.GONE);
+                    holder.progressBarTim.setVisibility(View.GONE);
+                    holder.imgHinhAnhSanpham.setVisibility(View.VISIBLE);
+                    holder.imageViewTim.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                holder.progressBarAnhSP.setVisibility(View.VISIBLE);
+                holder.progressBarTim.setVisibility(View.VISIBLE);
+                holder.imageViewTim.setVisibility(View.GONE);
+                holder.imgHinhAnhSanpham.setVisibility(View.INVISIBLE);
+
+
+            }
+        });
         final int idsanpham = sanPham.getId();
 
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) holder.cardViewCatalog.getLayoutParams();
@@ -108,31 +132,29 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
 
 
         Configuration config = context.getResources().getConfiguration();
-        if (config.smallestScreenWidthDp >= 720)
-        {
+        if (config.smallestScreenWidthDp >= 720) {
             boolean isFirst3Iteme = position < 3;
-            boolean isLast3tems = position > getItemCount() - 3 ;
-            if ( isFirst3Iteme){
+            boolean isLast3tems = position > getItemCount() - 3;
+            if (isFirst3Iteme) {
                 top = dptoPx(24);
             }
-            if (isLast3tems){
+            if (isLast3tems) {
                 bottom = dptoPx(24);
             }
 
-            isLeftSide =  position % 3 == 0;
-            isRightSide = ( position + 1) % 3 == 0;
+            isLeftSide = position % 3 == 0;
+            isRightSide = (position + 1) % 3 == 0;
 
             if (isLeftSide) {
                 right = dptoPx(0);
                 left = dptoPx(36);
             }
-            if(isRightSide) {
+            if (isRightSide) {
                 left = dptoPx(0);
                 right = dptoPx(36);
             }
             boolean isMiddle = (position + 2) % 3 == 0;
-            if ( isMiddle)
-            {
+            if (isMiddle) {
                 right = dptoPx(18);
                 left = dptoPx(18);
             }
@@ -175,7 +197,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
     }
 
 
-    public void setYeuThichs(List<YeuThichEntry> yeuThichEntries){
+    public void setYeuThichs(List<YeuThichEntry> yeuThichEntries) {
         this.mYeuThichEntries = yeuThichEntries;
         //notifyDataSetChanged();
     }
@@ -187,6 +209,9 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
         public TextView tvTensanpham;
         public TextView tvGiasanpham;
         public TextView tvGiakhuyenmai;
+        public ProgressBar progressBarAnhSP, progressBarTim;
+
+
         public itemHolder(View itemView) {
             super(itemView);
             imgHinhAnhSanpham = itemView.findViewById(R.id.anhsanpham);
@@ -195,27 +220,30 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
             tvGiakhuyenmai = itemView.findViewById(R.id.giakhuyenmai);
             cardViewCatalog = itemView.findViewById(R.id.card_view_catalog);
             imageViewTim = itemView.findViewById(R.id.image_view_tim);
+            progressBarAnhSP = itemView.findViewById(R.id.progressBarAnhSP);
+            progressBarTim = itemView.findViewById(R.id.progressBarTim);
+
             mDb = AppDatabase.getInstance(context);
 
             imgHinhAnhSanpham.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SanPham sanPham = sanPhams.get(getLayoutPosition());
-                    iD = sanPham.getId();
-                    idHang = sanPham.getIdHang();
-                    Intent intent = new Intent(context, DetailActivity.class);
-                    intent.putExtra(EXTRA_SANPHAM_ID, iD);
-                    intent.putExtra(EXTRA_HANG_ID, idHang);
-                    intent.putExtra("CatalogAdapter", "CatalogAdapter" );
-                    intent.putExtra("CatalogAdapter",sanPhams.get(getLayoutPosition()));
-                    context.startActivity(intent);
-                }
+                        SanPham sanPham = sanPhams.get(getLayoutPosition());
+                        iD = sanPham.getId();
+                        idHang = sanPham.getIdHang();
+                        Intent intent = new Intent(context, DetailActivity.class);
+                        intent.putExtra(EXTRA_SANPHAM_ID, iD);
+                        intent.putExtra(EXTRA_HANG_ID, idHang);
+                        intent.putExtra("CatalogAdapter", sanPhams.get(getLayoutPosition()));
+                        context.startActivity(intent);
+                    }
             });
 
             imageViewTim.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("UseCompatLoadingForDrawables")
                 @Override
                 public void onClick(View view) {
+
                     if (imageViewTim.getDrawable().getConstantState() == context.getResources().getDrawable(R.drawable.timden24).getConstantState()) {
                         final int idhang = sanPhams.get(getLayoutPosition()).getIdHang();
                         final int idsanpham = sanPhams.get(getLayoutPosition()).getId();
@@ -234,18 +262,17 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham, giakhuyemai, hinhanhsanpham, khoiluongsanpham,idhang, moTa, thuongHieu, xuatXu));
+                                mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham, giakhuyemai, hinhanhsanpham, khoiluongsanpham, idhang, moTa, thuongHieu, xuatXu));
                             }
                         });
-                    }
-                    else {
+                    } else {
                         final int idsanpham = sanPhams.get(getLayoutPosition()).getId();
                         imageViewTim.setImageResource(R.drawable.timden24);
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
                                 for (int vitrixoa = 0; vitrixoa < mYeuThichEntries.size(); vitrixoa++) {
-                                    int idsanphamxoa = mYeuThichEntries.get(vitrixoa).getIdSanPham() ;
+                                    int idsanphamxoa = mYeuThichEntries.get(vitrixoa).getIdSanPham();
                                     if (idsanphamxoa == idsanpham) {
                                         mDb.yeuThichDao().deleteYeuThich(mYeuThichEntries.get(vitrixoa));
                                     }
@@ -254,7 +281,9 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                         });
                     }
                 }
+
             });
         }
+
     }
 }
