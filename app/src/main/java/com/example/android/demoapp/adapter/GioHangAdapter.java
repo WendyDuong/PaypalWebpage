@@ -59,17 +59,16 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
         holder.textViewSoLuongItem.setText(soluongsanpham + "");
         holder.itemView.setTag(idsanpham);
 
-        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         if (giakhuyenmai != 0){
             //TODO SALE
-            holder.textViewGiaItem.setText(decimalFormat.format(giasanpham) + " Đ");
+            holder.textViewGiaItem.setText("€"+Math.round(giasanpham * 100.0) / 100.0);
             holder.textViewGiaItem.setPaintFlags(holder.textViewGiaItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.tvGiaKhuyenMai.setText(decimalFormat.format(giakhuyenmai) + " Đ");
+            holder.tvGiaKhuyenMai.setText("€"+Math.round(giakhuyenmai * 100.0) / 100.0);
             holder.tvGiaKhuyenMai.setVisibility(View.VISIBLE);
         }
         else{
             holder.tvGiaKhuyenMai.setVisibility(View.INVISIBLE);
-            holder.textViewGiaItem.setText(decimalFormat.format(giasanpham) + " Đ");
+            holder.textViewGiaItem.setText("€"+Math.round(giasanpham * 100.0) / 100.0);
             holder.textViewGiaItem.setPaintFlags(holder.textViewGiaItem.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
@@ -176,7 +175,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                         @Override
                         public void run() {
                             //TODO SALE
-                            mDb.gioHangDao().updateGioHang(new GioHangEntry(id , idsanpham,tensanpham, giasanpham * soluongsanphammoi /soluongsanphamcu, giakhuyenmai * soluongsanphammoi /soluongsanphamcu,  hinhanhsanpham,khoiluongsanpham,soluongsanphammoi,idhang, moTa, thuongHieu, xuatXu));
+                            mDb.gioHangDao().updateGioHang(new GioHangEntry(id , idsanpham,tensanpham, Math.round(giasanpham * soluongsanphammoi /soluongsanphamcu * 100.0) / 100.0, Math.round(giakhuyenmai * soluongsanphammoi /soluongsanphamcu * 100.0) / 100.0,  hinhanhsanpham,khoiluongsanpham,soluongsanphammoi,idhang, moTa, thuongHieu, xuatXu));
 
                         }
                     });
@@ -213,7 +212,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.viewHold
                         @Override
                         public void run() {
                             //TODO SALE
-                            mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensanpham, giasanpham * soluongsanphammoi / soluongsanphamcu, giakhuyenmai * soluongsanphammoi /soluongsanphamcu, hinhanhsanpham, khoiluongsanpham, soluongsanphammoi, idhang, moTa, thuongHieu, xuatXu));
+                            mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensanpham, Math.round(giasanpham * soluongsanphammoi /soluongsanphamcu * 100.0) / 100.0, Math.round(giakhuyenmai * soluongsanphammoi /soluongsanphamcu * 100.0) / 100.0, hinhanhsanpham, khoiluongsanpham, soluongsanphammoi, idhang, moTa, thuongHieu, xuatXu));
                         }
                     });
                     if (soluongsanphammoi < 2) {

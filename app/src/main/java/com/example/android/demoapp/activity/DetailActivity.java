@@ -238,22 +238,18 @@ public class DetailActivity extends AppCompatActivity {
             thuongHieu = sanPham.getThuongHieu();
             xuatXu = sanPham.getXuatXu();
             moTa = sanPham.getMoTa();
-            //Rounding currency to make a easy reading
-            giasp = sanPham.getGiaSanPham();
-            giasp = Precision.round(giasp / 1000, 0) * 1000;
-            giakhuyenmai = sanPham.getGiaKhuyenMai();
-            giakhuyenmai = Precision.round(giakhuyenmai / 1000, 0) * 1000;
-            DecimalFormat deci = new DecimalFormat("###,###,###");
+            giasp = Math.round(sanPham.getGiaSanPham() * 100.0) / 100.0;
+            giakhuyenmai = Math.round(sanPham.getGiaKhuyenMai() * 100.0) / 100.0;
 
             //TODO SALE
             if (sanPham.getGiaKhuyenMai() != 0) {
-                tvGia.setText(deci.format(giasp) + " Đ");
+                tvGia.setText("€"+giasp);
                 tvGia.setPaintFlags(tvGia.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                tvGiaKhuyenMai.setText(deci.format(giakhuyenmai) + " Đ");
+                tvGiaKhuyenMai.setText("€"+giakhuyenmai);
                 tvGiaKhuyenMai.setVisibility(View.VISIBLE);
             } else {
                 tvGiaKhuyenMai.setVisibility(View.INVISIBLE);
-                tvGia.setText(deci.format(giasp) + " Đ");
+                tvGia.setText("€"+giasp);
                 tvGia.setPaintFlags(tvGia.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
 
@@ -275,28 +271,24 @@ public class DetailActivity extends AppCompatActivity {
             thuongHieu = gioHang.getThuongHieu();
             xuatXu = gioHang.getXuatXu();
             moTa = gioHang.getMoTa();
-            //Rounding currency to make a easy reading
-            giasp = gioHang.getGiaSanPham()/gioHang.getSoLuong();
-            giasp = Precision.round(giasp / 1000, 0) * 1000;
-            giakhuyenmai = gioHang.getGiaKhuyenMai()/gioHang.getSoLuong();
-            giakhuyenmai = Precision.round(giakhuyenmai / 1000, 0) * 1000;
+            giasp = Math.round(gioHang.getGiaSanPham()/gioHang.getSoLuong() * 100.0) / 100.0;
+            giakhuyenmai = Math.round(gioHang.getGiaKhuyenMai()/gioHang.getSoLuong() * 100.0) / 100.0;
 
             tvTen.setText(tensp);
             tvMoTa.setText(moTa);
             tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
             tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
             tvXuatXu.setText("Xuất xứ: " + xuatXu);
-            DecimalFormat deci = new DecimalFormat("###,###,###");
 
             //TODO SALE
             if (giakhuyenmai!= 0) {
-                tvGia.setText(deci.format(giasp) + " Đ");
+                tvGia.setText("€"+giasp);
                 tvGia.setPaintFlags(tvGia.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                tvGiaKhuyenMai.setText(deci.format(giakhuyenmai) + " Đ");
+                tvGiaKhuyenMai.setText("€"+giakhuyenmai);
                 tvGiaKhuyenMai.setVisibility(View.VISIBLE);
             } else {
                 tvGiaKhuyenMai.setVisibility(View.INVISIBLE);
-                tvGia.setText(deci.format(giasp) + " Đ");
+                tvGia.setText("€"+giasp);
                 tvGia.setPaintFlags(tvGia.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
             Picasso.get().load(hinhanhsp).into(imgChiTiet);
@@ -312,25 +304,23 @@ public class DetailActivity extends AppCompatActivity {
             thuongHieu = yeuThich.getThuongHieu();
             xuatXu = yeuThich.getXuatXu();
             moTa = yeuThich.getMoTa();
-            //Rounding currency to make a easy reading
-            giasp = Precision.round(yeuThich.getGiaSanPham() / 1000, 0) * 1000;
-            giakhuyenmai = Precision.round(yeuThich.getGiaKhuyenMai() / 1000, 0) * 1000;
+            giasp = Math.round(yeuThich.getGiaSanPham() * 100.0) / 100.0;
+            giakhuyenmai = Math.round(yeuThich.getGiaKhuyenMai() * 100.0) / 100.0;
             tvTen.setText(tensp);
             tvMoTa.setText(moTa);
             tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
             tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
             tvXuatXu.setText("Xuất xứ: " + xuatXu);
-            DecimalFormat deci = new DecimalFormat("###,###,###");
 
             //TODO SALE
             if (giakhuyenmai!= 0) {
-                tvGia.setText(deci.format(giasp) + " Đ");
+                tvGia.setText("€"+giasp);
                 tvGia.setPaintFlags(tvGia.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                tvGiaKhuyenMai.setText(deci.format(giakhuyenmai) + " Đ");
+                tvGiaKhuyenMai.setText("€"+giakhuyenmai);
                 tvGiaKhuyenMai.setVisibility(View.VISIBLE);
             } else {
                 tvGiaKhuyenMai.setVisibility(View.INVISIBLE);
-                tvGia.setText(deci.format(giasp) + " Đ");
+                tvGia.setText("€"+giasp);
                 tvGia.setPaintFlags(tvGia.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
             Picasso.get().load(hinhanhsp).into(imgChiTiet);
@@ -390,7 +380,7 @@ public class DetailActivity extends AppCompatActivity {
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * soluongmoi) / 1000, 0) * 1000,Precision.round((giakhuyenmai * soluongmoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluongmoi, idHang, moTa, thuongHieu, xuatXu));
+                                    mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, giasp * soluongmoi,giakhuyenmai * soluongmoi, hinhanhsp, khoiluongsp, soluongmoi, idHang, moTa, thuongHieu, xuatXu));
 
 
                                 }
@@ -403,7 +393,7 @@ public class DetailActivity extends AppCompatActivity {
                                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, Precision.round((giasp * 20) / 1000, 0) * 1000,Precision.round((giakhuyenmai * soluongmoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, 50, idHang, moTa, thuongHieu, xuatXu));
+                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, giasp * 20,giakhuyenmai * soluongmoi, hinhanhsp, khoiluongsp, 50, idHang, moTa, thuongHieu, xuatXu));
 
 
                                     }
@@ -429,7 +419,7 @@ public class DetailActivity extends AppCompatActivity {
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, Precision.round((giaspmoi) / 1000, 0) * 1000, Precision.round((giakhuyenmaimoi) / 1000, 0) * 1000, hinhanhsp, khoiluongsp, soluong, idHang, moTa, thuongHieu, xuatXu));
+                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, giaspmoi, giakhuyenmaimoi, hinhanhsp, khoiluongsp, soluong, idHang, moTa, thuongHieu, xuatXu));
 
 
                             }
@@ -448,7 +438,7 @@ public class DetailActivity extends AppCompatActivity {
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, Precision.round((giaspmoi) / 1000, 0) * 1000,Precision.round((giakhuyenmaimoi) / 1000, 0) * 1000,  hinhanhsp, khoiluongsp, soluong, idHang, moTa, thuongHieu, xuatXu));
+                            mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, giaspmoi,giakhuyenmaimoi,  hinhanhsp, khoiluongsp, soluong, idHang, moTa, thuongHieu, xuatXu));
 
 
                         }

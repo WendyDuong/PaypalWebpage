@@ -99,8 +99,9 @@ public class GioHangFragment extends Fragment {
                         tongTienDonHang += tongtien;
                     }
 
-                    DecimalFormat decimalFormat1 = new DecimalFormat("###,###,###");
-                    tvTongtien.setText("Tổng số tiền: " + decimalFormat1.format(tongTienDonHang) + " Đ");
+                    // rounding number in case 3.19x6 = 19.13999999
+                    double gialamtron = Math.round(tongTienDonHang * 100.0) / 100.0;
+                    tvTongtien.setText("Tổng số tiền: " + "€"+ gialamtron);
                     tongTienDonHang = 0;
                 }
                 gioHangAdapter.setGioHangs(gioHangEntries);

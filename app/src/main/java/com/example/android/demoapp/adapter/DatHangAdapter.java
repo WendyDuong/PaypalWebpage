@@ -54,29 +54,28 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
         double giakhuyenmai = gioHangEntry.getGiaKhuyenMai();
         String hinhanhsanpham = gioHangEntry.getHinhAnhSanPham();
         int soluongsanpham = gioHangEntry.getSoLuong();
-        double giaDonViSanPham = giasanpham/soluongsanpham;
-        double giaDonViKhuyenMai = giakhuyenmai/soluongsanpham;
+        double giaDonViSanPham = Math.round(giasanpham/soluongsanpham * 100.0) / 100.0;
+        double giaDonViKhuyenMai = Math.round(giakhuyenmai/soluongsanpham * 100.0) / 100.0;
         int idsanpham = gioHangEntry.getIdSanPham();
 
         holder.textViewTenItem.setText(tensanpham);
         holder.textViewKhoiLuongItem.setText(khoiluongsanpham);
-        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         //TODO SALE
 
         if (giakhuyenmai!= 0){
             //TODO SALE
-            holder.textViewDonGia.setText(decimalFormat.format(giaDonViSanPham) + " Đ");
+            holder.textViewDonGia.setText("€"+ giaDonViSanPham);
             holder.textViewDonGia.setPaintFlags(holder.textViewDonGia.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.textViewDonGiaKhuyenMai.setText(decimalFormat.format(giaDonViKhuyenMai) + " Đ");
+            holder.textViewDonGiaKhuyenMai.setText("€"+ giaDonViKhuyenMai);
             holder.textViewDonGiaKhuyenMai.setVisibility(View.VISIBLE);
-            holder.textViewGiaItem.setText(decimalFormat.format(giakhuyenmai) + " Đ");
+            holder.textViewGiaItem.setText("€"+ giakhuyenmai);
 
         }
         else{
             holder.textViewDonGiaKhuyenMai.setVisibility(View.INVISIBLE);
-            holder.textViewDonGia.setText(decimalFormat.format(giaDonViSanPham) + " Đ");
+            holder.textViewDonGia.setText("€"+giaDonViSanPham);
             holder.textViewDonGia.setPaintFlags(holder.textViewDonGia.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            holder.textViewGiaItem.setText(decimalFormat.format(giasanpham) + " Đ");
+            holder.textViewGiaItem.setText("€"+ giasanpham);
 
         }
 

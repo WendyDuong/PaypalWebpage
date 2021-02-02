@@ -67,8 +67,10 @@ public class DatHangActivity extends AppCompatActivity {
     Button buttonDatHang, buttonMuaTiep;
     private double tongTienDonHang = 0;
     private AppDatabase mDb;
-    private static final int PAYPAL_REQUEST_CODE = 9797;
 
+    //TODO PAYMENT
+    private static final int PAYPAL_REQUEST_CODE = 9797;
+    //TODO PAYMENT
     private static PayPalConfiguration config = new PayPalConfiguration()
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
             .clientId(Config.PAYPAL_CLIENT_ID);
@@ -76,7 +78,7 @@ public class DatHangActivity extends AppCompatActivity {
     public static boolean isValidEmail(String email) {
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
-
+    //TODO PAYMENT
     @Override
     protected void onDestroy() {
         stopService(new Intent(this, PayPalService.class));
@@ -88,7 +90,8 @@ public class DatHangActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dat_hang_activity);
 
-
+        //TODO PAYMENT
+        //Starting paypal service
         Intent intent = new Intent(this, PayPalService.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
         startService(intent);
@@ -131,9 +134,9 @@ public class DatHangActivity extends AppCompatActivity {
                     }
                     tongTienDonHang += tongtien;
                 }
+                double gialamtron = Math.round(tongTienDonHang * 100.0) / 100.0;
 
-                DecimalFormat decimalFormat1 = new DecimalFormat("###,###,###");
-                tongTien.setText("Tổng số tiền: " + decimalFormat1.format(tongTienDonHang) + " Đ");
+                tongTien.setText("Tổng số tiền: " + "€" + gialamtron);
                 datHangAdapter.setDatHang(mDatHangs);
             }
         });
@@ -248,16 +251,17 @@ public class DatHangActivity extends AppCompatActivity {
             }
         });
     }
-
+    //TODO PAYMENT
     private void processPayment() {
         PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(tongTienDonHang)),"EUR", "Tong tien", PayPalPayment.PAYMENT_INTENT_SALE );
+        //send amount of money to pay (tongTienDonHang) to PaymentActivity, where payment methods ( Paypal/ Debit/..) was shown.
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
         intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
         startActivityForResult(intent, PAYPAL_REQUEST_CODE);
 
     }
-
+    //TODO PAYMENT
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == PAYPAL_REQUEST_CODE){

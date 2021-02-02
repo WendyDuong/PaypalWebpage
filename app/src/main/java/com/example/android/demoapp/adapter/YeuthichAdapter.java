@@ -61,23 +61,21 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
         String hinhanhsanpham = yeuThichEntry.getHinhAnhSanPham();
         double giasanpham = yeuThichEntry.getGiaSanPham();
         double giakhuyenmai = yeuThichEntry.getGiaKhuyenMai();
-        giasanpham = Precision.round(giasanpham / 1000, 0) * 1000;
 
         holder.tvTen.setText(tensanpham);
         holder.tvKhoiluong.setText(khoiluongsanpham);
         Picasso.get().load(hinhanhsanpham).into(holder.imgSanPham);
-        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
 
         if (giakhuyenmai != 0){
             //TODO SALE
-            holder.tvGia.setText(decimalFormat.format(giasanpham) + " Đ");
+            holder.tvGia.setText("€"+giasanpham);
             holder.tvGia.setPaintFlags(holder.tvGia.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.tvGiaKhuyenMai.setText(decimalFormat.format(giakhuyenmai) + " Đ");
+            holder.tvGiaKhuyenMai.setText("€"+giakhuyenmai);
             holder.tvGiaKhuyenMai.setVisibility(View.VISIBLE);
         }
         else{
             holder.tvGiaKhuyenMai.setVisibility(View.INVISIBLE);
-            holder.tvGia.setText(decimalFormat.format(giasanpham) + " Đ");
+            holder.tvGia.setText("€"+giasanpham);
             holder.tvGia.setPaintFlags(holder.tvGia.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
@@ -194,7 +192,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham / 1000, 0) * 1000, Precision.round(giakhuyenmai / 1000, 0) * 1000, hinhanhsanpham, khoiluongsanpham, 1, idHang, moTa, thuongHieu, xuatXu));
+                                    mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, giasanpham, giakhuyenmai , hinhanhsanpham, khoiluongsanpham, 1, idHang, moTa, thuongHieu, xuatXu));
 
                                 }
                             });
@@ -205,7 +203,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                             @Override
                             public void run() {
                                 //TODO SALE
-                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, Precision.round(giasanpham / 1000, 0) * 1000, Precision.round(giakhuyenmai / 1000, 0) * 1000, hinhanhsanpham, khoiluongsanpham, 1, idHang, moTa, thuongHieu, xuatXu));
+                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, giasanpham, giakhuyenmai, hinhanhsanpham, khoiluongsanpham, 1, idHang, moTa, thuongHieu, xuatXu));
                             }
                         });
                         Toast.makeText(mcontext,  "Đã thêm " + tensanpham + " vào giỏ hàng", Toast.LENGTH_SHORT).show();

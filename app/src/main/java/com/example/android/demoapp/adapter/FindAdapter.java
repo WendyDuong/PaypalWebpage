@@ -60,29 +60,24 @@ public class FindAdapter extends RecyclerView.Adapter<FindAdapter.itemHolder> {
 
         SanPham sanPham = sanPhams.get(position);
         holder.tvTensanpham.setText(sanPham.getTenSanPham());
-        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         double giasp = sanPham.getGiaSanPham();
         double giakhuyenmai = sanPham.getGiaKhuyenMai();
 
-        //Rounding curency to make a easy reading
-        giasp = Precision.round(giasp/1000, 0)*1000;
-        giakhuyenmai = Precision.round(giakhuyenmai/1000, 0)*1000;
-
         if (sanPham.getGiaKhuyenMai() != 0){
             //TODO SALE
-            holder.tvGiasanpham.setText(decimalFormat.format(giasp) + " Đ");
+            holder.tvGiasanpham.setText("€"+giasp);
             holder.tvGiasanpham.setPaintFlags(holder.tvGiasanpham.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.tvGiakhuyenmai.setText(sanPham.getGiaKhuyenMai()+ " Đ");
             holder.tvGiakhuyenmai.setVisibility(View.VISIBLE);
         }
         else{
             holder.tvGiakhuyenmai.setVisibility(View.INVISIBLE);
-            holder.tvGiasanpham.setText(decimalFormat.format(giasp) + " Đ");
+            holder.tvGiasanpham.setText("€"+giasp);
             holder.tvGiasanpham.setPaintFlags(holder.tvGiasanpham.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
 
-        holder.tvGiasanpham.setText(decimalFormat.format(giasp) + " Đ");
+        holder.tvGiasanpham.setText("€"+giasp);
         Picasso.get().load(sanPham.getHinhAnhSanPham()).into(holder.imgHinhAnhSanpham);
         final int idsanpham = sanPham.getId();
 

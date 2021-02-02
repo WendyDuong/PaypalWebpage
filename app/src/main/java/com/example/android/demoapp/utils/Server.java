@@ -21,10 +21,10 @@ public class Server {
 
 
     //Đường dẫn đến 9 hãng
-    public static String duongdansanphamhang0 = localhost+"server/getsanphamhang0.php?page=";
-    public static String duongdansanphamhang1 = localhost+"server/getsanphamhang1.php?page=";
-    public static String duongdansanphamhang2 = localhost+"server/getsanphamhang2.php?page=";
-    public static String duongdansanphamhang3 = localhost+"server/getsanphamhang3.php?page=";
+    public static String duongdansanphamhang0 = localhost+"server/getsanphamasiaandroid0.php?page=";
+    public static String duongdansanphamhang1 = localhost+"server/getsanphamasiaandroid1.php?page=";
+    public static String duongdansanphamhang2 = localhost+"server/getsanphamasiaandroid2.php?page=";
+    public static String duongdansanphamhang3 = localhost+"server/getsanphamasiaandroid3.php?page=";
     public static String duongdansanphamhang4 = localhost+"server/getsanphamhang4.php?page=";
     public static String duongdansanphamhang5 = localhost+"server/getsanphamhang5.php?page=";
     public static String duongdansanphamhang6 = localhost+"server/getsanphamhang6.php?page=";
@@ -32,7 +32,7 @@ public class Server {
     public static String duongdansanphamhang8 = localhost+"server/getsanphamhang8.php?page=";
 
     //Đường dẫn tìm kiếm sản phẩm
-    public static String duongdansanphamtheoten = localhost+"server/getsanphamtheoten.php?tenSanPham=";
+    public static String duongdansanphamtheoten = localhost+"server/getsanphamasiaandroidtheoten.php?tenSanPham=";
     public static String duongdansanphamidsanpham = localhost+"server/getsanphamtheoidsanpham.php?id=";
 
     //Đường dẫn thông tin trong NaviBar
