@@ -1,6 +1,7 @@
 package com.example.android.demoapp.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -30,15 +31,23 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.braintreepayments.api.dropin.DropInActivity;
+import com.braintreepayments.api.dropin.DropInRequest;
+import com.braintreepayments.api.dropin.DropInResult;
+import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.Config.Config;
 import com.example.android.demoapp.R;
+import com.example.android.demoapp.Retrofit.IAppChauAAPI;
 import com.example.android.demoapp.ViewModel.DatHangViewModel;
 import com.example.android.demoapp.adapter.DatHangAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.utils.CheckConnection;
+import com.example.android.demoapp.utils.Common;
 import com.example.android.demoapp.utils.Server;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
@@ -57,6 +66,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cz.msebera.android.httpclient.Header;
+import dmax.dialog.SpotsDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+
 public class DatHangActivity extends AppCompatActivity {
     DatHangAdapter datHangAdapter;
     List<GioHangEntry> mDatHangs;
@@ -67,22 +81,17 @@ public class DatHangActivity extends AppCompatActivity {
     Button buttonDatHang, buttonMuaTiep;
     private double tongTienDonHang = 0;
     private AppDatabase mDb;
+    IAppChauAAPI mService;
+    IAppChauAAPI mServiceScalars;
+    private final static int PAYMENT_REQUEST_CODE = 9797;
+    String ten, sdt, email, diachi = "";
 
-    //TODO PAYMENT
-    private static final int PAYPAL_REQUEST_CODE = 9797;
-    //TODO PAYMENT
-    private static PayPalConfiguration config = new PayPalConfiguration()
-            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
-            .clientId(Config.PAYPAL_CLIENT_ID);
+    //Global string
+    String token, amount, orderAddress, orderComment;
+    HashMap<String,String> hashMap;
 
     public static boolean isValidEmail(String email) {
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
-    }
-    //TODO PAYMENT
-    @Override
-    protected void onDestroy() {
-        stopService(new Intent(this, PayPalService.class));
-        super.onDestroy();
     }
 
     @Override
@@ -90,13 +99,9 @@ public class DatHangActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dat_hang_activity);
 
-        //TODO PAYMENT
-        //Starting paypal service
-        Intent intent = new Intent(this, PayPalService.class);
-        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-        startService(intent);
 
-
+        mService = Common.getAPI();
+        mServiceScalars = Common.getScalarsAPI();
         mDb = AppDatabase.getInstance(this);
 
         datHangRecyclerView = findViewById(R.id.recycler_view_dat_hang);
@@ -127,9 +132,9 @@ public class DatHangActivity extends AppCompatActivity {
 
                 //TODO SALE
                 for (int i = 0; i < mDatHangs.size(); i++) {
-                    if (mDatHangs.get(i).getGiaKhuyenMai() != 0){
+                    if (mDatHangs.get(i).getGiaKhuyenMai() != 0) {
                         tongtien = mDatHangs.get(i).getGiaKhuyenMai();
-                    }else {
+                    } else {
                         tongtien = mDatHangs.get(i).getGiaSanPham();
                     }
                     tongTienDonHang += tongtien;
@@ -149,16 +154,21 @@ public class DatHangActivity extends AppCompatActivity {
             }
         });
 
+        loadToken();
 
         buttonDatHang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String ten = editTextTen.getText().toString().trim();
-                final String sdt = editTextSoDt.getText().toString().trim();
-                final String email = editTextEmail.getText().toString().trim();
-                final String diachi = editTextDiaChi.getText().toString().trim();
-                processPayment();
+                ten = editTextTen.getText().toString().trim();
+                sdt = editTextSoDt.getText().toString().trim();
+                email = editTextEmail.getText().toString().trim();
+                diachi = editTextDiaChi.getText().toString().trim();
 
+                //Payment
+                DropInRequest dropInRequest = new DropInRequest().clientToken(token);
+                startActivityForResult(dropInRequest.getIntent(DatHangActivity.this), PAYMENT_REQUEST_CODE);
+
+/*
                 if (CheckConnection.haveNetworkConnection(DatHangActivity.this)) {
 
                     if (ten.length() > 0 && sdt.length() > 0 && email.length() > 0 && diachi.length() > 0 && isValidEmail(email)) {
@@ -245,51 +255,97 @@ public class DatHangActivity extends AppCompatActivity {
                     }
 
 
-                }else {
+                } else {
                     Toast.makeText(DatHangActivity.this, "Kiểm tra kết nối internet!", Toast.LENGTH_SHORT).show();
                 }
+*/
             }
         });
     }
-    //TODO PAYMENT
-    private void processPayment() {
-        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(tongTienDonHang)),"EUR", "Tong tien", PayPalPayment.PAYMENT_INTENT_SALE );
-        //send amount of money to pay (tongTienDonHang) to PaymentActivity, where payment methods ( Paypal/ Debit/..) was shown.
-        Intent intent = new Intent(this, PaymentActivity.class);
-        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
-        startActivityForResult(intent, PAYPAL_REQUEST_CODE);
 
+    private void loadToken() {
+        final AlertDialog waitingDialog = new SpotsDialog(DatHangActivity.this);
+        waitingDialog.show();
+        waitingDialog.setMessage("Please wait...");
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(Common.API_TOKEN_URL, new TextHttpResponseHandler() {
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+                waitingDialog.dismiss();
+                buttonDatHang.setEnabled(false);
+
+                Toast.makeText(DatHangActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                waitingDialog.dismiss();
+                token = responseString.trim();
+                Toast.makeText(DatHangActivity.this, "enable", Toast.LENGTH_SHORT).show();
+
+                buttonDatHang.setEnabled(true);
+
+
+            }
+        });
     }
-    //TODO PAYMENT
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == PAYPAL_REQUEST_CODE){
-            if (resultCode == RESULT_OK) {
-                PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-                if (confirmation != null){
-                    try {
-                        String paymentDetails = confirmation.toJSONObject().toString(4);
+        if (requestCode == PAYMENT_REQUEST_CODE){
+            if (resultCode == RESULT_OK){
+                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+                PaymentMethodNonce nonce = result.getPaymentMethodNonce();
+                String strNonce = nonce.getNonce();
 
-                        startActivity(new Intent(this, PaymentDetails.class)
-                                .putExtra("PaymentDetails", paymentDetails)
-                                .putExtra("PaymentAmount", String.valueOf(tongTienDonHang))
-                        );
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+                    amount = String.valueOf(tongTienDonHang);
+                    hashMap = new HashMap<>();
+                    hashMap.put("amount", amount);
+                    hashMap.put("nonce", strNonce);
+                    
+                    sendPayment();
+
+
+
             }
-            else if (resultCode == Activity.RESULT_CANCELED)
-                Toast.makeText(DatHangActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+            else if (resultCode == RESULT_CANCELED){
+                Toast.makeText(DatHangActivity.this, "Payment cancelled!", Toast.LENGTH_SHORT).show();
 
-        }else if (requestCode == PaymentActivity.RESULT_EXTRAS_INVALID){
-            Toast.makeText(DatHangActivity.this, "Invalid", Toast.LENGTH_SHORT).show();
-
+            }else {
+                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+                Log.e("APP_ERROR", error.getMessage());
+            }
         }
-
         super.onActivityResult(requestCode, resultCode, data);
     }
-}
 
+    private void sendPayment() {
+        mServiceScalars.payment(hashMap.get("nonce"), hashMap.get("amount"))
+                .enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                        assert response.body() != null;
+                        if (response.body().toString().contains("Successful")){
+                            Toast.makeText(DatHangActivity.this, "Transaction successful!", Toast.LENGTH_SHORT).show();
+
+                            //Submit order
+                        }else{
+                            Toast.makeText(DatHangActivity.this, "Transaction failed!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        Log.d("APP_ERROR", response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Log.d("APP_ERROR", t.getMessage());
+                    }
+                });
+    }
+}
 

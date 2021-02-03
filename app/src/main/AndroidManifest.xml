@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:allowBackup="false"
+        android:allowBackup="true"
         android:icon="@drawable/appicon"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -94,6 +94,15 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:showOnLockScreen="true" />
+        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="${applicationId}.braintree" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
