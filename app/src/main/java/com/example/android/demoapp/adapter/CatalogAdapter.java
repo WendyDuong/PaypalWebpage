@@ -12,7 +12,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -27,27 +26,26 @@ import com.example.android.demoapp.model.SanPham;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.math3.util.Precision;
-
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHolder> {
+public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHolder>  {
     private List<YeuThichEntry> mYeuThichEntries;
     private AppDatabase mDb;
     Context context;
     private ArrayList<SanPham> sanPhams;
     private int iD;
     private int idHang;
+    private String language;
     public static int timDoList;
     private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
     private static final String EXTRA_HANG_ID = "extraHangId";
     private static final String EXTRA_ANH_HANG = "extraAnhHang";
 
-    public CatalogAdapter(Context context, ArrayList<SanPham> sanPhams) {
+    public CatalogAdapter(Context context, ArrayList<SanPham> sanPhams, String language) {
         this.context = context;
         this.sanPhams = sanPhams;
+        this.language = language;
     }
 
 
@@ -61,9 +59,29 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
     @Override
     public void onBindViewHolder(final itemHolder holder, final int position) {
         SanPham sanPham = sanPhams.get(position);
-        holder.tvTensanpham.setText(sanPham.getTenSanPham());
+
+        //Setting language
+/*        switch (language){
+            case "de":
+
+                break;
+            case "vn" :
+
+                break;
+        }*/
+        switch (language){
+            case "de":
+                holder.tvTensanpham.setText(sanPham.getTenSanPhamDE());
+                break;
+            case "vn" :
+                holder.tvTensanpham.setText(sanPham.getTenSanPham());
+                break;
+        }
+
         double giasp = sanPham.getGiaSanPham();
 
+
+        //checking if item on sale
         if (sanPham.getGiaKhuyenMai() != 0){
             //TODO SALE
             holder.tvGiasanpham.setText("€"+giasp);
@@ -77,9 +95,6 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
             holder.tvGiasanpham.setPaintFlags(holder.tvGiasanpham.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
-/*
-        Picasso.get().load(sanPham.getHinhAnhSanPham()).placeholder(R.drawable.error).fit().into(holder.imgHinhAnhSanpham);
-*/
         Picasso.get().load(sanPham.getHinhAnhSanPham()).fit().into(holder.imgHinhAnhSanpham, new Callback() {
             @Override
             public void onSuccess() {
@@ -252,6 +267,9 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                         final String moTa = sanPhams.get(getLayoutPosition()).getMoTa();
                         final String thuongHieu = sanPhams.get(getLayoutPosition()).getThuongHieu();
                         final String xuatXu = sanPhams.get(getLayoutPosition()).getXuatXu();
+                        final String tenSanPhamDE = sanPhams.get(getLayoutPosition()).getTenSanPhamDE();
+                        final String moTaDE = sanPhams.get(getLayoutPosition()).getMoTaDE();
+                        final int idShopBan = sanPhams.get(getLayoutPosition()).getIdShopBan();
 
                         imageViewTim.setImageResource(R.drawable.timdo24);
 
@@ -259,7 +277,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.itemHold
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham, giakhuyemai, hinhanhsanpham, khoiluongsanpham, idhang, moTa, thuongHieu, xuatXu));
+                                mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham, giakhuyemai, hinhanhsanpham, khoiluongsanpham, idhang, moTa, thuongHieu, xuatXu, tenSanPhamDE, moTaDE, idShopBan));
                             }
                         });
                     } else {

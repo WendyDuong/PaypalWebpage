@@ -13,14 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.fragment.MainFragment;
 
-public class GiaoHang extends AppCompatActivity {
+public class GiaoHangActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_giao_hang);
         Toolbar toolbar = findViewById(R.id.toolbar_tim_do);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(MainFragment.mangchinhsach.get(1).getTenbanner());
+        getSupportActionBar().setTitle(R.string.giao_hang);
 
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -32,7 +32,7 @@ public class GiaoHang extends AppCompatActivity {
         });
         TextView tv = findViewById(R.id.tv_giao_hang);
 
-        tv.setText(MainFragment.mangchinhsach.get(1).getAnhbanner());
+        tv.setText(MainFragment.mangchinhsach.get(1).getNoidungDE());
     }
 
 }

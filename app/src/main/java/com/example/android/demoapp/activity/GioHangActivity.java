@@ -1,7 +1,9 @@
 package com.example.android.demoapp.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -18,17 +20,55 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
 
-public class GioHangActivity extends AppCompatActivity {
+public class GioHangActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private TabLayout.Tab tabYeuThich;
     public static BadgeDrawable badgeDrawableYeuthich;
     List<YeuThichEntry> yeuThichEntries;
+    String language;
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        getViewModelStore().clear();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        if (key.equals(getString(R.string.settings_language_key))){
+
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+            language = sharedPrefs.getString(
+                    getString(R.string.settings_language_key),
+                    getString(R.string.settings_language_default)
+            );
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gio_hang_activity);
+
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        language = sharedPrefs.getString(
+                getString(R.string.settings_language_key),
+                getString(R.string.settings_language_default)
+        );
 
         toolbar = findViewById(R.id.toolbar_gio_hang_activity);
         setSupportActionBar(toolbar);

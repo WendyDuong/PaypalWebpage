@@ -24,9 +24,6 @@ import com.example.android.demoapp.database.YeuThichEntry;
 import com.example.android.demoapp.model.SanPham;
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.math3.util.Precision;
-
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -221,13 +218,16 @@ public class FindAdapter extends RecyclerView.Adapter<FindAdapter.itemHolder> {
                         final String moTa = sanPhams.get(getLayoutPosition()).getMoTa();
                         final String thuongHieu = sanPhams.get(getLayoutPosition()).getThuongHieu();
                         final String xuatXu = sanPhams.get(getLayoutPosition()).getXuatXu();
+                        final String tenSanPhamDE = sanPhams.get(getLayoutPosition()).getTenSanPhamDE();
+                        final String moTaDE = sanPhams.get(getLayoutPosition()).getMoTaDE();
+                        final int idShopBan = sanPhams.get(getLayoutPosition()).getIdShopBan();
 
                         imageViewTim.setImageResource(R.drawable.timdo24);
 
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham,giakhuyenmai, hinhanhsanpham, khoiluongsanpham,idhang, moTa, thuongHieu, xuatXu));
+                                mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensanpham, giasanpham,giakhuyenmai, hinhanhsanpham, khoiluongsanpham,idhang, moTa, thuongHieu, xuatXu, tenSanPhamDE, moTaDE, idShopBan));
                             }
                         });
                     }

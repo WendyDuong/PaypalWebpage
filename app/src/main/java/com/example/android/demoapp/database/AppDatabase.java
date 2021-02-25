@@ -14,7 +14,7 @@ import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 
 
-@Database(entities = {SanPhamEntry.class, GioHangEntry.class, YeuThichEntry.class}, version = 1, exportSchema = false)
+@Database(entities = {GioHangEntry.class, YeuThichEntry.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     private static final String LOG_TAG = AppDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();
@@ -51,7 +51,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
     }
 
-    public abstract SanPhamDao sanPhamDao();
 
     public abstract GioHangDao gioHangDao();
 

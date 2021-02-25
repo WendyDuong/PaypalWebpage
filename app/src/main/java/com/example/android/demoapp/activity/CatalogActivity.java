@@ -2,17 +2,16 @@ package com.example.android.demoapp.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,7 +49,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CatalogActivity extends AppCompatActivity {
+public class CatalogActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
     public static final String EXTRA_HANG_ID = "extraHangId";
     private static final String TAG = CatalogActivity.class.getSimpleName();
     private static final String EXTRA_ANH_HANG = "extraAnhHang";
@@ -72,10 +71,41 @@ public class CatalogActivity extends AppCompatActivity {
     private AppDatabase mDb;
     private int idHang;
     private String anhHang;
+
     private boolean loading = false;
     private boolean limitData = false;
     private int page = 1;
     private int visibleItemCount, totalItemCount, pastVisiblesItems;
+    String language;
+    @Override
+    protected void onStart() {
+        super.onStart();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        getViewModelStore().clear();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        if (key.equals(getString(R.string.settings_language_key))){
+
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+            language = sharedPrefs.getString(
+                    getString(R.string.settings_language_key),
+                    getString(R.string.settings_language_default)
+            );
+
+        }
+    }
+
 
     @SuppressLint("ResourceType")
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -83,6 +113,12 @@ public class CatalogActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.catalog_activity);
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        language = sharedPrefs.getString(
+                getString(R.string.settings_language_key),
+                getString(R.string.settings_language_default)
+        );
         populateUI();
         actionToolbar();
         Intent intent = getIntent();
@@ -96,7 +132,7 @@ public class CatalogActivity extends AppCompatActivity {
         if (CheckConnection.haveNetworkConnection(CatalogActivity.this)) {
             getData(page);
             loadMoreData();
-            catalogAdapter = new CatalogAdapter(CatalogActivity.this, sanPhams);
+            catalogAdapter = new CatalogAdapter(CatalogActivity.this, sanPhams, language);
             recyclerView.setAdapter(catalogAdapter);
             recyclerView.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
@@ -239,7 +275,6 @@ public class CatalogActivity extends AppCompatActivity {
                     default:
                         break;
                 }
-
             }
         });
 
@@ -277,35 +312,7 @@ public class CatalogActivity extends AppCompatActivity {
     private void getData(final int page) {
         RequestQueue requestQueue = Volley.newRequestQueue(CatalogActivity.this);
         String duongdan;
-        switch (idHang) {
-            case 0:
-                duongdan = Server.duongdansanphamhang0 + page;
-                break;
-            case 1:
-                duongdan = Server.duongdansanphamhang1 + page;
-                break;
-            case 2:
-                duongdan = Server.duongdansanphamhang2 + page;
-                break;
-            case 3:
-                duongdan = Server.duongdansanphamhang3 + page;
-                break;
-            case 4:
-                duongdan = Server.duongdansanphamhang4 + page;
-                break;
-            case 5:
-                duongdan = Server.duongdansanphamhang5 + page;
-                break;
-            case 6:
-                duongdan = Server.duongdansanphamhang6 + page;
-                break;
-            case 7:
-                duongdan = Server.duongdansanphamhang7 + page;
-                break;
-            default:
-                duongdan = Server.duongdansanphamhang8 + page;
-                break;
-        }
+        duongdan = Server.duongdansanphamhang + page + "&idHang=" + idHang;
 
         StringRequest str = new StringRequest(Request.Method.POST, duongdan, new Response.Listener<String>() {
             @Override
@@ -318,9 +325,7 @@ public class CatalogActivity extends AppCompatActivity {
                         for (int i = 0; i < json.length(); i++) {
                             JSONObject object = json.getJSONObject(i);
                             final double giakhuyenmai = object.getDouble("giaKhuyenMai");
-                            Log.d("sale", "In ra thoi");
-
-                            sanPhams.add(new SanPham(object.getInt("id"), object.getInt("idHang"), object.getString("tenSanPham"), object.getDouble("giaSanPham"), giakhuyenmai, object.getString("hinhAnhSanPham"), object.getString("khoiLuong"), object.getString("moTa"), object.getString("thuongHieu"), object.getString("xuatXu")));
+                            sanPhams.add(new SanPham(object.getInt("id"), object.getInt("idHang"), object.getString("tenSanPham"), object.getDouble("giaSanPham"), giakhuyenmai, object.getString("hinhAnhSanPham"), object.getString("khoiLuong"), object.getString("moTa"), object.getString("thuongHieu"), object.getString("xuatXu"), object.getString("tenSanPhamDE"),object.getString("moTaDE"), object.getInt("idShopBan")));
                             catalogAdapter.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {
@@ -363,12 +368,6 @@ public class CatalogActivity extends AppCompatActivity {
         }
 
 
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        getViewModelStore().clear();
     }
 
     @Override

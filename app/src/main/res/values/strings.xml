@@ -1,68 +1,65 @@
 <resources>
     <string name="app_name">Demo App</string>
-    <string name="banh_sisi">Bánh Sisi Mix Brand </string>
-    <string name="banh_rafaello">Bánh Rafaello phủ dừa</string>
-    <string name="banh_ca">Bánh Cá Mix Brand</string>
-    <string name="tao_my">Táo Mỹ</string>
-    <string name="nam_muoi">50.000đ</string>
-    <string name="tram_nghin">100.000đ</string>
-    <string name="tram_tam">180.000đ</string>
-    <string name="bon_lam">45.000đ</string>
-    <string name="ban100">Đã bán 100</string>
-    <string name="ban30">Đã bán 30</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="facebook_app_id">1188433441539591</string>
-    <string name="fb_login_protocol_scheme">fb1188433441539591</string>
 
-    //Navigation Drawer
-    <string name="thong_tin_ca_nhan">Thông tin cá nhân</string>
-    <string name="hinh_thuc_thanh_toan">Hình Thức Thanh Toán</string>
-    <string name="cac_don_hang">Các Đơn Hàng</string>
+    <!-- Navi Drawer-->
+    <string name="hinh_thuc_thanh_toan_de">Zahlung</string>
+    <string name="hinh_thuc_thanh_toan">Thanh toán</string>
+    <string name="giao_hang_de">Versand</string>
     <string name="giao_hang">Giao hàng</string>
-    <string name="chinh_sach_doi_tra">Đặt hàng theo yêu cầu</string>
-    <string name="lien_he">Thông tin liên hệ</string>
-    <string name="thong_tin_thanh_toan">Quý khách tiến hàng gửi email đặt hàng đến địa chỉ: cskh.shoppingsquare@gmail.com
-\nShopping Square sẽ liên lạc với quý khách để hoàn tất quá trình đặt hàng.
-\n\nĐể thanh toán quý khách vui lòng chuyển khoản tới:
-\n\nSố Tài Khoản: 0541000321788
-\nTên Tài Khoản: Dương Thị Ngát
-\nChi Nhánh: Vietcombank Long Biên
+    <string name="lien_he_de">Kontakt</string>
+    <string name="lien_he">Liên hệ</string>
+    <string name="ngon_ngu_de">Sprache</string>
+    <string name="ngon_ngu">Ngôn ngữ</string>
 
-\n\nKhi chuyển khoản quý khách vui lòng ghi thêm thông tin vào phần nội dung chuyển tiền của ngân hàng như sau:
-\n\nTên người gửi- Số điện thoại hoặc email.
-\nVD: Dương Minh Hiếu– minhhieu@gmail.com/0968686868
-\nSau khi nhận được tiền, công ty sẽ tiến hành đặt hàng cho quý khách.
-
-</string>
-    <string name="thong_tin_giao_hang">Hàng sẽ được giao trung bình từ 2-3 tuần (Các dịp cao điểm sale của Đức, dịp tết Việt Nam hay mưa bão có thể sẽ hơn một chút).
-        \n\nSau khi hàng về đến Việt Nam, đại lý phân phối ở Việt Nam sẽ liên hệ trực tiếp để giao hàng cho quý khách.
-\n\nQuý khách vui lòng kiểm tra kỹ số lượng, xem lại sản phẩm khi nhận hàng tại đại lý phân phối. Nếu có gì sai sót báo ngay cho đại lý phân phối hoặc liên hệ email: cskh.shoppingsquare@gmail.com.
-        \nShopping Square sẽ giải quyết trong thời gian nhanh nhất có thể.
-</string>
-
-    <string name="dat_hang_ho">Để đáp ứng mong muốn của quý khách, Shopping Square hỗ trợ đặt hàng theo yêu cầu!
-\n\nQuy trình: GỬI LINK (Kèm size, màu, số lượng) => NHẬN BÁO GIÁ => CHỐT ĐƠN HÀNG => ĐẶT CỌC 100% TIỀN HÀNG VÀ PHÍ DỊCH VỤ => NHẬN HÓA ĐƠN QUA EMAIL => CHỜ HÀNG VỀ => NHẬN HÀNG VÀ THANH TOÁN SHIP ĐỨC - VIỆT.
-        \n\nLIÊN HỆ ĐỂ NHẬN BÁO GIÁ: cskh.shoppingsquare@gmail.com
-</string>
-    <string name="thong_tin_lien_he">Mọi thắc mắc xin vui lòng liên hệ:
-    \n\nEmail: cskh.shoppingsquare@gmail.com
-    </string>
     <string name="dang_xuat">Đăng Xuất</string>
     <string name="dummy_button">Dummy Button</string>
 
-    <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
+    <!-- Title text for the empty view -->
     <string name="empty_view_title_gio_hang">Giỏ hàng của bạn đang trống...</string>
-    <string name="empty_view_tilte_yeu_thich">Danh sách yêu thích đang trống...</string>
+    <string name="empty_view_title_gio_hang_de">Ihr Einkaufswagen ist leer...</string>
+    <string name="empty_view_tilte_yeu_thich">Danh sách yêu thích của bạn đang trống...</string>
+    <string name="empty_view_tilte_yeu_thich_de">Ihre Merkliste ist leer...</string>
 
     <!-- Text in DetailActivity-->
     <string name="thong_tin_san_pham">Thông tin sản phẩm</string>
+    <string name="thong_tin_san_pham_de">Produktinformation</string>
     <string name="mo_ta_san_pham">Mô tả sản phẩm</string>
+    <string name="mo_ta_san_pham_de">Produktbeschreibung</string>
+    <string name="them_vao_gio_hang">Thêm vào giỏ</string>
+    <string name="them_vao_gio_hang_de">In den Einkaufswagen</string>
 
-    <!-- Subtitle text for the empty view that prompts the user to add a pet [CHAR LIMIT=50] -->
-    <string name="dummy_content">DUMMY\nCONTENT</string>
 
-    <string name="them_vao_gio_hang">Thêm vào giỏ hàng</string>
+    <string name="xacNhanThanhToan">Quý khách đã thanh toán thành công! \nThư xác nhận đặt hàng sẽ được gửi vào email của quý khách.</string>
 
+
+    <!-- Hint text for DatHangActivity-->
+    <string name="name_de">Max Mustermann</string>
+    <string name="adress">Musterstrße 1, 12345 Musterstadt</string>
+    <string name="email_de">max@mustermann.de</string>
+    <string name="phone_number">01234 567890</string>
+    <string name="buy_more_de">Weiter kaufen</string>
+    <string name="buy_more_vn">Mua tiếp</string>
+    <string name="buy_now_de">Jetzt zahlen</string>
+    <string name="buy_now_vn">Thanh toán</string>
+    <string name="order_de">Bestellen</string>
+    <string name="order_vn">Đặt hàng</string>
+    <string name="summe_de">Summe</string>
+    <string name="summe_vn">Tổng tiền</string>
+
+
+    <!-- Strings For language Preference [CHAR LIMIT=30] -->
+    <string name="settings_title">Sprache/ Ngôn ngữ</string>
+
+    <string name="settings_language_label">Sprache/ Ngôn ngữ</string>
+    <string name="settings_language_key" translatable="false">language</string>
+    <string name="settings_language_default" translatable="false">@string/settings_language_de_value</string>
+
+    <!-- Label for germany language option [CHAR LIMIT=20] -->
+    <string name="settings_language_de_label">Deutsch</string>
+    <string name="settings_language_de_value" translatable="false">de</string>
+
+    <!-- Label for vietnamese language option [CHAR LIMIT=20] -->
+    <string name="settings_language_vn_label">Tiếng Việt</string>
+    <string name="settings_language_vn_value" translatable="false">vn</string>
 
 </resources>

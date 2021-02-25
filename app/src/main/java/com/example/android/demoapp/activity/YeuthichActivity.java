@@ -1,7 +1,9 @@
 package com.example.android.demoapp.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -26,10 +28,12 @@ public class YeuthichActivity  extends AppCompatActivity {
     public static   BadgeDrawable badgeDrawableGioHang;
     List<GioHangEntry> gioHangEntries;
     YeuThichViewModel viewModel;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.yeuthich_activity);
+
         toolbar = findViewById(R.id.toolbar_yeu_thich_activity);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back);

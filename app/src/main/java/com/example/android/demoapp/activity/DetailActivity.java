@@ -2,13 +2,14 @@ package com.example.android.demoapp.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,12 +24,10 @@ import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.YeuThichViewModel;
 import com.example.android.demoapp.database.AppDatabase;
-import com.example.android.demoapp.database.GioHangDao;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
 import com.example.android.demoapp.fragment.MainFragment;
 import com.example.android.demoapp.model.SanPham;
-import com.example.android.demoapp.utils.CheckConnection;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import com.google.android.material.badge.BadgeDrawable;
@@ -36,21 +35,17 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.math3.util.Precision;
-
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     ImageView timImageView, imageViewHangSp;
     private static final int DEFAULT_ID = -1;
     private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
     private static final String EXTRA_HANG_ID = "extraHangId";
 
-    private int idHang;
-    YeuThichViewModel viewModel;
+    private int idHang, idShopBan;
     Toolbar toolBarChiTietActivity;
     TextView tvMoTaTitle, tvChiTietTitle, devider1, devider2;
     View cardViewSpinner;
@@ -58,9 +53,9 @@ public class DetailActivity extends AppCompatActivity {
     private AppDatabase mDb;
     TextView tvTen, tvGia, tvGiaKhuyenMai, tvMoTa, tvKhoiluong, tvThuongHieu, tvXuatXu;
     ExtendedFloatingActionButton btnDatMua;
-    String hinhanhsp;
     double giasp, giakhuyenmai;
-    String tensp, khoiluongsp, moTa, thuongHieu, xuatXu;
+    String tensp, khoiluongsp, hinhanhsp, moTa, thuongHieu, xuatXu, tenSanPhamDE, moTaDE;
+    String language;
     private int idsanpham = DEFAULT_ID;
     Spinner spinner;
     TabLayout tabLayout;
@@ -71,6 +66,35 @@ public class DetailActivity extends AppCompatActivity {
     List<GioHangEntry> gioHangEntries;
     List<YeuThichEntry> yeuThichEntries;
     Intent intent;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        getViewModelStore().clear();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        if (key.equals(getString(R.string.settings_language_key))){
+
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+            language = sharedPrefs.getString(
+                    getString(R.string.settings_language_key),
+                    getString(R.string.settings_language_default)
+            );
+
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -227,19 +251,30 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getsanpham(Intent intent) {
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        language = sharedPrefs.getString(
+                getString(R.string.settings_language_key),
+                getString(R.string.settings_language_default)
+        );
+
         if (intent.hasExtra("CatalogAdapter")) {
             Log.i("LogData", "CatalogAdapter");
+
             SanPham sanPham = (SanPham) getIntent().getSerializableExtra("CatalogAdapter");
             assert sanPham != null;
             idsanpham = sanPham.getId();
-            tensp = sanPham.getTenSanPham();
             hinhanhsp = sanPham.getHinhAnhSanPham();
             khoiluongsp = sanPham.getKhoiLuong();
             thuongHieu = sanPham.getThuongHieu();
             xuatXu = sanPham.getXuatXu();
+            tenSanPhamDE = sanPham.getTenSanPhamDE();
+            moTaDE = sanPham.getMoTaDE();
+            tensp = sanPham.getTenSanPham();
             moTa = sanPham.getMoTa();
             giasp = Math.round(sanPham.getGiaSanPham() * 100.0) / 100.0;
             giakhuyenmai = Math.round(sanPham.getGiaKhuyenMai() * 100.0) / 100.0;
+            idShopBan = sanPham.getIdShopBan();
 
             //TODO SALE
             if (sanPham.getGiaKhuyenMai() != 0) {
@@ -253,11 +288,30 @@ public class DetailActivity extends AppCompatActivity {
                 tvGia.setPaintFlags(tvGia.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
 
-            tvTen.setText(tensp);
-            tvMoTa.setText(moTa);
-            tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
-            tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
-            tvXuatXu.setText("Xuất xứ: " + xuatXu);
+            //Setting language
+            switch (language){
+                case "de":
+                    tvTen.setText(tenSanPhamDE);
+                    tvMoTa.setText(moTaDE);
+                    tvKhoiluong.setText("Detail: " + khoiluongsp);
+                    tvThuongHieu.setText("Marke: " + thuongHieu);
+                    tvXuatXu.setText("Hergestellt in: " + xuatXu);
+                    tvMoTaTitle.setText(R.string.mo_ta_san_pham_de);
+                    tvChiTietTitle.setText(R.string.thong_tin_san_pham_de);
+                    btnDatMua.setText(R.string.them_vao_gio_hang_de);
+                    break;
+                case "vn" :
+                    tvTen.setText(tensp);
+                    tvMoTa.setText(moTa);
+                    tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
+                    tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
+                    tvXuatXu.setText("Xuất xứ: " + xuatXu);
+                    tvMoTaTitle.setText(R.string.mo_ta_san_pham);
+                    tvChiTietTitle.setText(R.string.thong_tin_san_pham);
+                    btnDatMua.setText(R.string.them_vao_gio_hang);
+                    break;
+            }
+
             Picasso.get().load(hinhanhsp).into(imgChiTiet);
         } else if (intent.hasExtra("GioHangAdapter")) {
             Log.i("LogData", "GioHangAdapter");
@@ -273,14 +327,10 @@ public class DetailActivity extends AppCompatActivity {
             moTa = gioHang.getMoTa();
             giasp = Math.round(gioHang.getGiaSanPham()/gioHang.getSoLuong() * 100.0) / 100.0;
             giakhuyenmai = Math.round(gioHang.getGiaKhuyenMai()/gioHang.getSoLuong() * 100.0) / 100.0;
+            idShopBan = gioHang.getIdShopBan();
 
-            tvTen.setText(tensp);
-            tvMoTa.setText(moTa);
-            tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
-            tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
-            tvXuatXu.setText("Xuất xứ: " + xuatXu);
 
-            //TODO SALE
+            // checking sale price
             if (giakhuyenmai!= 0) {
                 tvGia.setText("€"+giasp);
                 tvGia.setPaintFlags(tvGia.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -291,7 +341,32 @@ public class DetailActivity extends AppCompatActivity {
                 tvGia.setText("€"+giasp);
                 tvGia.setPaintFlags(tvGia.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
+
+            //Setting language
+            switch (language){
+                case "de":
+                    tvTen.setText(tenSanPhamDE);
+                    tvMoTa.setText(moTaDE);
+                    tvKhoiluong.setText("Detail: " + khoiluongsp);
+                    tvThuongHieu.setText("Marke: " + thuongHieu);
+                    tvXuatXu.setText("Hergestellt in: " + xuatXu);
+                    tvMoTaTitle.setText(R.string.mo_ta_san_pham_de);
+                    tvChiTietTitle.setText(R.string.thong_tin_san_pham_de);
+                    btnDatMua.setText(R.string.them_vao_gio_hang_de);
+                    break;
+                case "vn" :
+                    tvTen.setText(tensp);
+                    tvMoTa.setText(moTa);
+                    tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
+                    tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
+                    tvXuatXu.setText("Xuất xứ: " + xuatXu);
+                    tvMoTaTitle.setText(R.string.mo_ta_san_pham);
+                    tvChiTietTitle.setText(R.string.thong_tin_san_pham);
+                    btnDatMua.setText(R.string.them_vao_gio_hang);
+                    break;
+            }
             Picasso.get().load(hinhanhsp).into(imgChiTiet);
+
         } else if (intent.hasExtra("YeuThichAdapter")) {
             Log.i("LogData", "YeuThichAdapter");
 
@@ -306,13 +381,10 @@ public class DetailActivity extends AppCompatActivity {
             moTa = yeuThich.getMoTa();
             giasp = Math.round(yeuThich.getGiaSanPham() * 100.0) / 100.0;
             giakhuyenmai = Math.round(yeuThich.getGiaKhuyenMai() * 100.0) / 100.0;
-            tvTen.setText(tensp);
-            tvMoTa.setText(moTa);
-            tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
-            tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
-            tvXuatXu.setText("Xuất xứ: " + xuatXu);
+            idShopBan = yeuThich.getIdShopBan();
 
-            //TODO SALE
+
+            // Checking sale price
             if (giakhuyenmai!= 0) {
                 tvGia.setText("€"+giasp);
                 tvGia.setPaintFlags(tvGia.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -323,6 +395,31 @@ public class DetailActivity extends AppCompatActivity {
                 tvGia.setText("€"+giasp);
                 tvGia.setPaintFlags(tvGia.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
+
+            // Setting language
+            switch (language){
+                case "de":
+                    tvTen.setText(tenSanPhamDE);
+                    tvMoTa.setText(moTaDE);
+                    tvKhoiluong.setText("Detail: " + khoiluongsp);
+                    tvThuongHieu.setText("Marke: " + thuongHieu);
+                    tvXuatXu.setText("Hergestellt in: " + xuatXu);
+                    tvMoTaTitle.setText(R.string.mo_ta_san_pham_de);
+                    tvChiTietTitle.setText(R.string.thong_tin_san_pham_de);
+                    btnDatMua.setText(R.string.them_vao_gio_hang_de);
+                    break;
+                case "vn" :
+                    tvTen.setText(tensp);
+                    tvMoTa.setText(moTa);
+                    tvKhoiluong.setText("Chi tiết: " + khoiluongsp);
+                    tvThuongHieu.setText("Thương hiệu: " + thuongHieu);
+                    tvXuatXu.setText("Xuất xứ: " + xuatXu);
+                    tvMoTaTitle.setText(R.string.mo_ta_san_pham);
+                    tvChiTietTitle.setText(R.string.thong_tin_san_pham);
+                    btnDatMua.setText(R.string.them_vao_gio_hang);
+                    break;
+            }
+
             Picasso.get().load(hinhanhsp).into(imgChiTiet);
         } else
             Toast.makeText(DetailActivity.this, "Error!", Toast.LENGTH_SHORT).show();
@@ -341,7 +438,7 @@ public class DetailActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             //TODO SALE
-                            mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensp, giasp,giakhuyenmai, hinhanhsp, khoiluongsp, idHang, moTa, thuongHieu, xuatXu));
+                            mDb.yeuThichDao().insertYeuThich(new YeuThichEntry(idsanpham, tensp, giasp,giakhuyenmai, hinhanhsp, khoiluongsp, idHang, moTa, thuongHieu, xuatXu, tenSanPhamDE, moTaDE, idShopBan));
 
                         }
                     });
@@ -380,7 +477,7 @@ public class DetailActivity extends AppCompatActivity {
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, giasp * soluongmoi,giakhuyenmai * soluongmoi, hinhanhsp, khoiluongsp, soluongmoi, idHang, moTa, thuongHieu, xuatXu));
+                                    mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, giasp * soluongmoi,giakhuyenmai * soluongmoi, hinhanhsp, khoiluongsp, soluongmoi, idHang, moTa, thuongHieu, xuatXu, tenSanPhamDE, moTaDE, idShopBan));
 
 
                                 }
@@ -393,7 +490,7 @@ public class DetailActivity extends AppCompatActivity {
                                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, giasp * 20,giakhuyenmai * soluongmoi, hinhanhsp, khoiluongsp, 50, idHang, moTa, thuongHieu, xuatXu));
+                                        mDb.gioHangDao().updateGioHang(new GioHangEntry(id, idsanpham, tensp, giasp * 20,giakhuyenmai * soluongmoi, hinhanhsp, khoiluongsp, 50, idHang, moTa, thuongHieu, xuatXu, tenSanPhamDE, moTaDE, idShopBan));
 
 
                                     }
@@ -419,7 +516,7 @@ public class DetailActivity extends AppCompatActivity {
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, giaspmoi, giakhuyenmaimoi, hinhanhsp, khoiluongsp, soluong, idHang, moTa, thuongHieu, xuatXu));
+                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, giaspmoi, giakhuyenmaimoi, hinhanhsp, khoiluongsp, soluong, idHang, moTa, thuongHieu, xuatXu, tenSanPhamDE, moTaDE, idShopBan));
 
 
                             }
@@ -438,7 +535,7 @@ public class DetailActivity extends AppCompatActivity {
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, giaspmoi,giakhuyenmaimoi,  hinhanhsp, khoiluongsp, soluong, idHang, moTa, thuongHieu, xuatXu));
+                            mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanpham, tensp, giaspmoi,giakhuyenmaimoi,  hinhanhsp, khoiluongsp, soluong, idHang, moTa, thuongHieu, xuatXu, tenSanPhamDE, moTaDE, idShopBan));
 
 
                         }
@@ -487,12 +584,7 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStop() {
-        getViewModelStore().clear();
-        super.onStop();
 
-    }
 
 
     @Override
@@ -502,18 +594,15 @@ public class DetailActivity extends AppCompatActivity {
         this.setIntent(intent);
         intent = getIntent();
         getsanpham(intent);
+
+        //KiemTraYeuThich();
         Log.i("Intent", "Reload getsanpham()");
 
-
-/*
-        if (intent != null && intent.hasExtra(EXTRA_HANG_ID) && intent.hasExtra(EXTRA_SANPHAM_ID)) {
-*/
         if (intent != null) {
 
             idHang = intent.getIntExtra(EXTRA_HANG_ID, DEFAULT_ID);
             Picasso.get().load(MainFragment.manghangsanpham.get(idHang).getAnhHang()).into(imageViewHangSp);
             idsanpham = intent.getIntExtra(EXTRA_SANPHAM_ID, DEFAULT_ID);
-
         }
         super.onNewIntent(intent);
     }

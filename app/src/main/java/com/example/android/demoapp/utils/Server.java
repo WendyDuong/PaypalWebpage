@@ -5,45 +5,35 @@ package com.example.android.demoapp.utils;
  */
 
 public class Server {
-    //TODO SALE
 
-    //public static String localhost ="http://192.168.0.51:8080/";
-    public static String localhost ="https://germanyshoppingsquare.000webhostapp.com/";
+    public static String localhost ="http://www.germanyshoppingsquare.com/";
 
-    public static String duongdanhangsp = localhost+"server/gethangsanpham.php";
-    public static String duongdansanphammoinhat =localhost+ "server/getsanphammoinhat.php";
-    public static String duongdandonhang = localhost+"server/thongtinkhachhang.php";
-    public static String duongdanchitietdonhang = localhost+"server/chitietdonhang.php";
-    public static String duongdananhbanner = localhost+"server/getanhbanner.php";
-    public static String duongdanchinhsach = localhost+"server/getchinhsach.php";
+    public static String duongdanhangsp = localhost +"server/ungdungchaua/gethangsanpham.php";
+    public static String duongdananhbanner = localhost +"server/ungdungchaua/getanhbanner.php";
+    public static String duongdanchinhsach = localhost +"server/ungdungchaua/getchinhsach.php";
+
+    public static String duongdandonhang = localhost+"server/ungdungchaua/thongtinkhachhang.php";
+    public static String duongdanchitietdonhang = localhost+"server/ungdungchaua/chitietdonhang.php";
 
 
 
 
-    //Đường dẫn đến 9 hãng
-    public static String duongdansanphamhang0 = localhost+"server/getsanphamasiaandroid0.php?page=";
-    public static String duongdansanphamhang1 = localhost+"server/getsanphamasiaandroid1.php?page=";
-    public static String duongdansanphamhang2 = localhost+"server/getsanphamasiaandroid2.php?page=";
-    public static String duongdansanphamhang3 = localhost+"server/getsanphamasiaandroid3.php?page=";
-    public static String duongdansanphamhang4 = localhost+"server/getsanphamhang4.php?page=";
-    public static String duongdansanphamhang5 = localhost+"server/getsanphamhang5.php?page=";
-    public static String duongdansanphamhang6 = localhost+"server/getsanphamhang6.php?page=";
-    public static String duongdansanphamhang7 = localhost+"server/getsanphamhang7.php?page=";
-    public static String duongdansanphamhang8 = localhost+"server/getsanphamhang8.php?page=";
+
+    //Đường dẫn đến từng hãng
+    public static String duongdansanphamhang = localhost +"server/ungdungchaua/getsanphamtheohang.php?page=";
 
     //Đường dẫn tìm kiếm sản phẩm
-    public static String duongdansanphamtheoten = localhost+"server/getsanphamasiaandroidtheoten.php?tenSanPham=";
-    public static String duongdansanphamidsanpham = localhost+"server/getsanphamtheoidsanpham.php?id=";
+    public static String duongdansanphamtheoten = localhost +"server/ungdungchaua/getsanphamtheoten.php?tenSanPham=";
 
     //Đường dẫn thông tin trong NaviBar
-    public static String duongdanthongtindathang = localhost+"server/getthongtindathang.php";
-    public static String duongdanthongtingiaohang = localhost+"server/getthongtingiaohang.php";
-    public static String  duongdandathangtheoyeucau = localhost+"server/getdathangtheoyeucau.php";
-    public static String  duongdanthongtinlienhe = localhost+"server/getthongtinlienhe.php";
+    public static String duongdanthongtindathang = localhost+"server/ungdungchaua/getthongtindathang.php";
+    public static String duongdanthongtingiaohang = localhost+"server/ungdungchaua/getthongtingiaohang.php";
+    public static String  duongdandathangtheoyeucau = localhost+"server/ungdungchaua/getdathangtheoyeucau.php";
+    public static String  duongdanthongtinlienhe = localhost+"server/ungdungchaua/getthongtinlienhe.php";
 
 
 
     //Đường dẫn đăng ký đăng nhập
-    public static String duongdandangki =localhost+"server/dangki.php";
-    public static String duongdankiemtradangnhap =localhost+"server/kiemtradangnhap.php";
+    public static String duongdandangki =localhost+"server/ungdungchaua/dangki.php";
+    public static String duongdankiemtradangnhap =localhost+"server/ungdungchaua/kiemtradangnhap.php";
 }

@@ -1,15 +1,15 @@
 package com.example.android.demoapp.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,7 +30,6 @@ import com.android.volley.toolbox.Volley;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.ViewModel.YeuThichViewModel;
 import com.example.android.demoapp.adapter.CatalogAdapter;
-import com.example.android.demoapp.adapter.FindAdapter;
 import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
@@ -50,7 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class FindActivity extends AppCompatActivity {
+public class FindActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
     private static final String EXTRA_TEN_SAN_PHAM_TIM_KIEM = "tensanphamtimkiem";
     String mTenSanPham;
     private AppDatabase mDb;
@@ -66,7 +65,7 @@ public class FindActivity extends AppCompatActivity {
     List<GioHangEntry> gioHangEntries;
     List<YeuThichEntry> yeuThichEntries;
     ArrayList<SanPham> sanPhams;
-
+    String language;
     ProgressBar mProgressBar;
     private boolean loading = false;
     private boolean limitData = false;
@@ -76,10 +75,46 @@ public class FindActivity extends AppCompatActivity {
     GridLayoutManager gridLayoutManager;
 
 
+    protected void onStart() {
+        super.onStart();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        getViewModelStore().clear();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        if (key.equals(getString(R.string.settings_language_key))){
+
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+            language = sharedPrefs.getString(
+                    getString(R.string.settings_language_key),
+                    getString(R.string.settings_language_default)
+            );
+
+        }
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find);
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        language = sharedPrefs.getString(
+                getString(R.string.settings_language_key),
+                getString(R.string.settings_language_default)
+        );
         populateUI();
         actionToolbar();
 
@@ -217,7 +252,7 @@ public class FindActivity extends AppCompatActivity {
         sanPhams = new ArrayList<>();
         mDb = AppDatabase.getInstance(getApplicationContext());
 
-        timKiemAdapter = new CatalogAdapter(FindActivity.this, sanPhams);
+        timKiemAdapter = new CatalogAdapter(FindActivity.this, sanPhams, language);
         mProgressBar = findViewById(R.id.progress_bar);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_tim_do);
@@ -285,7 +320,7 @@ public class FindActivity extends AppCompatActivity {
                         for (int i = 0; i < json.length(); i++) {
                             JSONObject object = json.getJSONObject(i);
                             //TODO SALE
-                            sanPhams.add(new SanPham(object.getInt("id"), object.getInt("idHang"), object.getString("tenSanPham"), object.getDouble("giaSanPham"),object.getDouble("giaKhuyenMai"), object.getString("hinhAnhSanPham"), object.getString("khoiLuong"), object.getString("moTa"), object.getString("thuongHieu"), object.getString("xuatXu")));
+                            sanPhams.add(new SanPham(object.getInt("id"), object.getInt("idHang"), object.getString("tenSanPham"), object.getDouble("giaSanPham"),object.getDouble("giaKhuyenMai"), object.getString("hinhAnhSanPham"), object.getString("khoiLuong"), object.getString("moTa"), object.getString("thuongHieu"), object.getString("xuatXu"), object.getString("tenSanPhamDE"),object.getString("moTaDE"), object.getInt("idShopBan")));
                             timKiemAdapter.notifyDataSetChanged();
                         }
 
@@ -355,11 +390,6 @@ public class FindActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        getViewModelStore().clear();
-    }
 
     @Override
     protected void onRestart() {

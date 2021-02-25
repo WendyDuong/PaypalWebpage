@@ -15,10 +15,13 @@ public class SanPham implements Serializable {
     private  String moTa;
     private String thuongHieu;
     private  String xuatXu;
+    private String tenSanPhamDE;
+    private String moTaDE;
+    private  int idShopBan;
 
 
-    public SanPham (int idHang ,String tenSanPham, double giaSanPham, String hinhAnhSanPham,
-                        String khoiLuong, String moTa, String thuongHieu, String xuatXu) {
+    public SanPham(int idHang, String tenSanPham, double giaSanPham, String hinhAnhSanPham,
+                   String khoiLuong, String moTa, String thuongHieu, String xuatXu, String tenSanPhamDE, String moTaDE, int idShopBan) {
         this.idHang = idHang;
         this.tenSanPham = tenSanPham;
         this.giaSanPham = giaSanPham;
@@ -27,10 +30,13 @@ public class SanPham implements Serializable {
         this.moTa = moTa;
         this.thuongHieu = thuongHieu;
         this.xuatXu = xuatXu;
+        this.tenSanPhamDE = tenSanPhamDE;
+        this.moTaDE = moTaDE;
+        this.idShopBan = idShopBan;
     }
 
-    public SanPham (int id, int idHang, String tenSanPham, double giaSanPham,
-                    String hinhAnhSanPham, String khoiLuong, String moTa, String thuongHieu, String xuatXu) {
+    public SanPham(int id, int idHang, String tenSanPham, double giaSanPham,
+                   String hinhAnhSanPham, String khoiLuong, String moTa, String thuongHieu, String xuatXu, String tenSanPhamDE, String moTaDE, int idShopBan) {
         this.id = id;
         this.idHang = idHang;
         this.tenSanPham = tenSanPham;
@@ -40,10 +46,13 @@ public class SanPham implements Serializable {
         this.moTa = moTa;
         this.thuongHieu = thuongHieu;
         this.xuatXu = xuatXu;
+        this.tenSanPhamDE = tenSanPhamDE;
+        this.moTaDE = moTaDE;
+        this.idShopBan = idShopBan;
     }
 
     public SanPham(int id, int idHang, String tenSanPham, double giaSanPham,
-                   double giaKhuyenMai, String hinhAnhSanPham, String khoiLuong, String moTa, String thuongHieu, String xuatXu) {
+                   double giaKhuyenMai, String hinhAnhSanPham, String khoiLuong, String moTa, String thuongHieu, String xuatXu, String tenSanPhamDE, String moTaDE, int idShopBan) {
         this.id = id;
         this.idHang = idHang;
         this.tenSanPham = tenSanPham;
@@ -54,6 +63,9 @@ public class SanPham implements Serializable {
         this.moTa = moTa;
         this.thuongHieu = thuongHieu;
         this.xuatXu = xuatXu;
+        this.tenSanPhamDE = tenSanPhamDE;
+        this.moTaDE = moTaDE;
+        this.idShopBan = idShopBan;
     }
 
     public int getId() {
@@ -136,5 +148,29 @@ public class SanPham implements Serializable {
 
     public void setGiaKhuyenMai(double giaKhuyenMai) {
         this.giaKhuyenMai = giaKhuyenMai;
+    }
+
+    public String getTenSanPhamDE() {
+        return tenSanPhamDE;
+    }
+
+    public void setTenSanPhamDE(String tenSanPhamDE) {
+        this.tenSanPhamDE = tenSanPhamDE;
+    }
+
+    public String getMoTaDE() {
+        return moTaDE;
+    }
+
+    public void setMoTaDE(String moTaDE) {
+        this.moTaDE = moTaDE;
+    }
+
+    public int getIdShopBan() {
+        return idShopBan;
+    }
+
+    public void setIdShopBan(int idShopBan) {
+        this.idShopBan = idShopBan;
     }
 }

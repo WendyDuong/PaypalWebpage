@@ -74,7 +74,7 @@
         android:background="@color/colorAccent"
         android:gravity="center"
         android:layout_margin="10dp"
-        android:text="Tiến hành đặt hàng"
+        android:text="@string/order_de"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"

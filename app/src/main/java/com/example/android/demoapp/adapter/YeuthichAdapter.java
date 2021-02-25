@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +28,6 @@ import com.example.android.demoapp.database.GioHangEntry;
 import com.example.android.demoapp.database.YeuThichEntry;
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.math3.util.Precision;
-import java.text.DecimalFormat;
 import java.util.List;
 
 public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHolderYeuthich> {
@@ -40,8 +37,11 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
     private AppDatabase mDb;
     Context mcontext;
     private List<GioHangEntry> mgioHangEntries;
-    public YeuthichAdapter(Context mcontext) {
+    private String language;
+
+    public YeuthichAdapter(Context mcontext, String language) {
         this.mcontext = mcontext;
+        this.language = language;
     }
 
     @NonNull
@@ -57,12 +57,24 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
 
         YeuThichEntry yeuThichEntry = yeuThichs.get(position);
         String tensanpham = yeuThichEntry.getTenSanPham();
+        String tensanphamDE = yeuThichEntry.getTenSanPhamDE();
         String khoiluongsanpham = yeuThichEntry.getKhoiLuong();
         String hinhanhsanpham = yeuThichEntry.getHinhAnhSanPham();
         double giasanpham = yeuThichEntry.getGiaSanPham();
         double giakhuyenmai = yeuThichEntry.getGiaKhuyenMai();
 
-        holder.tvTen.setText(tensanpham);
+        //Setting language
+        switch (language){
+            case "de":
+                holder.tvTen.setText(tensanphamDE);
+                holder.buttonThem.setText(R.string.them_vao_gio_hang_de);
+                break;
+            case "vn" :
+                holder.tvTen.setText(tensanpham);
+                holder.buttonThem.setText(R.string.them_vao_gio_hang);
+
+                break;
+        }
         holder.tvKhoiluong.setText(khoiluongsanpham);
         Picasso.get().load(hinhanhsanpham).into(holder.imgSanPham);
 
@@ -178,6 +190,10 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                     final String moTa = yeuThichs.get(getLayoutPosition()).getMoTa();
                     final String thuongHieu = yeuThichs.get(getLayoutPosition()).getThuongHieu();
                     final String xuatXu = yeuThichs.get(getLayoutPosition()).getXuatXu();
+                    final String tenSanPhamDE = yeuThichs.get(getLayoutPosition()).getTenSanPhamDE();
+                    final String moTaDE = yeuThichs.get(getLayoutPosition()).getMoTaDE();
+                    final int idShopBan = yeuThichs.get(getLayoutPosition()).getIdShopBan();
+
 
                     if (mgioHangEntries.size() > 0) {
                         boolean exit = false;
@@ -192,7 +208,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, giasanpham, giakhuyenmai , hinhanhsanpham, khoiluongsanpham, 1, idHang, moTa, thuongHieu, xuatXu));
+                                    mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, giasanpham, giakhuyenmai , hinhanhsanpham, khoiluongsanpham, 1, idHang, moTa, thuongHieu, xuatXu, tenSanPhamDE, moTaDE, idShopBan));
 
                                 }
                             });
@@ -203,7 +219,7 @@ public class YeuthichAdapter extends RecyclerView.Adapter<YeuthichAdapter.viewHo
                             @Override
                             public void run() {
                                 //TODO SALE
-                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, giasanpham, giakhuyenmai, hinhanhsanpham, khoiluongsanpham, 1, idHang, moTa, thuongHieu, xuatXu));
+                                mDb.gioHangDao().insertGioHang(new GioHangEntry(idsanphamhientai, tensanpham, giasanpham, giakhuyenmai, hinhanhsanpham, khoiluongsanpham, 1, idHang, moTa, thuongHieu, xuatXu, tenSanPhamDE, moTaDE, idShopBan));
                             }
                         });
                         Toast.makeText(mcontext,  "Đã thêm " + tensanpham + " vào giỏ hàng", Toast.LENGTH_SHORT).show();

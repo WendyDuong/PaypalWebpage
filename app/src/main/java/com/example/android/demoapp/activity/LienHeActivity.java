@@ -1,5 +1,6 @@
 package com.example.android.demoapp.activity;
 
+
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -12,14 +13,16 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.fragment.MainFragment;
 
-public class ThanhToan extends AppCompatActivity {
+public class LienHeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_thanh_toan);
+        setContentView(R.layout.activity_lien_he);
+
         Toolbar toolbar = findViewById(R.id.toolbar_tim_do);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(MainFragment.mangchinhsach.get(0).getTenbanner());
+        getSupportActionBar().setTitle(R.string.lien_he);
+
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,8 +31,9 @@ public class ThanhToan extends AppCompatActivity {
 
             }
         });
-        TextView tv = findViewById(R.id.tv_thanh_toan);
-        tv.setText(MainFragment.mangchinhsach.get(0).getAnhbanner());
+        TextView tv = findViewById(R.id.tv_lien_he);
+        tv.setText(MainFragment.mangchinhsach.get(3).getNoidungDE());
+
 
     }
 }

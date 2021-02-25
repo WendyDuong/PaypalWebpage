@@ -2,8 +2,10 @@ package com.example.android.demoapp.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +35,11 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 
-public class GioHangFragment extends Fragment {
+public class GioHangFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     Button buttonDatHang;
     RecyclerView giohangRecyclerView;
     View emptyView;
+    TextView tvEmptyTilte;
     GioHangAdapter gioHangAdapter;
     @SuppressLint("StaticFieldLeak")
     public static TextView tvTongtien;
@@ -50,6 +53,49 @@ public class GioHangFragment extends Fragment {
         // Required empty public constructor
     }
 
+    String language;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        if (key.equals(getString(R.string.settings_language_key))){
+
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+            language = sharedPrefs.getString(
+                    getString(R.string.settings_language_key),
+                    getString(R.string.settings_language_default)
+            );
+
+            //Setting language
+            switch (language) {
+                case "de":
+                    tvEmptyTilte.setText(R.string.empty_view_title_gio_hang_de);
+                    buttonDatHang.setText(R.string.order_de);
+                    break;
+                case "vn":
+                    tvEmptyTilte.setText(R.string.empty_view_title_gio_hang);
+                    buttonDatHang.setText(R.string.order_vn);
+
+                    break;
+            }
+
+
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,12 +103,34 @@ public class GioHangFragment extends Fragment {
         mDb = AppDatabase.getInstance(getActivity());
 
         final View rootView = inflater.inflate(R.layout.gio_hang_fragment, container, false);
+
+        //Get preference values
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        language = sharedPrefs.getString(
+                getString(R.string.settings_language_key),
+                getString(R.string.settings_language_default)
+        );
+
         buttonDatHang = rootView.findViewById(R.id.button_dat_hang);
         emptyView = rootView.findViewById(R.id.empty_view);
-        gioHangAdapter = new GioHangAdapter(getActivity());
+        tvEmptyTilte = rootView.findViewById(R.id.empty_title_text);
+        gioHangAdapter = new GioHangAdapter(getActivity(), language);
         tvTongtien = rootView.findViewById(R.id.tong_tien);
-
         giohangRecyclerView = rootView.findViewById(R.id.recycler_view_gio_hang);
+
+
+        //Setting language
+        switch (language) {
+            case "de":
+                tvEmptyTilte.setText(R.string.empty_view_title_gio_hang_de);
+                buttonDatHang.setText(R.string.order_de);
+                break;
+            case "vn":
+                tvEmptyTilte.setText(R.string.empty_view_title_gio_hang);
+                buttonDatHang.setText(R.string.order_vn);
+
+                break;
+        }
         Configuration config = getResources().getConfiguration();
         if (config.smallestScreenWidthDp >= 720)
         {

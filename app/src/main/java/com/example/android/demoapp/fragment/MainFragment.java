@@ -20,9 +20,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.android.demoapp.AppExecutors;
 import com.example.android.demoapp.R;
 import com.example.android.demoapp.adapter.MainAdapter;
 import com.example.android.demoapp.model.Banner;
+import com.example.android.demoapp.model.ChinhSach;
 import com.example.android.demoapp.model.HangSanPham;
 import com.example.android.demoapp.utils.CheckConnection;
 import com.example.android.demoapp.utils.Server;
@@ -38,12 +40,12 @@ import java.util.List;
 public class MainFragment extends Fragment {
 
     int id, idchinhsach = 0;
-    String tenhang, tenchinhsach = "";
-    String hinhanhhang, noidungchinhsach = "";
+    String tenhang, tenchinhsach = "", tenchinhsachDE= "";
+    String hinhanhhang, noidungchinhsach = "", noidungchinhsachDE ="";
     MainAdapter mainAdapter;
     public static ArrayList<HangSanPham> manghangsanpham;
     ArrayList<Banner> manganhbanner;
-    public static ArrayList<Banner> mangchinhsach;
+    public static ArrayList<ChinhSach> mangchinhsach;
     ViewFlipper viewFlipper;
     RecyclerView recyclerViewMain;
     ProgressBar mProgressBar;
@@ -65,10 +67,14 @@ public class MainFragment extends Fragment {
 
         if (CheckConnection.haveNetworkConnection(getActivity())) {
             mProgressBar = rootView.findViewById(R.id.progress_bar);
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    gethangsanpham();
+                    actionViewFlipper();
+                    getchinhsach();                }
+            });
 
-            gethangsanpham();
-            actionViewFlipper();
-            getchinhsach();
             mainAdapter = new MainAdapter(getActivity(), manghangsanpham);
             recyclerViewMain.setHasFixedSize(true);
             recyclerViewMain.setLayoutManager(new GridLayoutManager(getActivity(), 3));
@@ -99,7 +105,9 @@ public class MainFragment extends Fragment {
                             idchinhsach = object.getInt("id");
                             tenchinhsach = object.getString("tenchinhsach");
                             noidungchinhsach = object.getString("noidung");
-                            mangchinhsach.add(new Banner(idchinhsach, tenchinhsach, noidungchinhsach));
+                            tenchinhsachDE = object.getString("tenchinhsachDE");
+                            noidungchinhsachDE = object.getString("noidungDE");
+                            mangchinhsach.add(new ChinhSach(idchinhsach, tenchinhsach, noidungchinhsach, tenchinhsachDE, noidungchinhsachDE));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -124,7 +132,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onResponse(JSONArray response) {
                 if (response != null) {
-                    for (int i = 0; i < 9; i++) {
+                    for (int i = 0; i < 6; i++) {
                         try {
                             JSONObject object = response.getJSONObject(i);
                             id = object.getInt("id");
@@ -151,6 +159,8 @@ public class MainFragment extends Fragment {
 
     }
 
+
+    //Animation of Banner'images
     private void actionViewFlipper() {
 
         final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
@@ -175,7 +185,7 @@ public class MainFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
-                    viewFlipper.setFlipInterval(10000);
+                    viewFlipper.setFlipInterval(4000);
                     viewFlipper.setAutoStart(true);
                     Animation animationSlideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_right);
                     Animation animationSlideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_right);

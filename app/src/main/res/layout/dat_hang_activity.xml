@@ -28,7 +28,7 @@
             android:drawablePadding="10dp"
             android:elevation="5dp"
             android:ems="10"
-            android:hint="Họ và tên"
+            android:hint="@string/name_de"
             android:imeOptions="actionDone"
             android:inputType="textPersonName"
             android:padding="10dp" />
@@ -43,10 +43,11 @@
             android:drawablePadding="10dp"
             android:elevation="5dp"
             android:ems="10"
-            android:hint="Địa chỉ"
+            android:hint="@string/adress"
             android:imeOptions="actionDone"
             android:inputType="textPersonName"
-            android:padding="10dp" />
+            android:padding="10dp"
+             />
 
         <EditText
             android:id="@+id/editTextText_email"
@@ -59,7 +60,7 @@
             android:drawablePadding="10dp"
             android:elevation="5dp"
             android:ems="10"
-            android:hint="Email"
+            android:hint="@string/email_de"
             android:imeOptions="actionDone"
             android:inputType="textPersonName"
             android:padding="10dp" />
@@ -74,7 +75,7 @@
             android:drawablePadding="10dp"
             android:elevation="5dp"
             android:ems="10"
-            android:hint="Số điện thoại"
+            android:hint="@string/phone_number"
             android:imeOptions="actionDone"
             android:inputType="number"
             android:padding="10dp" />
@@ -96,7 +97,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
-        android:text="100.000đ"
+        android:text="€100"
         android:textColor="#fa3223" />
 
     <LinearLayout
@@ -110,12 +111,12 @@
             android:id="@+id/mua_tiep_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="1"
             android:background="@color/colorAccent"
             android:gravity="center"
-            android:text="Mua tiếp"
+            android:text="@string/buy_more_de"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
 
@@ -131,7 +132,7 @@
             android:layout_weight="1"
             android:background="@color/colorAccent"
             android:gravity="center"
-            android:text="Thanh toán"
+            android:text="@string/buy_now_de"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
 

@@ -15,7 +15,7 @@ public interface IAppChauAAPI {
     Call<User> registerNewUser(@Field("phone") String phone,
                                @Field("name") String name,
                                @Field("address") String address,
-                               @Field("birthdate") String birthdate);*/
+                               @Field("birthdate") String birthdate);
 
     @FormUrlEncoded
     @POST("submitoder.php")
@@ -23,7 +23,7 @@ public interface IAppChauAAPI {
                              @Field("address") String address,
                              @Field("phone") String phone,
                              @Field("name") String name
-                             );
+                             );*/
 
     @FormUrlEncoded
     @POST("braintree/checkout.php")

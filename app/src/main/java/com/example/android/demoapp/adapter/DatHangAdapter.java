@@ -18,7 +18,6 @@ import com.example.android.demoapp.database.AppDatabase;
 import com.example.android.demoapp.database.GioHangEntry;
 import com.squareup.picasso.Picasso;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHolderDatHang> {
@@ -27,10 +26,12 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
     private List<GioHangEntry> gioHangs;
     private static final String EXTRA_SANPHAM_ID = "extraSanPhamId";
     private static final String EXTRA_HANG_ID = "extraHangId";
+    private String language;
 
 
-    public DatHangAdapter(Context context) {
+    public DatHangAdapter(Context context, String language) {
         mcontext = context;
+        this.language = language;
     }
 
 
@@ -48,6 +49,7 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
         //Determine the values of the wanted data
 
         String tensanpham = gioHangEntry.getTenSanPham();
+        String tensanphamDE = gioHangEntry.getTenSanPhamDE();
         String khoiluongsanpham = gioHangEntry.getKhoiLuong();
 
         double giasanpham = gioHangEntry.getGiaSanPham();
@@ -58,7 +60,6 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
         double giaDonViKhuyenMai = Math.round(giakhuyenmai/soluongsanpham * 100.0) / 100.0;
         int idsanpham = gioHangEntry.getIdSanPham();
 
-        holder.textViewTenItem.setText(tensanpham);
         holder.textViewKhoiLuongItem.setText(khoiluongsanpham);
         //TODO SALE
 
@@ -79,6 +80,18 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
 
         }
 
+
+        //Setting language
+        switch (language) {
+            case "de":
+                holder.textViewTenItem.setText(tensanphamDE);
+                holder.tvTongItemTitle.setText(R.string.summe_de);
+                break;
+            case "vn":
+                holder.textViewTenItem.setText(tensanpham);
+                holder.tvTongItemTitle.setText(R.string.summe_vn);
+                break;
+        }
         Picasso.get().load(hinhanhsanpham).into(holder.imageViewITem);
         holder.textViewSoLuongItem.setText(soluongsanpham + "x");
         holder.itemView.setTag(idsanpham);
@@ -108,6 +121,7 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
     public class viewHolderDatHang extends RecyclerView.ViewHolder {
 
         TextView textViewTenItem, textViewGiaItem, textViewKhoiLuongItem, textViewSoLuongItem, textViewDonGia, textViewDonGiaKhuyenMai;
+        TextView tvTongItemTitle;
         ImageView imageViewITem;
 
         public viewHolderDatHang(View view) {
@@ -117,6 +131,7 @@ public class DatHangAdapter extends RecyclerView.Adapter<DatHangAdapter.viewHold
             textViewDonGiaKhuyenMai = view.findViewById(R.id.giakhuyenmai);
             textViewTenItem = view.findViewById(R.id.ten_item_dat);
             textViewGiaItem = view.findViewById(R.id.gia_item_dat);
+            tvTongItemTitle = view.findViewById(R.id.tv_tong_item_title);
             textViewKhoiLuongItem = view.findViewById(R.id.khoiluong_item_dat);
             textViewSoLuongItem = view.findViewById(R.id.soluong_item_dat);
             imageViewITem = view.findViewById(R.id.image_view_item_dat);

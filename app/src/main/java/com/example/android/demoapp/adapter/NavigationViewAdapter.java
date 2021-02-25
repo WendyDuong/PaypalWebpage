@@ -8,35 +8,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.android.demoapp.activity.CatalogActivity;
-import com.example.android.demoapp.activity.GiaoHang;
+import com.example.android.demoapp.activity.GiaoHangActivity;
 import com.example.android.demoapp.R;
-import com.example.android.demoapp.activity.DatHangHoActivity;
-import com.example.android.demoapp.activity.LienHe;
-import com.example.android.demoapp.activity.ThanhToan;
+import com.example.android.demoapp.activity.LienHeActivity;
+import com.example.android.demoapp.activity.SettingsActivity;
+import com.example.android.demoapp.activity.ThanhToanActivity;
+import com.example.android.demoapp.model.ChinhSach;
 import com.example.android.demoapp.utils.CheckConnection;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NavigationViewAdapter extends RecyclerView.Adapter<NavigationViewAdapter.myViewHolder> {
+public class NavigationViewAdapter extends RecyclerView.Adapter<NavigationViewAdapter.myViewHolder>{
     Context context;
-    List<String> mData;
+    String language;
+    ArrayList<ChinhSach> chinhSach;
+
 
     public static final List<Integer> ImageList = new ArrayList<Integer>() {{
         add(R.drawable.ic_baseline_payment_24);
         add(R.drawable.ic_baseline_local_shipping_24);
-        add(R.drawable.ic_baseline_assignment_return_24);
+        add(R.drawable.ic_baseline_language_24);
         add(R.drawable.ic_baseline_contact_mail_24);
+
+
     }};
 
-    public NavigationViewAdapter(Context context, List<String> data) {
+    public NavigationViewAdapter(Context context, String language,ArrayList<ChinhSach> chinhSach) {
         this.context = context;
-        this.mData = data;
+        this.language = language;
+        this.chinhSach = chinhSach;
     }
 
     @Override
@@ -47,13 +51,20 @@ public class NavigationViewAdapter extends RecyclerView.Adapter<NavigationViewAd
 
     @Override
     public void onBindViewHolder(NavigationViewAdapter.myViewHolder holder, int position) {
-        holder.nav.setText(mData.get(position));
+        switch (language){
+            case "de":
+                holder.nav.setText(chinhSach.get(position).getTenchinhsachDE());
+                break;
+            case "vn" :
+                holder.nav.setText(chinhSach.get(position).getTenchinhsach());
+                break;
+        }
         holder.iconView.setImageResource(ImageList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return chinhSach.size();
     }
 
     public class myViewHolder extends RecyclerView.ViewHolder {
@@ -67,33 +78,33 @@ public class NavigationViewAdapter extends RecyclerView.Adapter<NavigationViewAd
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (CheckConnection.haveNetworkConnection(context)){
+                    if (CheckConnection.haveNetworkConnection(context)) {
 
                         int pos = getLayoutPosition();
-                    switch (pos) {
-                        case 0:
-                            Intent intentThanhToan = new Intent(context, ThanhToan.class);
-                            context.startActivity(intentThanhToan);
-                            break;
-                        case 1:
-                            Intent intentGiaoHang = new Intent(context, GiaoHang.class);
-                            context.startActivity(intentGiaoHang);
-                            break;
-                        case 2:
-                            Intent intentDoiTra = new Intent(context, DatHangHoActivity.class);
-                            context.startActivity(intentDoiTra);
-                            break;
-                        case 3:
-                            Intent intentLienHe = new Intent(context, LienHe.class);
-                            context.startActivity(intentLienHe);
-                            break;
+                        switch (pos) {
+                            case 0:
+                                Intent intentThanhToan = new Intent(context, ThanhToanActivity.class);
+                                context.startActivity(intentThanhToan);
+                                break;
+                            case 1:
+                                Intent intentGiaoHang = new Intent(context, GiaoHangActivity.class);
+                                context.startActivity(intentGiaoHang);
+                                break;
+                            case 2:
+                                Intent intentNgonNgu = new Intent(context, SettingsActivity.class);
+                                context.startActivity(intentNgonNgu);
+                                break;
+                            case 3:
+                                Intent intentLienHe = new Intent(context, LienHeActivity.class);
+                                context.startActivity(intentLienHe);
+                                break;
+                        }
+
+                    } else {
+                        CheckConnection.showToast_Short(context, "No internet connection!");
+
                     }
-
                 }
-                    else {
-                        CheckConnection.showToast_Short(context, "Không có kết nối Internet!");
-
-                    }                }
             });
         }
     }

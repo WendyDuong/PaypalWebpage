@@ -3,9 +3,11 @@ package com.example.android.demoapp.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -71,7 +73,7 @@ import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class DatHangActivity extends AppCompatActivity {
+public class DatHangActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     DatHangAdapter datHangAdapter;
     List<GioHangEntry> mDatHangs;
     TextView tongTien;
@@ -84,21 +86,58 @@ public class DatHangActivity extends AppCompatActivity {
     IAppChauAAPI mService;
     IAppChauAAPI mServiceScalars;
     private final static int PAYMENT_REQUEST_CODE = 9797;
-    String ten, sdt, email, diachi = "";
+    String ten, sdt, email, diachi = "", language, summe, inputError, noInternet;
 
     //Global string
     String token, amount, orderAddress, orderComment;
-    HashMap<String,String> hashMap;
+    HashMap<String, String> hashMap;
 
+    //To check whether email is right email format
     public static boolean isValidEmail(String email) {
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
+    //registerOnSharedPreferenceChangeListener
+    @Override
+    public void onStart() {
+        super.onStart();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    //unregisterOnSharedPreferenceChangeListener
+    @Override
+    public void onStop() {
+        super.onStop();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        if (key.equals(getString(R.string.settings_language_key))){
+
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+            //reset language after setting was changed
+            language = sharedPrefs.getString(
+                    getString(R.string.settings_language_key),
+                    getString(R.string.settings_language_default)
+            );
+
+        }
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dat_hang_activity);
 
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        language = sharedPrefs.getString(
+                getString(R.string.settings_language_key),
+                getString(R.string.settings_language_default)
+        );
 
         mService = Common.getAPI();
         mServiceScalars = Common.getScalarsAPI();
@@ -111,7 +150,7 @@ public class DatHangActivity extends AppCompatActivity {
         else
             datHangRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        datHangAdapter = new DatHangAdapter(this);
+        datHangAdapter = new DatHangAdapter(this, language);
         datHangRecyclerView.setAdapter(datHangAdapter);
 
         tongTien = findViewById(R.id.tong_so_tien_hang_dat);
@@ -121,6 +160,26 @@ public class DatHangActivity extends AppCompatActivity {
         editTextSoDt = findViewById(R.id.editText_so_dt);
         editTextDiaChi = findViewById(R.id.editText_dia_chi);
         editTextEmail = findViewById(R.id.editTextText_email);
+
+
+        //Setting language
+        switch (language) {
+            case "de":
+                buttonDatHang.setText(R.string.buy_now_de);
+                buttonMuaTiep.setText(R.string.buy_more_de);
+                summe = getResources().getString(R.string.summe_de);
+                inputError = "Eingabe ungültig! Überprüfen Sie Ihre Email-Eingabe und Füllen Sie alle Filed aus!";
+                noInternet = "Überprüfen Sie Ihre Internetverbindung!";
+
+                break;
+            case "vn":
+                buttonDatHang.setText(R.string.buy_now_vn);
+                buttonMuaTiep.setText(R.string.buy_more_vn);
+                summe = getResources().getString(R.string.summe_vn);
+                inputError = "Thông tin cá nhân còn thiếu hoặc địa chỉ email chưa đúng!";
+                noInternet = "Kiểm tra kết nối internet!";
+                break;
+        }
 
 
         DatHangViewModel datHangViewModel = ViewModelProviders.of(this).get(DatHangViewModel.class);
@@ -141,10 +200,11 @@ public class DatHangActivity extends AppCompatActivity {
                 }
                 double gialamtron = Math.round(tongTienDonHang * 100.0) / 100.0;
 
-                tongTien.setText("Tổng số tiền: " + "€" + gialamtron);
+                tongTien.setText(summe + ": €" + gialamtron);
                 datHangAdapter.setDatHang(mDatHangs);
             }
         });
+
 
         buttonMuaTiep.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,105 +224,110 @@ public class DatHangActivity extends AppCompatActivity {
                 email = editTextEmail.getText().toString().trim();
                 diachi = editTextDiaChi.getText().toString().trim();
 
-                //Payment
-                DropInRequest dropInRequest = new DropInRequest().clientToken(token);
-                startActivityForResult(dropInRequest.getIntent(DatHangActivity.this), PAYMENT_REQUEST_CODE);
-
-/*
                 if (CheckConnection.haveNetworkConnection(DatHangActivity.this)) {
 
                     if (ten.length() > 0 && sdt.length() > 0 && email.length() > 0 && diachi.length() > 0 && isValidEmail(email)) {
 
-                        final RequestQueue requestQueue = Volley.newRequestQueue(DatHangActivity.this);
-                        StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.duongdandonhang, new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(final String madonhang) {
-                                if (Integer.parseInt(madonhang) > 0) {
-                                    RequestQueue requestQueue1 = Volley.newRequestQueue(DatHangActivity.this);
-                                    StringRequest stringRequest1 = new StringRequest(Request.Method.POST, Server.duongdanchitietdonhang, new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-                                            if (response.equals("1")) {
-                                                for (int i = 0; i < mDatHangs.size(); i++) {
-
-                                                    final int finalI = i;
-                                                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            mDb.gioHangDao().deleteGioHang(mDatHangs.get(finalI));
-                                                        }
-
-                                                    });
-                                                }
-                                                Toast.makeText(DatHangActivity.this, "Bạn đã đặt hàng thành công, Shopping Square sẽ liên lạc để hoàn tất thanh toán!", Toast.LENGTH_LONG).show();
-                                                //startActivity(new Intent(DatHangActivity.this, MainActivity.class));
-                                                Toast.makeText(DatHangActivity.this, "Mời bạn tiếp tục mua hàng", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                Toast.makeText(DatHangActivity.this, "Lỗi không tiến hành đặt hàng được!", Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    }, new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                        }
-                                    }) {
-                                        @Override
-                                        protected Map<String, String> getParams() throws AuthFailureError {
-                                            JSONArray jsonArray = new JSONArray();
-                                            for (int i = 0; i < mDatHangs.size(); i++) {
-                                                JSONObject jsonObject = new JSONObject();
-                                                try {
-                                                    jsonObject.put("madonhang", madonhang);
-                                                    jsonObject.put("masanpham", mDatHangs.get(i).getId());
-                                                    jsonObject.put("tensanpham", mDatHangs.get(i).getTenSanPham());
-                                                    jsonObject.put("giasanpham", mDatHangs.get(i).getGiaSanPham());
-                                                    //TODO SALE
-                                                    jsonObject.put("giakhuyenmai", mDatHangs.get(i).getGiaKhuyenMai());
-                                                    jsonObject.put("soluongsanpham", mDatHangs.get(i).getSoLuong());
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-                                                jsonArray.put(jsonObject);
-                                            }
-                                            HashMap<String, String> hashMap = new HashMap<String, String>();
-                                            hashMap.put("json", jsonArray.toString());
-                                            return hashMap;
-                                        }
-                                    };
-                                    requestQueue1.add(stringRequest1);
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                            }
-                        }) {
-                            @Override
-                            protected Map<String, String> getParams() throws AuthFailureError {
-                                HashMap<String, String> hashMap = new HashMap<String, String>();
-                                hashMap.put("tenkhachhang", ten);
-                                hashMap.put("sodienthoai", sdt);
-                                hashMap.put("email", email);
-                                hashMap.put("diachi", diachi);
-
-                                return hashMap;
-                            }
-                        };
-                        requestQueue.add(stringRequest);
-
+                        //Step 3. The customer submits payment information, the client SDK communicates that information to Braintree and
+                        // returns a payment method nonce
+                        DropInRequest dropInRequest = new DropInRequest().clientToken(token);
+                        startActivityForResult(dropInRequest.getIntent(DatHangActivity.this), PAYMENT_REQUEST_CODE);
                     } else {
-                        Toast.makeText(DatHangActivity.this, "Thông tin cá nhân còn thiếu hoặc địa chỉ email chưa đúng", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DatHangActivity.this, inputError, Toast.LENGTH_SHORT).show();
                     }
-
-
                 } else {
-                    Toast.makeText(DatHangActivity.this, "Kiểm tra kết nối internet!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DatHangActivity.this, noInternet, Toast.LENGTH_SHORT).show();
                 }
-*/
             }
         });
     }
 
+
+    // upload invoice infos in Webservice
+    private void UploadInvoice() {
+        final RequestQueue requestQueue = Volley.newRequestQueue(DatHangActivity.this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.duongdandonhang, new Response.Listener<String>() {
+            @Override
+            public void onResponse(final String madonhang) {
+                if (Integer.parseInt(madonhang) > 0) {
+                    RequestQueue requestQueue1 = Volley.newRequestQueue(DatHangActivity.this);
+                    StringRequest stringRequest1 = new StringRequest(Request.Method.POST, Server.duongdanchitietdonhang, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if (response.equals("1")) {
+                                for (int i = 0; i < mDatHangs.size(); i++) {
+
+                                    final int finalI = i;
+                                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mDb.gioHangDao().deleteGioHang(mDatHangs.get(finalI));
+                                        }
+
+                                    });
+                                }
+                            } else {
+                                Toast.makeText(DatHangActivity.this, "Lỗi không tiến hành đặt hàng được!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                        }
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams() throws AuthFailureError {
+                            JSONArray jsonArray = new JSONArray();
+                            for (int i = 0; i < mDatHangs.size(); i++) {
+                                JSONObject jsonObject = new JSONObject();
+                                try {
+                                    //put order details into table chitietdonhang
+                                    jsonObject.put("madonhang", madonhang);
+                                    jsonObject.put("masanpham", mDatHangs.get(i).getId());
+                                    jsonObject.put("tensanpham", mDatHangs.get(i).getTenSanPham());
+                                    jsonObject.put("giasanpham", mDatHangs.get(i).getGiaSanPham());
+                                    jsonObject.put("giakhuyenmai", mDatHangs.get(i).getGiaKhuyenMai());
+                                    jsonObject.put("soluongsanpham", mDatHangs.get(i).getSoLuong());
+                                    jsonObject.put("idShopBan", mDatHangs.get(i).getIdShopBan());
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                jsonArray.put(jsonObject);
+                            }
+                            HashMap<String, String> hashMap = new HashMap<String, String>();
+                            hashMap.put("json", jsonArray.toString());
+                            return hashMap;
+                        }
+                    };
+                    requestQueue1.add(stringRequest1);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                //put user input into table donhang
+                HashMap<String, String> hashMap = new HashMap<String, String>();
+                hashMap.put("tenkhachhang", ten);
+                hashMap.put("sodienthoai", sdt);
+                hashMap.put("email", email);
+                hashMap.put("diachi", diachi);
+
+                return hashMap;
+            }
+        };
+        requestQueue.add(stringRequest);
+
+
+    }
+
+
+    //Step 1. requests a client token from server
+    //Step2. server generates and sends a client token back to client using the server SDK.
     private void loadToken() {
         final AlertDialog waitingDialog = new SpotsDialog(DatHangActivity.this);
         waitingDialog.show();
@@ -295,28 +360,28 @@ public class DatHangActivity extends AppCompatActivity {
         });
     }
 
+
+    //Show Drop-in
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == PAYMENT_REQUEST_CODE){
-            if (resultCode == RESULT_OK){
+
+        if (requestCode == PAYMENT_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
                 DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
                 PaymentMethodNonce nonce = result.getPaymentMethodNonce();
                 String strNonce = nonce.getNonce();
 
-                    amount = String.valueOf(tongTienDonHang);
-                    hashMap = new HashMap<>();
-                    hashMap.put("amount", amount);
-                    hashMap.put("nonce", strNonce);
-                    
-                    sendPayment();
+                amount = String.valueOf(tongTienDonHang);
+                hashMap = new HashMap<>();
+                hashMap.put("amount", amount);
+                hashMap.put("nonce", strNonce);
+                sendPayment();
 
-
-
-            }
-            else if (resultCode == RESULT_CANCELED){
+            } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(DatHangActivity.this, "Payment cancelled!", Toast.LENGTH_SHORT).show();
 
-            }else {
+            } else {
                 Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
                 Log.e("APP_ERROR", error.getMessage());
             }
@@ -324,28 +389,87 @@ public class DatHangActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
+    private void sendPayment() {
+        RequestQueue queue = Volley.newRequestQueue(DatHangActivity.this);
+
+        //Step 4. front-end sends the payment method nonce to server.
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Common.API_SEND_PAYMENT,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //Step 5. server code receives the payment method nonce and then uses the server SDK to create a transaction.
+                        if (response.contains("Successful")) {
+                            Toast.makeText(DatHangActivity.this, "Transaction successful", Toast.LENGTH_SHORT).show();
+                            UploadInvoice();
+                            Intent intent = new Intent(DatHangActivity.this, PaymentDetails.class);
+                            intent.putExtra("tongTien", String.valueOf(tongTienDonHang));
+                            startActivity(intent);
+                        } else
+                            Toast.makeText(DatHangActivity.this, "Transaction failed", Toast.LENGTH_LONG).show();
+                        Log.d("mylog", "Final Response: " + response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("mylog", "Volley error : " + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                if (hashMap == null)
+                    return null;
+                Map<String, String> params = new HashMap<>();
+                for (String key : hashMap.keySet()) {
+                    params.put(key, hashMap.get(key));
+                    Log.d("mylog", "Key : " + key + " Value : " + hashMap.get(key));
+                }
+
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+    }
+/*
     private void sendPayment() {
         mServiceScalars.payment(hashMap.get("nonce"), hashMap.get("amount"))
                 .enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                         assert response.body() != null;
-                        if (response.body().toString().contains("Successful")){
+                        Log.d("APP_DEBUG", "respond is ready!!");
+                        String c = response.body().toString();
+                        if (response.body().toString().contains("Successful")) {
                             Toast.makeText(DatHangActivity.this, "Transaction successful!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(DatHangActivity.this, PaymentDetails.class);
+                            startActivity(intent);
+                            Log.d("APP_DEBUG", "Transaction successful!");
+
 
                             //Submit order
-                        }else{
+                        } else {
                             Toast.makeText(DatHangActivity.this, "Transaction failed!", Toast.LENGTH_SHORT).show();
+                            Log.d("APP_DEBUG", "Transaction failed!");
+
                         }
 
-                        Log.d("APP_ERROR", response.body());
+                        Log.d("APP_ERROR1", response.body());
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-                        Log.d("APP_ERROR", t.getMessage());
+                        Log.d("APP_ERROR2", t.getMessage());
                     }
                 });
     }
+*/
 }
 
