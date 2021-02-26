@@ -48,6 +48,7 @@ public class GioHangFragment extends Fragment implements SharedPreferences.OnSha
     List<GioHangEntry> mGiohangs;
     double tongtien;
     YeuThichViewModel gioHangViewModel;
+    String tongtienText;
 
     public GioHangFragment() {
         // Required empty public constructor
@@ -85,11 +86,12 @@ public class GioHangFragment extends Fragment implements SharedPreferences.OnSha
                 case "de":
                     tvEmptyTilte.setText(R.string.empty_view_title_gio_hang_de);
                     buttonDatHang.setText(R.string.order_de);
+                    tongtienText = getResources().getString(R.string.summe_de);
                     break;
                 case "vn":
                     tvEmptyTilte.setText(R.string.empty_view_title_gio_hang);
                     buttonDatHang.setText(R.string.order_vn);
-
+                    tongtienText = getResources().getString(R.string.summe_vn);
                     break;
             }
 
@@ -124,10 +126,14 @@ public class GioHangFragment extends Fragment implements SharedPreferences.OnSha
             case "de":
                 tvEmptyTilte.setText(R.string.empty_view_title_gio_hang_de);
                 buttonDatHang.setText(R.string.order_de);
+                tongtienText = getResources().getString(R.string.summe_de);
+
                 break;
             case "vn":
                 tvEmptyTilte.setText(R.string.empty_view_title_gio_hang);
                 buttonDatHang.setText(R.string.order_vn);
+                tongtienText = getResources().getString(R.string.summe_vn);
+
 
                 break;
         }
@@ -143,7 +149,7 @@ public class GioHangFragment extends Fragment implements SharedPreferences.OnSha
         giohangRecyclerView.setAdapter(gioHangAdapter);
 
         gioHangViewModel = ViewModelProviders.of(this).get(YeuThichViewModel.class);
-        gioHangViewModel.getGioHang().observe(this, new Observer<List<GioHangEntry>>() {
+        gioHangViewModel.getGioHang().observe(getViewLifecycleOwner(), new Observer<List<GioHangEntry>>() {
             @Override
             public void onChanged(@Nullable List<GioHangEntry> gioHangEntries) {
                 tvTongtien = rootView.findViewById(R.id.tong_tien);
@@ -169,7 +175,7 @@ public class GioHangFragment extends Fragment implements SharedPreferences.OnSha
 
                     // rounding number in case 3.19x6 = 19.13999999
                     double gialamtron = Math.round(tongTienDonHang * 100.0) / 100.0;
-                    tvTongtien.setText("Tổng số tiền: " + "€"+ gialamtron);
+                    tvTongtien.setText(tongtienText + ": €"+ gialamtron);
                     tongTienDonHang = 0;
                 }
                 gioHangAdapter.setGioHangs(gioHangEntries);

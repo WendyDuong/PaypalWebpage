@@ -5,7 +5,9 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -13,6 +15,10 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -55,6 +61,10 @@ import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
+import com.paypal.pyplcheckout.BuildConfig;
+import com.paypal.pyplcheckout.merchantIntegration.CheckoutConfig;
+import com.paypal.pyplcheckout.merchantIntegration.PayPalWebViewUtils;
+import com.paypal.pyplcheckout.merchantIntegration.RunTimeEnvironment;
 
 
 import org.json.JSONArray;
@@ -83,14 +93,23 @@ public class DatHangActivity extends AppCompatActivity implements SharedPreferen
     Button buttonDatHang, buttonMuaTiep;
     private double tongTienDonHang = 0;
     private AppDatabase mDb;
-    IAppChauAAPI mService;
-    IAppChauAAPI mServiceScalars;
-    private final static int PAYMENT_REQUEST_CODE = 9797;
-    String ten, sdt, email, diachi = "", language, summe, inputError, noInternet;
+    //IAppChauAAPI mService;
+    //IAppChauAAPI mServiceScalars;
+
+    //TODO Change to blank string for test purpose, remember to set ist back
+    String ten ="", sdt ="", email="", diachi = "", language, summe, inputError, noInternet;
 
     //Global string
     String token, amount, orderAddress, orderComment;
     HashMap<String, String> hashMap;
+
+    private static final int PAYPAL_REQUEST_CODE = 7979;
+
+
+    //Change Enviroment to ENVIROMENT_PRODUCTION after go live
+    private static PayPalConfiguration config = new PayPalConfiguration()
+            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+            .clientId(Config.PAYPAL_CLIENT_ID);
 
     //To check whether email is right email format
     public static boolean isValidEmail(String email) {
@@ -113,6 +132,14 @@ public class DatHangActivity extends AppCompatActivity implements SharedPreferen
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
+
+    //unregister paypal service
+    @Override
+    protected void onDestroy() {
+        stopService(new Intent(this, PayPalService.class));
+        super.onDestroy();
+    }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         if (key.equals(getString(R.string.settings_language_key))){
@@ -132,6 +159,15 @@ public class DatHangActivity extends AppCompatActivity implements SharedPreferen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dat_hang_activity);
 
+
+
+
+
+        //register paypal service
+        Intent intent = new Intent(this, PayPalService.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        startService(intent);
+
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         language = sharedPrefs.getString(
@@ -139,8 +175,8 @@ public class DatHangActivity extends AppCompatActivity implements SharedPreferen
                 getString(R.string.settings_language_default)
         );
 
-        mService = Common.getAPI();
-        mServiceScalars = Common.getScalarsAPI();
+        //mService = Common.getAPI();
+        //mServiceScalars = Common.getScalarsAPI();
         mDb = AppDatabase.getInstance(this);
 
         datHangRecyclerView = findViewById(R.id.recycler_view_dat_hang);
@@ -161,6 +197,7 @@ public class DatHangActivity extends AppCompatActivity implements SharedPreferen
         editTextDiaChi = findViewById(R.id.editText_dia_chi);
         editTextEmail = findViewById(R.id.editTextText_email);
 
+        buttonDatHang.setEnabled(true);
 
         //Setting language
         switch (language) {
@@ -188,8 +225,6 @@ public class DatHangActivity extends AppCompatActivity implements SharedPreferen
             public void onChanged(@Nullable List<GioHangEntry> datHangs) {
                 mDatHangs = datHangs;
                 assert mDatHangs != null;
-
-                //TODO SALE
                 for (int i = 0; i < mDatHangs.size(); i++) {
                     if (mDatHangs.get(i).getGiaKhuyenMai() != 0) {
                         tongtien = mDatHangs.get(i).getGiaKhuyenMai();
@@ -199,7 +234,6 @@ public class DatHangActivity extends AppCompatActivity implements SharedPreferen
                     tongTienDonHang += tongtien;
                 }
                 double gialamtron = Math.round(tongTienDonHang * 100.0) / 100.0;
-
                 tongTien.setText(summe + ": €" + gialamtron);
                 datHangAdapter.setDatHang(mDatHangs);
             }
@@ -214,7 +248,7 @@ public class DatHangActivity extends AppCompatActivity implements SharedPreferen
             }
         });
 
-        loadToken();
+        //loadToken();
 
         buttonDatHang.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,12 +260,16 @@ public class DatHangActivity extends AppCompatActivity implements SharedPreferen
 
                 if (CheckConnection.haveNetworkConnection(DatHangActivity.this)) {
 
-                    if (ten.length() > 0 && sdt.length() > 0 && email.length() > 0 && diachi.length() > 0 && isValidEmail(email)) {
+                    //if (ten.length() > 0 && sdt.length() > 0 && email.length() > 0 && diachi.length() > 0 && isValidEmail(email)) {
+                    if (1==1) {
+
+                        //processPayment();
+                        startActivity(new Intent(DatHangActivity.this, MakePaymentActivity.class));
 
                         //Step 3. The customer submits payment information, the client SDK communicates that information to Braintree and
                         // returns a payment method nonce
-                        DropInRequest dropInRequest = new DropInRequest().clientToken(token);
-                        startActivityForResult(dropInRequest.getIntent(DatHangActivity.this), PAYMENT_REQUEST_CODE);
+                        //DropInRequest dropInRequest = new DropInRequest().clientToken(token);
+                        //startActivityForResult(dropInRequest.getIntent(DatHangActivity.this), PAYMENT_REQUEST_CODE);
                     } else {
                         Toast.makeText(DatHangActivity.this, inputError, Toast.LENGTH_SHORT).show();
                     }
@@ -241,6 +279,60 @@ public class DatHangActivity extends AppCompatActivity implements SharedPreferen
             }
         });
     }
+
+    private void processPayment() {
+        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(tongTienDonHang)),"EUR", "Asia Shop", PayPalPayment.PAYMENT_INTENT_SALE );
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
+        startActivityForResult(intent, PAYPAL_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == PAYPAL_REQUEST_CODE){
+            if (resultCode == RESULT_OK) {
+                PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+                if (confirmation != null){
+                    try {
+                        String paymentDetails = confirmation.toJSONObject().toString(4);
+
+                        UploadInvoice();
+                        Intent intent = new Intent(DatHangActivity.this, PaymentDetails.class);
+                        intent.putExtra("tongTien", String.valueOf(tongTienDonHang));
+                        intent.putExtra("PaymentDetails", paymentDetails);
+                        startActivity(intent);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    for (int i = 0; i < mDatHangs.size(); i++) {
+
+                        final int finalI = i;
+                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                mDb.gioHangDao().deleteGioHang(mDatHangs.get(finalI));
+                            }
+
+                        });
+                    }
+                    tongTienDonHang = 0;
+
+                }
+            }
+            else if (resultCode == Activity.RESULT_CANCELED)
+                Toast.makeText(DatHangActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+
+        }else if (requestCode == PaymentActivity.RESULT_EXTRAS_INVALID){
+            Toast.makeText(DatHangActivity.this, "Invalid", Toast.LENGTH_SHORT).show();
+
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
 
 
     // upload invoice infos in Webservice
@@ -328,6 +420,7 @@ public class DatHangActivity extends AppCompatActivity implements SharedPreferen
 
     //Step 1. requests a client token from server
     //Step2. server generates and sends a client token back to client using the server SDK.
+/*
     private void loadToken() {
         final AlertDialog waitingDialog = new SpotsDialog(DatHangActivity.this);
         waitingDialog.show();
@@ -359,9 +452,11 @@ public class DatHangActivity extends AppCompatActivity implements SharedPreferen
             }
         });
     }
+*/
 
 
     //Show Drop-in
+/*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
@@ -388,8 +483,10 @@ public class DatHangActivity extends AppCompatActivity implements SharedPreferen
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+*/
 
 
+/*
     private void sendPayment() {
         RequestQueue queue = Volley.newRequestQueue(DatHangActivity.this);
 
@@ -437,38 +534,6 @@ public class DatHangActivity extends AppCompatActivity implements SharedPreferen
             }
         };
         queue.add(stringRequest);
-    }
-/*
-    private void sendPayment() {
-        mServiceScalars.payment(hashMap.get("nonce"), hashMap.get("amount"))
-                .enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                        assert response.body() != null;
-                        Log.d("APP_DEBUG", "respond is ready!!");
-                        String c = response.body().toString();
-                        if (response.body().toString().contains("Successful")) {
-                            Toast.makeText(DatHangActivity.this, "Transaction successful!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(DatHangActivity.this, PaymentDetails.class);
-                            startActivity(intent);
-                            Log.d("APP_DEBUG", "Transaction successful!");
-
-
-                            //Submit order
-                        } else {
-                            Toast.makeText(DatHangActivity.this, "Transaction failed!", Toast.LENGTH_SHORT).show();
-                            Log.d("APP_DEBUG", "Transaction failed!");
-
-                        }
-
-                        Log.d("APP_ERROR1", response.body());
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        Log.d("APP_ERROR2", t.getMessage());
-                    }
-                });
     }
 */
 }

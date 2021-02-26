@@ -4,7 +4,6 @@
     package="com.example.android.demoapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -14,7 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.PaymentDetails"></activity>
+        <activity android:name=".activity.MakePaymentActivity"></activity>
+        <activity
+            android:name=".activity.PaymentDetails"
+            android:configChanges="orientation"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:showOnLockScreen="true" />
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="orientation"
@@ -71,35 +76,38 @@
             android:screenOrientation="portrait"
             android:showOnLockScreen="true" />
         <activity
-            android:name=".activity.DatHangHoActivity"
+            android:name=".activity.ThanhToanActivity"
             android:configChanges="orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:showOnLockScreen="true" />
         <activity
-            android:name=".activity.ThanhToan"
+            android:name=".activity.LienHeActivity"
             android:configChanges="orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:showOnLockScreen="true" />
         <activity
-            android:name=".activity.LienHe"
+            android:name=".activity.GiaoHangActivity"
             android:configChanges="orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:showOnLockScreen="true" />
         <activity
-            android:name=".activity.GiaoHang"
+            android:name=".activity.SettingsActivity"
             android:configChanges="orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:showOnLockScreen="true" />
-        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+        <activity
+            android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="${applicationId}.braintree" />
             </intent-filter>
         </activity>

@@ -130,7 +130,7 @@ public class YeuThichFragment extends Fragment implements SharedPreferences.OnSh
         yeuThichAdapter = new YeuthichAdapter(getActivity(), language);
         recyclerViewYeuThich.setAdapter(yeuThichAdapter);
         YeuThichViewModel yeuThichViewModel = ViewModelProviders.of(this).get(YeuThichViewModel.class);
-        yeuThichViewModel.getYeuThich().observe(this, new Observer<List<YeuThichEntry>>() {
+        yeuThichViewModel.getYeuThich().observe(getViewLifecycleOwner(), new Observer<List<YeuThichEntry>>() {
             @Override
             public void onChanged(@Nullable List<YeuThichEntry> yeuThichEntries) {
                 mYeuThichs = yeuThichEntries;
